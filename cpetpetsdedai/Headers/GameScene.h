@@ -32,6 +32,8 @@ protected:
 	PhysicsEngine physicsEngine;
 	GraphicDebugger graphicDebugger;
 	std::shared_ptr<GameObject> Player;
+	std::shared_ptr<GameObject> Ground;
+	std::shared_ptr<BoxCollider> groundCollider;
 	std::shared_ptr<GameObject> directionArrow;
 	std::shared_ptr<GameObject> forceArrow;
 	std::shared_ptr<GameObject> BackgroundObject;
@@ -39,11 +41,6 @@ protected:
 	std::shared_ptr<GameObject> CreateBackground();
 	std::tuple<std::shared_ptr<GameObject>, std::shared_ptr<CircleCollider>> CreatePlayer();
 	std::tuple<std::shared_ptr<GameObject>, std::shared_ptr<CustomCollider>> CreateTarget();
-
-	std::tuple<std::shared_ptr<GameObject>, std::shared_ptr<CustomCollider>> CreatePlatformeOne();
-	std::tuple<std::shared_ptr<GameObject>, std::shared_ptr<CustomCollider>> CreatePlatformeTwo();
-	std::tuple<std::shared_ptr<GameObject>, std::shared_ptr<CustomCollider>> CreatePlatformeThree();
-	std::tuple<std::shared_ptr<GameObject>, std::shared_ptr<CustomCollider>> CreatePlatformeFour();
 
 
 	int currentLevel;

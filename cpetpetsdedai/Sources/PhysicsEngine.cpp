@@ -187,7 +187,7 @@ void PhysicsEngine::SetModifyMode(bool newState)
 
 bool PhysicsEngine::TwoObjectAreColliding(Collider* c1, Collider* c2)
 {
-	// ca marche que avec les polygone convexe (sans angle interieure > 180 degrÈe)
+	// ca marche que avec les polygone convexe (sans angle interieure > 180 degr√©e)
 
 	Collider* colliderOne = c1;
 	Collider* colliderTwo = c2;
@@ -318,11 +318,11 @@ bool PhysicsEngine::ShapeAreTouching
 		sf::Vector2f col1PointA = Shape1AllPoints[p] + OffsetShape1;
 		sf::Vector2f col1PointB = Shape1AllPoints[(p + 1) % Shape1AllPoints.size()] + OffsetShape1;
 		
-		// check des cotÈ
+		// check des cot√©
 		for (int q = 0; q < Shape2AllPoints.size(); q++)
 		{
 			sf::Vector2f col2PointA = Shape2AllPoints[q] + OffsetShape2;
-			// point a cotÈ
+			// point a cot√©
 			sf::Vector2f col2PointB = Shape2AllPoints[(q + 1) % Shape2AllPoints.size()] + OffsetShape2;
 
 			bool segmentIntersects = false;

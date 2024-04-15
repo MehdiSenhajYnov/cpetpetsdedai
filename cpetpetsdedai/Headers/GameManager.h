@@ -1,8 +1,5 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <iostream>
-#include <math.h>
-#include "GameObject.h"
 #include "Scene.h"
 #include "Camera.h"
 #include "GravitySystem.h"

@@ -9,7 +9,7 @@ void Button::Init(std::shared_ptr<GameObject> _gameObject, std::string _buttonSt
 
 	if (!fontLoaded)
 	{
-		if (!font.loadFromFile("fonts/Arial.ttf"))
+		if (!font.loadFromFile("./Fonts/Arial.ttf"))
 		{
 			std::cout << "ERROR" << std::endl;
 		}

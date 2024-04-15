@@ -8,7 +8,7 @@ void GameScene::InitializeScene(sf::RenderWindow* _window)
 {
 
 
-	if (!font.loadFromFile("fonts/Arial.ttf"))
+	if (!font.loadFromFile("./Fonts/Arial.ttf"))
 	{
 		std::cout << "ERROR" << std::endl;
 	}
@@ -55,6 +55,8 @@ void GameScene::InitializeScene(sf::RenderWindow* _window)
 
 	mainCamera.AddToTexts(&ThrowsText);
 	mainCamera.AddToTexts(&LevelText);
+
+	physicsEngine.EnterModifyMode();
 
 }
 
@@ -127,20 +129,19 @@ void GameScene::OnSceneChanged()
 std::shared_ptr<GameObject> GameScene::CreateBackground()
 {
 	auto tempBackground = CreateGameObject("Background", 0);
-	tempBackground->SetSprite("Background.png");
+	//tempBackground->SetSprite("./Assets/Background.png");
 	return tempBackground;
 }
 
 std::tuple<std::shared_ptr<GameObject>, std::shared_ptr<CircleCollider>> GameScene::CreatePlayer()
 {
-	auto _tempPlayer = CreateGameObject("Ball", 20);
-	_tempPlayer->SetSprite("assets/Ball.png");
-
-	_tempPlayer->GetSprite()->setScale(sf::Vector2f(0.025f, 0.025f));
+	auto _tempPlayer = CreateGameObject("Player", 20);
+	_tempPlayer->SetSprite("./Assets/Dragon Warrior Files/Dragon Warrior PNG/idle_01.png");
+	_tempPlayer->GetSprite()->setScale(sf::Vector2f(1.25f, 1.25f));
 	_tempPlayer->SetPosition(300, 400);
 
 	auto _tempPlayerCollider = physicsEngine.CreateCircleCollider(_tempPlayer, sf::Vector2f(0, 0), 15, 15);
-	_tempPlayerCollider->OnCollisionEnter()->Subscribe(&GameScene::OnPlayerCollisionEnter, this);
+	//_tempPlayerCollider->OnCollisionEnter()->Subscribe(&GameScene::OnPlayerCollisionEnter, this);
 	_tempPlayerCollider->Gravity = true;
 
 	return std::make_tuple(_tempPlayer, _tempPlayerCollider);
@@ -150,7 +151,7 @@ std::tuple<std::shared_ptr<GameObject>, std::shared_ptr<CustomCollider>> GameSce
 {
 
 	std::shared_ptr<GameObject> target = CreateGameObject("Target", 20);
-	target->SetSprite("assets/Target.png");
+	//target->SetSprite("./Assets/Target.png");
 	target->GetSprite()->setScale(sf::Vector2f(0.05f, 0.05f));
 	std::shared_ptr<CustomCollider> targetCollider = physicsEngine.CreateCustomCollider(target, {
 		sf::Vector2f(15,70),
@@ -166,94 +167,5 @@ std::tuple<std::shared_ptr<GameObject>, std::shared_ptr<CustomCollider>> GameSce
 	targetCollider->SetIsStatic(true);
 
 	return std::make_tuple(target, targetCollider);
-
-}
-
-
-
-
-std::tuple<std::shared_ptr<GameObject>, std::shared_ptr<CustomCollider>> GameScene::CreatePlatformeOne()
-{
-
-	std::shared_ptr<GameObject> ground = CreateGameObject("ground", 10);
-	ground->SetSprite("assets/Platforme1.png");
-	ground->GetSprite()->setScale(sf::Vector2f(0.4f, 0.4f));
-	ground->SetPosition(300, 700);
-	std::shared_ptr<CustomCollider> groundCollider = physicsEngine.CreateCustomCollider(ground, {
-		sf::Vector2f(0,100),
-		sf::Vector2f(630,100),
-		sf::Vector2f(400,350),
-		sf::Vector2f(350,350),
-		sf::Vector2f(220,200),
-		sf::Vector2f(120,200),
-		});
-	groundCollider->SetIsStatic(true);
-
-	return std::make_tuple(ground, groundCollider);
-
-}
-
-
-
-
-std::tuple<std::shared_ptr<GameObject>, std::shared_ptr<CustomCollider>> GameScene::CreatePlatformeTwo()
-{
-
-	std::shared_ptr<GameObject> ground = CreateGameObject("ground", 10);
-	ground->SetSprite("assets/Platforme2.png");
-	ground->GetSprite()->setScale(sf::Vector2f(0.2f, 0.2f));
-	ground->SetPosition(300, 650);
-	std::shared_ptr<CustomCollider> groundCollider = physicsEngine.CreateCustomCollider(ground, {
-		sf::Vector2f(0,50),
-		sf::Vector2f(525,50),
-		sf::Vector2f(275,220),
-		sf::Vector2f(250,220),
-		sf::Vector2f(220,200),
-		sf::Vector2f(120,200),
-		});
-	groundCollider->SetIsStatic(true);
-
-	return std::make_tuple(ground, groundCollider);
-
-}
-
-
-std::tuple<std::shared_ptr<GameObject>, std::shared_ptr<CustomCollider>> GameScene::CreatePlatformeThree()
-{
-
-	std::shared_ptr<GameObject> ground = CreateGameObject("ground", 10);
-	ground->SetSprite("assets/Platforme3.png");
-	ground->GetSprite()->setScale(sf::Vector2f(0.4f, 0.4f));
-	ground->SetPosition(300, 600);
-	std::shared_ptr<CustomCollider> groundCollider = physicsEngine.CreateCustomCollider(ground, {
-		sf::Vector2f(0,100),
-		sf::Vector2f(750,100),
-		sf::Vector2f(430,280),
-		sf::Vector2f(190,280),
-		});
-	groundCollider->SetIsStatic(true);
-
-	return std::make_tuple(ground, groundCollider);
-
-}
-
-
-
-std::tuple<std::shared_ptr<GameObject>, std::shared_ptr<CustomCollider>> GameScene::CreatePlatformeFour()
-{
-
-	std::shared_ptr<GameObject> ground = CreateGameObject("ground", 10);
-	ground->SetSprite("assets/Platforme4.png");
-	ground->GetSprite()->setScale(sf::Vector2f(0.15f, 0.15f));
-	ground->SetPosition(300, 700);
-	std::shared_ptr<CustomCollider> groundCollider = physicsEngine.CreateCustomCollider(ground, {
-		sf::Vector2f(0,50),
-		sf::Vector2f(355,50),
-		sf::Vector2f(220,150),
-		sf::Vector2f(120,150),
-		});
-	groundCollider->SetIsStatic(true);
-
-	return std::make_tuple(ground, groundCollider);
 
 }

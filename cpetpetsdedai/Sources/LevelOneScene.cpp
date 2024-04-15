@@ -13,22 +13,14 @@ void LevelOneScene::Update(float deltaTime)
 void LevelOneScene::InitLevel()
 {
 	currentLevel = 1;
+	Ground = CreateGameObject("ground",-1);
+	groundCollider = physicsEngine.CreateBoxCollider(Ground, sf::Vector2f(0,0), sf::Vector2f(10000, 200));
+	Ground->SetPosition(0, 100);
 }
 
 void LevelOneScene::SetupMapElements()
 {
 	BackgroundObject = CreateBackground();
-	
-	auto [ground1, ground1Collider] = CreatePlatformeThree();
-	ground1->SetPosition(150, 650);
-
-	std::get<0>(CreatePlatformeThree())->SetPosition(2000, 250);
-
-	std::get<0>(CreatePlatformeTwo())->SetPosition(3300, 400);
-
-	std::get<0>(CreatePlatformeOne())->SetPosition(5000, 250);
-
-	std::get<0>(CreatePlatformeOne())->SetPosition(6800, 800);
 }
 
 void LevelOneScene::SetupElements()
