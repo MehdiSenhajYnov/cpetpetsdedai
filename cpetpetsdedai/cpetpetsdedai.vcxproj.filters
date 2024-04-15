@@ -151,4 +151,22 @@
     <None Include="vcpkg.json" />
     <None Include=".gitignore" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\Circle.png">
+      <Filter>Fichiers de ressources</Filter>
+    </Image>
+    <Image Include="Assets\RoundedRectangle.png">
+      <Filter>Fichiers de ressources</Filter>
+    </Image>
+    <Image Include="Assets\Square.png">
+      <Filter>Fichiers de ressources</Filter>
+    </Image>
+    <Image Include="Assets\Target.png">
+      <Filter>Fichiers de ressources</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Fonts\Arial.ttf" />
+    <Font Include="Fonts\BebasNeue-Regular.ttf" />
+  </ItemGroup>
 </Project>

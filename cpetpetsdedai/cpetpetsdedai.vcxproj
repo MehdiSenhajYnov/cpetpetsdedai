@@ -181,6 +181,16 @@
     <None Include=".gitignore" />
     <None Include="vcpkg.json" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\Circle.png" />
+    <Image Include="Assets\RoundedRectangle.png" />
+    <Image Include="Assets\Square.png" />
+    <Image Include="Assets\Target.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Fonts\Arial.ttf" />
+    <Font Include="Fonts\BebasNeue-Regular.ttf" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
