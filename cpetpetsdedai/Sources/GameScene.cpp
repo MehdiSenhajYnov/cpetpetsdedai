@@ -133,14 +133,14 @@ std::shared_ptr<GameObject> GameScene::CreateBackground()
 	return tempBackground;
 }
 
-std::tuple<std::shared_ptr<GameObject>, std::shared_ptr<CircleCollider>> GameScene::CreatePlayer()
+std::tuple<std::shared_ptr<GameObject>, std::shared_ptr<BoxCollider>> GameScene::CreatePlayer()
 {
 	auto _tempPlayer = CreateGameObject("Player", 20);
 	_tempPlayer->SetSprite("./Assets/Dragon Warrior Files/Dragon Warrior PNG/idle_01.png");
 	_tempPlayer->GetSprite()->setScale(sf::Vector2f(1.25f, 1.25f));
 	_tempPlayer->SetPosition(300, 400);
 
-	auto _tempPlayerCollider = physicsEngine.CreateCircleCollider(_tempPlayer, sf::Vector2f(0, 0), 15, 15);
+	auto _tempPlayerCollider =physicsEngine.CreateBoxCollider(_tempPlayer, sf::Vector2f(290, 150), sf::Vector2f(90, 160));
 	//_tempPlayerCollider->OnCollisionEnter()->Subscribe(&GameScene::OnPlayerCollisionEnter, this);
 	_tempPlayerCollider->Gravity = true;
 

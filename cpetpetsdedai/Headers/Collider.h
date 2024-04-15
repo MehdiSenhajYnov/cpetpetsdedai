@@ -55,12 +55,12 @@ protected:
 	void FireCollisionEnter(Collider* CollideWith, sf::Vector2f ContactPoint);
 	void FireCollisionExit(Collider* CollideWith);
 
-	// Hérité via Component
+	// HÃ©ritÃ© via Component
 	virtual void Start() = 0;
 	void Update(float deltaTime);
 	virtual void ColliderUpdate(float deltaTime) = 0;
 	const float frictionForce = 0.99f;
-	const float gravityForce = 14;
+	const float gravityForce = 90;
 
 	bool IsStatic;
 

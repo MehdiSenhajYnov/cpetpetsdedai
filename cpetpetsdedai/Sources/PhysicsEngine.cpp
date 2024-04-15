@@ -110,7 +110,7 @@ void PhysicsEngine::UpdatePhysics(float deltaTime)
 			bool isStatic = AllColliders[i]->GetIsStatic();
 			if (isStatic) continue;
 			//std::cout << "velocity moving" << std::endl;
-			movementResult = MoveObject(AllColliders[i].get(), AllColliders[i]->GetVelocity());
+			movementResult = MoveObject(AllColliders[i].get(), AllColliders[i]->GetVelocity(), deltaTime);
 			//if (!movementResult)
 			//{
 			//	AllColliders[i]->SetVelocity(sf::Vector2f(0, 0));
@@ -123,13 +123,13 @@ void PhysicsEngine::UpdatePhysics(float deltaTime)
 	SomeObjecsAreColliding();
 }
 
-bool PhysicsEngine::MoveObject(Collider* _colliderToMove, sf::Vector2f _moveby)
+bool PhysicsEngine::MoveObject(Collider* _colliderToMove, sf::Vector2f _moveby, float deltaTime)
 {
 	if (ObjectCanMoveBy(_colliderToMove, _moveby))
 	{
-		auto vectorToStr = [](sf::Vector2f toconvert) { return "x : " + std::to_string(toconvert.x) + " y : " + std::to_string(toconvert.y); };
+		//auto vectorToStr = [](sf::Vector2f toconvert) { return "x : " + std::to_string(toconvert.x) + " y : " + std::to_string(toconvert.y); };
 		//std::cout << "moving by : " << vectorToStr(_moveby) << " from : " << vectorToStr(_colliderToMove->GetAttachedObject()->GetPosition()) << std::endl;
-		_colliderToMove->GetAttachedObject()->Move(_moveby);
+		_colliderToMove->GetAttachedObject()->Move(_moveby*deltaTime);
 		return true;
 	}
 	return false;
@@ -153,17 +153,6 @@ bool PhysicsEngine::ObjectCanMoveBy(Collider* colliderToCheck, sf::Vector2f _mov
 		col1isTouchincol2 = ShapeAreTouching(
 			colliderToCheck->GetCenter(), colliderToCheck->GetAttachedObject()->GetPosition() + _moveBy, colliderToCheck->GetAllPoints(),
 			colliderInCollision->GetCenter(), colliderInCollision->GetAttachedObject()->GetPosition(), colliderInCollision->GetAllPoints());
-
-
-		//centerPositionCol2 = colliderInCollision->GetCenter() + colliderInCollision->GetAttachedObject()->GetPosition();
-
-		//float distance = std::abs(MyMath::VectorLength(centerPositionCol1 - centerPositionCol2));
-		//float distance2 = std::abs(MyMath::VectorLength(centerPositionCol1 + _moveBy - centerPositionCol2));
-
-		//if (distance2 < distance)
-		//{
-		//	return false;
-		//}
 
 		if (col1isTouchincol2)
 		{
@@ -278,19 +267,6 @@ sf::Vector2f PhysicsEngine::CalculateNormalForceVector(Collider* c1, Collider* c
 	{
 		normalForceVector = sf::Vector2f(0.0f, 0.0f);
 	}
-	else
-	{
-		// log
-		//std::cout << "currentForce = " << vectorToStr(currentForce) << std::endl;
-		//std::cout << "ContactPoint = " << vectorToStr(ContactPoint) << std::endl;
-		//std::cout << "c1Center = " << vectorToStr(c1Center) << std::endl;
-		//std::cout << "c2Center = " << vectorToStr(c2Center) << std::endl;
-		//std::cout << "PointA = " << vectorToStr(PointA) << std::endl;
-		std::cout << "currentForce = " << vectorToStr(currentForce) << std::endl;
-		std::cout << "normal point = " << vectorToStr(normalPoint) << std::endl;
-		std::cout << "normal force = " << vectorToStr(normalForceVector) << std::endl << std::endl << std::endl;
-	}
-
 
 
 	return normalForceVector;

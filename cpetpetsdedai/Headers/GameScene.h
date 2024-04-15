@@ -39,7 +39,7 @@ protected:
 	std::shared_ptr<GameObject> BackgroundObject;
 
 	std::shared_ptr<GameObject> CreateBackground();
-	std::tuple<std::shared_ptr<GameObject>, std::shared_ptr<CircleCollider>> CreatePlayer();
+	std::tuple<std::shared_ptr<GameObject>, std::shared_ptr<BoxCollider>> CreatePlayer();
 	std::tuple<std::shared_ptr<GameObject>, std::shared_ptr<CustomCollider>> CreateTarget();
 
 

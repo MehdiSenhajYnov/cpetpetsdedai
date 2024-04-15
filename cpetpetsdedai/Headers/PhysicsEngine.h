@@ -43,7 +43,7 @@ private:
 	bool point_in_polygon(sf::Vector2f point, std::vector<sf::Vector2f> polygon, sf::Vector2f offest);
 
 	GraphicDebugger* graphicDebugger;
-	bool MoveObject(Collider* _colliderToMove, sf::Vector2f _moveby);
+	bool MoveObject(Collider* _colliderToMove, sf::Vector2f _moveby, float deltaTime);
 
 
 

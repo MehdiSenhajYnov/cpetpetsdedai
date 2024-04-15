@@ -10,7 +10,7 @@ class BoxCollider : public Collider
 {
 public:
 	BoxCollider();
-	void Init(std::shared_ptr<GameObject> _gameObject, sf::Vector2f _topLeftPoint, sf::Vector2f _bottomRightPoint);
+	void Init(std::shared_ptr<GameObject> _gameObject, sf::Vector2f _topLeftPoint, sf::Vector2f _size);
 
 private:
 
