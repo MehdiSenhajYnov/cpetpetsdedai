@@ -1,10 +1,9 @@
 #pragma once
 #include <SFML/System/Vector2.hpp>
-#include <SFML/Graphics/Rect.hpp>
-#include "GameObject.h"
 #include "Component.h"
 #include "Event.h"
 #include "Camera.h"
+#include "Utilities.h"
 
 class Collider : public Component
 {

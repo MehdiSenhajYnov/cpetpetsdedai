@@ -65,6 +65,25 @@ std::shared_ptr<CustomCollider> PhysicsEngine::CreateCustomCollider(std::shared_
 	return newCollider;
 }
 
+std::shared_ptr<BoxCollider> PhysicsEngine::CreateBoxCollider(std::shared_ptr<GameObject> _gameObject,
+	sf::Vector2f _topLeftPoint, sf::Vector2f _size, std::string _colliderID)
+{
+	  
+	return CreateBoxCollider(_gameObject, _topLeftPoint, _size);
+}
+
+std::shared_ptr<CircleCollider> PhysicsEngine::CreateCircleCollider(std::shared_ptr<GameObject> _gameObject,
+	sf::Vector2f _topLeftPoint, float radius, int accuracy, std::string _colliderID)
+{
+	return CreateCircleCollider(_gameObject, _topLeftPoint, radius, accuracy);
+}
+
+std::shared_ptr<CustomCollider> PhysicsEngine::CreateCustomCollider(std::shared_ptr<GameObject> _gameObject,
+	std::vector<sf::Vector2f> allPoints, std::string _colliderID)
+{
+	return CreateCustomCollider(_gameObject, allPoints);
+}
+
 
 void PhysicsEngine::DestroyCollider(Collider* _colliderToRemove)
 {
@@ -127,8 +146,7 @@ bool PhysicsEngine::MoveObject(Collider* _colliderToMove, sf::Vector2f _moveby, 
 {
 	if (ObjectCanMoveBy(_colliderToMove, _moveby))
 	{
-		//auto vectorToStr = [](sf::Vector2f toconvert) { return "x : " + std::to_string(toconvert.x) + " y : " + std::to_string(toconvert.y); };
-		//std::cout << "moving by : " << vectorToStr(_moveby) << " from : " << vectorToStr(_colliderToMove->GetAttachedObject()->GetPosition()) << std::endl;
+		//std::cout << "moving by : " << Utilities::VectorToString(_moveby) << " from : " << Utilities::VectorToString(_colliderToMove->GetAttachedObject()->GetPosition()) << std::endl;
 		_colliderToMove->GetAttachedObject()->Move(_moveby*deltaTime);
 		return true;
 	}
@@ -234,8 +252,6 @@ bool PhysicsEngine::TwoObjectAreColliding(Collider* c1, Collider* c2)
 
 sf::Vector2f PhysicsEngine::CalculateNormalForceVector(Collider* c1, Collider* c2, sf::Vector2f ContactPoint, sf::Vector2f ComplementaryAxePoint1, sf::Vector2f ComplementaryAxePoint2)
 {
-	auto vectorToStr = [](sf::Vector2f toconvert) { return "x : " + std::to_string(toconvert.x) + " y : " + std::to_string(toconvert.y); };
-
 	sf::Vector2f c1Center = c1->GetCenter() + c1->GetAttachedObject()->GetPosition();
 	sf::Vector2f c2Center = c2->GetCenter() + c2->GetAttachedObject()->GetPosition();
 	sf::Vector2f currentForce = c1->GetVelocity();

@@ -23,6 +23,12 @@ public:
 	std::shared_ptr<BoxCollider> CreateBoxCollider(std::shared_ptr<GameObject> _gameObject, sf::Vector2f _topLeftPoint, sf::Vector2f _size);
 	std::shared_ptr<CircleCollider> CreateCircleCollider(std::shared_ptr<GameObject> _gameObject, sf::Vector2f _topLeftPoint, float radius, int accuracy);
 	std::shared_ptr<CustomCollider> CreateCustomCollider(std::shared_ptr<GameObject> _gameObject, std::vector<sf::Vector2f> allPoints);
+	
+	std::shared_ptr<BoxCollider> CreateBoxCollider(std::shared_ptr<GameObject> _gameObject, sf::Vector2f _topLeftPoint, sf::Vector2f _size, std::string _colliderID);
+	std::shared_ptr<CircleCollider> CreateCircleCollider(std::shared_ptr<GameObject> _gameObject, sf::Vector2f _topLeftPoint, float radius, int accuracy, std::string _colliderID);
+	std::shared_ptr<CustomCollider> CreateCustomCollider(std::shared_ptr<GameObject> _gameObject, std::vector<sf::Vector2f> allPoints, std::string _colliderID);
+
+	
 	void DestroyCollider(Collider* _colliderToRemove);
 	void EnterModifyMode();
 	void ExitModifyMode();

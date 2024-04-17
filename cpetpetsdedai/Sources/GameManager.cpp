@@ -1,5 +1,7 @@
 #include "../Headers/GameManager.h"
 
+#include "SingletonManager.h"
+
 GameManager::GameManager() :
 window(sf::VideoMode(1700, 1000), "Simple 2D Game", sf::Style::Fullscreen)
 {
@@ -26,8 +28,9 @@ void GameManager::Run()
 
 		deltaTime = dtClock.restart().asSeconds();
 		currentScene->Update(deltaTime);
-
 	}
+	
+	SingletonManager::DeleteAll();
 }
 
 void GameManager::OnChangeSceneAsked(SceneManager::SceneEnum sceneToUse)

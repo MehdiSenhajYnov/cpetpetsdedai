@@ -76,12 +76,10 @@ std::map<Collider*, sf::Vector2f> Collider::GetCurrentCollisions()
 
 void Collider::AddInCollisionWith(Collider* ColliderToAdd, sf::Vector2f ContactPoint)
 {
-	auto vectorToStr = [](sf::Vector2f toconvert) { return "x : " + std::to_string(toconvert.x) + " y : " + std::to_string(toconvert.y); };
-
 	currentCollisions[ColliderToAdd] = ContactPoint;
 	//std::cout << "Collision enter between " << this->gameObject->Name << " and " << ColliderToAdd->gameObject->Name << std::endl;
-	//std::cout << "Current velocity " << vectorToStr(this->GetVelocity()) << std::endl;
-	//std::cout << "Current acceleration " << vectorToStr(this->GetAcceleration()) << std::endl;
+	//std::cout << "Current velocity " << Utilities::VectorToString(this->GetVelocity()) << std::endl;
+	//std::cout << "Current acceleration " << Utilities::VectorToString(this->GetAcceleration()) << std::endl;
 	FireCollisionEnter(ColliderToAdd, ContactPoint);
 }
 
@@ -142,7 +140,6 @@ void Collider::AddForce(sf::Vector2f forceToAdd)
 	//forceToAdd.y = forceToAdd.y / 100;
 	if (IsStatic) return;
 
-	auto vectorToStr = [](sf::Vector2f toconvert) { return "x : " + std::to_string(toconvert.x) + " y : " + std::to_string(toconvert.y); };
 	if (std::isnan(forceToAdd.x) || std::isnan(forceToAdd.y))
 	{
 		std::cout << "adding NAN force" << std::endl;
@@ -150,7 +147,7 @@ void Collider::AddForce(sf::Vector2f forceToAdd)
 	}
 	if ((velocity + forceToAdd).x <= -std::numeric_limits<float>::max() || (velocity + forceToAdd).y <= -std::numeric_limits<float>::max())
 	{
-		std::cout << "out of limit. MIN Force = " << std::numeric_limits<float>::min() <<" acceleration = " << vectorToStr(velocity)  << " force to add : " << vectorToStr(forceToAdd) <<std::endl;
+		std::cout << "out of limit. MIN Force = " << std::numeric_limits<float>::min() <<" acceleration = " << Utilities::VectorToString(velocity)  << " force to add : " << Utilities::VectorToString(forceToAdd) <<std::endl;
 		return;
 	}
 
@@ -161,7 +158,7 @@ void Collider::AddForce(sf::Vector2f forceToAdd)
 	}
 	
 	velocity += (forceToAdd);
-	//std::cout << "Add force : " << vectorToStr(forceToAdd) << " Current velocity : " << vectorToStr(velocity) << std::endl;
+	//std::cout << "Add force : " << Utilities::VectorToString(forceToAdd) << " Current velocity : " << Utilities::VectorToString(velocity) << std::endl;
 }
 
 void Collider::SetVelocity(sf::Vector2f newVelocity)

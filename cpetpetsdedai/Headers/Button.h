@@ -2,7 +2,7 @@
 #include "Component.h"
 #include "Camera.h"
 #include "Event.h"
-
+#include "Utilities.h"
 class Button : public Component
 {
 public:
@@ -15,9 +15,9 @@ public:
 
 	bool IsInButton(sf::Vector2i positionToCheck);
 
-	// Hérité via Component
-	void Start() override;
 	void Logs(sf::Vector2i positionToCheck);
+	// HÃ©ritÃ© via Component
+	void Start() override;
 	void Update(float deltaTime) override;
 private:
 	void UpdatePosition();

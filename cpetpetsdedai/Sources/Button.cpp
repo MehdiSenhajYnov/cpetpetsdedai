@@ -109,11 +109,10 @@ void Button::Start()
 
 void Button::Logs(sf::Vector2i positionToCheck)
 {
-	auto vectorToStr = [](sf::Vector2f toconvert) { return "x : " + std::to_string(toconvert.x) + " y : " + std::to_string(toconvert.y); };
 	std::cout << std::endl << std::endl << std::endl;
-	std::cout << "mouse position : " << vectorToStr(sf::Vector2f(positionToCheck.x, positionToCheck.y)) << std::endl;
-	std::cout << "gameObject position : " << vectorToStr(gameObject->GetPosition()) << std::endl;
-	std::cout << "gameObjectWithCamereOffset position : " << vectorToStr(gameObject->GetPosition() - camera->GetAttachedObject()->GetPosition()) << std::endl;
+	std::cout << "mouse position : " << Utilities::VectorToString(sf::Vector2f(positionToCheck.x, positionToCheck.y)) << std::endl;
+	std::cout << "gameObject position : " << Utilities::VectorToString(gameObject->GetPosition()) << std::endl;
+	std::cout << "gameObjectWithCamereOffset position : " << Utilities::VectorToString(gameObject->GetPosition() - camera->GetAttachedObject()->GetPosition()) << std::endl;
 
 	sf::Vector2f limits = gameObject->GetPosition() - camera->GetAttachedObject()->GetPosition();
 	limits = limits + sf::Vector2f(
@@ -121,7 +120,7 @@ void Button::Logs(sf::Vector2i positionToCheck)
 		gameObject->GetSprite()->getTexture()->getSize().y * gameObject->GetSprite()->getScale().y
 	);
 
-	std::cout << "limits : " << vectorToStr(limits) << std::endl;
+	std::cout << "limits : " << Utilities::VectorToString(limits) << std::endl;
 	std::cout << std::endl << std::endl << std::endl;
 }
 
