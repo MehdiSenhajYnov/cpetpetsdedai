@@ -6,7 +6,8 @@
 class Animation
 {
 public:
-    Animation(std::string _name, std::string _animationPath, float _duration, bool _loop);
+    Animation();
+    void Init(std::string _name, std::string _animationPath, float _duration, bool _loop);
     std::string name;
     std::string animationPath;
     float duration;

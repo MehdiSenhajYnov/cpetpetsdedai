@@ -6,9 +6,12 @@ TextureManager::~TextureManager()
 {
     DeleteAllTextures();
 }
+
+
 void TextureManager::Init()
 {
-    textures["PlayerIdle001"] = new sf::Texture();
+
+    
 }
 
 sf::Texture* TextureManager::GetTexture(std::string _texturePath)
@@ -47,4 +50,31 @@ TextureManager* TextureManager::Instance()
         instance = new TextureManager();
     }
     return instance;
+}
+
+void TextureManager::IncludeIdleAnimationTextures()
+{
+    textures["PLAYERIDLE001"] = new sf::Texture();
+    textures["PLAYERIDLE001"]->loadFromFile("./Assets/PlayerAnimations/Idle/PLAYERIDLE001.png");
+}
+
+void TextureManager::AutoInclude(std::string mapName, std::string path, std::string pattern, int _counterAmount, std::string fileExtension,int amount)
+{
+    textures[mapName] = new sf::Texture();
+    std::string nbString = "";
+    int nbOfZeroToAdd;
+    for (int i = 0; i < amount; i++)
+    {
+        nbString = std::to_string(i);
+        if (nbString.length() < _counterAmount)
+        {
+            nbOfZeroToAdd = _counterAmount - nbString.length();
+            for (int j = 0; j < nbOfZeroToAdd; j++)
+            {
+                nbString = "0" + nbString;
+            }
+        }
+        std::string fullPath = path + pattern + nbString + fileExtension;
+        textures[mapName]->loadFromFile(fullPath);
+    }
 }
