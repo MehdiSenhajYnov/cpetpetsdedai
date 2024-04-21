@@ -9,9 +9,10 @@ public:
 	GameObject(std::string _name);
 	std::string Name;
 	sf::Sprite* GetSprite();
-	void SetSprite(std::string _texturepath);
+	void SetSprite(const std::string& _spriteName);
 
-	void SetSprite(std::string texturepath, sf::IntRect textureRect);
+	void SetSprite(const std::string& _spriteName, sf::IntRect textureRect);
+	void SetTexture(sf::Texture* _texture);
 
 	void SetPosition(sf::Vector2<float> _newposition);
 	void SetPosition(float _x, float _y);
@@ -32,7 +33,7 @@ public:
 	void SetZIndex(int _zIndex);
 
 private:
-	sf::Texture spriteTexture;
+	sf::Texture* spriteTexture;
 	sf::Sprite sprite;
 	sf::Vector2<float> position;
 	std::vector<std::string> _tags;

@@ -1,5 +1,7 @@
 ﻿#include "../Headers/Animator.h"
 
+#include "../Headers/TextureManager.h"
+
 void Animator::Init(std::shared_ptr<GameObject> _gameObject)
 {
     LoadComponentBase(_gameObject);
@@ -9,7 +11,7 @@ void Animator::Init(std::shared_ptr<GameObject> _gameObject)
 
 void Animator::Init(std::shared_ptr<GameObject> _gameObject, std::vector<Animation*> _animations)
 {
-    LoadComponentBase(_gameObject);
+    LoadComponentBase(std::move(_gameObject));
     animations = _animations;
 }
 
@@ -25,28 +27,77 @@ std::vector<Animation*>* Animator::GetAnimations()
 
 void Animator::Stop()
 {
+    state = AnimationState::Stopped;
 }
 
 void Animator::Pause()
 {
+    state = AnimationState::Paused;
 }
 
 void Animator::Resume()
 {
+    state = AnimationState::Playing;
 }
 
 void Animator::Play(std::string _name)
 {
+    for (auto& anim : animations)
+    {
+        if (anim->name == _name)
+        {
+            currentAnimation = *anim;
+
+            currentTime = 0.0f;
+            nextFrameTime = 0.0f;
+            frameNameToChange = "";
+            
+            state = AnimationState::Playing;
+            break;
+        }
+    }
 }
 
 void Animator::Start()
 {
+    
+}
+
+
+
+void Animator::Update(float deltaTime)
+{
+    if (state != AnimationState::Playing)
+    {
+        return;
+    }
+    
+    currentTime += deltaTime;
+
+    if (currentTime >= nextFrameTime)
+    {
+        bool isAnimationEnd = true;
+        for (auto& [frameTime, frameName] : currentAnimation.timeFrames)
+        {
+            if (currentTime < frameTime)
+            {
+                nextFrameTime = frameTime;
+                isAnimationEnd = false;
+                break;
+            }
+            frameNameToChange = frameName;
+        }
+        gameObject->SetTexture(TextureManager::Instance()->GetTexture(frameNameToChange));
+        if (isAnimationEnd)
+        {
+            currentTime = 0.0f;
+            nextFrameTime = 0.0f;
+            frameNameToChange = "";
+        }
+    }
+    
 }
 
 Animator::~Animator()
-{
-}
-
-void Animator::Update(float deltaTime)
 {
 }

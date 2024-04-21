@@ -1,5 +1,7 @@
 #include "../Headers/GameObject.h"
 
+#include "../Headers/TextureManager.h"
+
 GameObject::GameObject(std::string _name) : Name(_name)
 {
 }
@@ -9,33 +11,27 @@ sf::Sprite* GameObject::GetSprite()
 	return &sprite;
 }
 
-void GameObject::SetSprite(std::string texturepath)
+void GameObject::SetSprite(const std::string& texturepath)
 {
-	if (spriteTexture.loadFromFile(texturepath))
-	{
-		spriteTexture.setSmooth(true);
-		sprite.setTexture(spriteTexture);
-	}
-	else
-	{
-		std::cout << "error with load texture " << std::endl;
-	}
+	spriteTexture = TextureManager::Instance()->GetTexture(texturepath);
+	sprite.setTexture(*spriteTexture);
 }
 
 
-void GameObject::SetSprite(std::string texturepath, sf::IntRect textureRect)
+void GameObject::SetSprite(const std::string& _spriteName, sf::IntRect textureRect)
 {
-	if (spriteTexture.loadFromFile(texturepath, textureRect))
-	{
-		spriteTexture.setSmooth(true);
-		sprite.setTexture(spriteTexture);
-	}
-	else
-	{
-		std::cout << "error with load texture " << std::endl;
-	}
+	spriteTexture = TextureManager::Instance()->GetTexture(_spriteName);
+	//TODO: Set the texture rectangle
+	
+	sprite.setTexture(*spriteTexture);
+
 }
 
+void GameObject::SetTexture(sf::Texture* _texture)
+{
+	spriteTexture = _texture;
+	sprite.setTexture(*spriteTexture);
+}
 
 void GameObject::SetPosition(sf::Vector2<float> _newposition)
 {

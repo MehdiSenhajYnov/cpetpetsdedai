@@ -3,6 +3,13 @@
 #include "Animation.h"
 #include "Component.h"
 
+enum class AnimationState
+{
+    Playing,
+    Paused,
+    Stopped
+};
+
 class Animator : public Component
 {
 public:
@@ -13,6 +20,7 @@ public:
 
     std::vector<Animation*>* GetAnimations();
 
+    AnimationState state = AnimationState::Stopped;
     
     void Play(std::string _name);
     void Stop();
@@ -29,5 +37,11 @@ private:
 
     float currentTime = 0.0f;
     int currentFrame = 0;
+
+    
+
+    float nextFrameTime = 0.0f;
+    std::string frameNameToChange = "";
     
 };
+

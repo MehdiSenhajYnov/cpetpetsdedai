@@ -1,6 +1,7 @@
 #include "../Headers/GameManager.h"
 
 #include "SingletonManager.h"
+#include "../Headers/TextureManager.h"
 
 GameManager::GameManager() :
 window(sf::VideoMode(1700, 1000), "Simple 2D Game", sf::Style::Fullscreen)
@@ -10,6 +11,7 @@ window(sf::VideoMode(1700, 1000), "Simple 2D Game", sf::Style::Fullscreen)
 
 void GameManager::Run()
 {
+	TextureManager::Instance()->Init();
 	SceneManager::OnSceneChanged.Subscribe(&GameManager::OnChangeSceneAsked, this);
 	haveToChangeScene = false;
 	OnChangeSceneAsked(SceneManager::SceneEnum::Menu);
@@ -29,7 +31,7 @@ void GameManager::Run()
 		deltaTime = dtClock.restart().asSeconds();
 		currentScene->Update(deltaTime);
 	}
-	
+
 	SingletonManager::DeleteAll();
 }
 

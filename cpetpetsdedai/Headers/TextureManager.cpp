@@ -1,24 +1,35 @@
 ﻿#include "TextureManager.h"
 
+
 TextureManager* TextureManager::instance;
 
 TextureManager::~TextureManager()
 {
+    std::cout << "Deleting TextureManager" << std::endl;
     DeleteAllTextures();
+}
+
+void TextureManager::AddTexture(std::string mapName, std::string _texturePath)
+{
+    if (!textures.contains(mapName) || textures[mapName] == nullptr)
+    {
+        textures[mapName] = new sf::Texture();
+    }
+    textures[mapName]->loadFromFile(_texturePath);
 }
 
 
 void TextureManager::Init()
 {
-
-    
+    std::cout << "TextureManager initializing ..." << std::endl;
+    IncludeIdleAnimationTextures();
 }
 
-sf::Texture* TextureManager::GetTexture(std::string _texturePath)
+sf::Texture* TextureManager::GetTexture(std::string _textureName)
 {
-    if (textures.contains(_texturePath))
+    if (textures.contains(_textureName))
     {
-        return textures[_texturePath];
+        return textures[_textureName];
     }
     return nullptr;
 }
@@ -37,6 +48,7 @@ void TextureManager::DeleteAllTextures()
     for (auto& [textureName, texture] :textures)
     {
         delete texture;
+        texture = nullptr;
     }
     textures.clear();
 }
@@ -54,14 +66,12 @@ TextureManager* TextureManager::Instance()
 
 void TextureManager::IncludeIdleAnimationTextures()
 {
-    textures["PLAYERIDLE001"] = new sf::Texture();
-    textures["PLAYERIDLE001"]->loadFromFile("./Assets/PlayerAnimations/Idle/PLAYERIDLE001.png");
+    AutoInclude("PLAYERIDLE", "./Assets/PlayerAnimations/Idle/", "PLAYERIDLE", 3, ".png", 3);
 }
 
-void TextureManager::AutoInclude(std::string mapName, std::string path, std::string pattern, int _counterAmount, std::string fileExtension,int amount)
+void TextureManager::AutoInclude(const std::string& mapNamePattern, const std::string& path, const std::string& pattern, int _counterAmount, const std::string& fileExtension, int amount)
 {
-    textures[mapName] = new sf::Texture();
-    std::string nbString = "";
+    std::string nbString;
     int nbOfZeroToAdd;
     for (int i = 0; i < amount; i++)
     {
@@ -75,6 +85,7 @@ void TextureManager::AutoInclude(std::string mapName, std::string path, std::str
             }
         }
         std::string fullPath = path + pattern + nbString + fileExtension;
-        textures[mapName]->loadFromFile(fullPath);
+        std::cout<< "adding texture: " << mapNamePattern + nbString << " from: " << fullPath << std::endl;
+        //AddTexture(mapNamePattern + nbString, fullPath);
     }
 }

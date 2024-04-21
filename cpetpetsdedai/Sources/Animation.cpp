@@ -5,28 +5,54 @@ Animation::Animation()
 {
 }
 
-void Animation::Init(std::string _name, std::string _animationPath, float _duration, bool _loop)
+
+
+void Animation::Init(std::string _name, float _duration, bool _loop, std::initializer_list<std::string> _frameNames)
 {
-	// This structure would distinguish a file from a
-	// directory
-	struct stat sb;
- 
-	// Looping until all the items of the directory are
-	// exhausted
-	for (const auto& entry : std::filesystem::directory_iterator(_animationPath))
+	name = _name;
+	duration = _duration;
+	loop = _loop;
+	frameNames = _frameNames;
+	
+	auto generatedframeTimes = GenerateAutoFrameTime(duration, frameNames.size());
+	int i = 0;
+	for (auto& frameName : frameNames)
 	{
- 
-		// Converting the path to const char * in the
-		// subsequent lines
-		std::filesystem::path outfilename = entry.path();
-		std::string outfilename_str = outfilename.string();
-		const char* path = outfilename_str.c_str();
- 
-		// Testing whether the path points to a
-		// non-directory or not If it does, displays path
-		if (stat(path, &sb) == 0 && !(sb.st_mode & S_IFDIR))
-		{
-			std ::cout << path << std::endl;
-		}
+		timeFrames[generatedframeTimes[i]] = frameName;
+		i++;
 	}
+
+	regularNextFrameStep = duration / frameNames.size();
+	
+}
+
+void Animation::AddFrames(std::initializer_list<std::string> _frameNames)
+{
+	for (auto& frameName : _frameNames)
+	{
+		frameNames.push_back(frameName);
+		duration += regularNextFrameStep;
+		timeFrames[duration] = frameName;
+	}
+}
+
+std::vector<float> Animation::GenerateAutoFrameTime(float duration, int counters) {
+	std::vector<float> result;
+	float step = duration / counters;
+	for (int i = 0; i <= counters; ++i) {
+		result.push_back(step * i);
+	}
+	return result;
+}
+
+void Animation::ChangeFrameTime(float currentTimeFrame, float newTime)
+{
+	if (timeFrames.contains(currentTimeFrame))
+	{
+		std::string frameName = timeFrames[currentTimeFrame];
+		timeFrames.erase(currentTimeFrame);
+		timeFrames[newTime] = frameName;
+	}
+
+	
 }
