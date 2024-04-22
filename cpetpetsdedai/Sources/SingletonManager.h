@@ -3,5 +3,8 @@
 class SingletonManager
 {
 public:
-    static void DeleteAll();
+    SingletonManager();
+    ~SingletonManager();
+    void DeleteAll();
+    void InitAll();
 };

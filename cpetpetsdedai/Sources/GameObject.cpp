@@ -14,6 +14,11 @@ sf::Sprite* GameObject::GetSprite()
 void GameObject::SetSprite(const std::string& texturepath)
 {
 	spriteTexture = TextureManager::Instance()->GetTexture(texturepath);
+	if (spriteTexture == nullptr)
+	{
+		std::cout << "Texture not found" << std::endl;
+		return;
+	}
 	sprite.setTexture(*spriteTexture);
 }
 
@@ -22,7 +27,12 @@ void GameObject::SetSprite(const std::string& _spriteName, sf::IntRect textureRe
 {
 	spriteTexture = TextureManager::Instance()->GetTexture(_spriteName);
 	//TODO: Set the texture rectangle
-	
+
+	if (spriteTexture == nullptr)
+	{
+		std::cout << "Texture not found" << std::endl;
+		return;
+	}
 	sprite.setTexture(*spriteTexture);
 
 }
@@ -30,6 +40,11 @@ void GameObject::SetSprite(const std::string& _spriteName, sf::IntRect textureRe
 void GameObject::SetTexture(sf::Texture* _texture)
 {
 	spriteTexture = _texture;
+	if (spriteTexture == nullptr)
+	{
+		std::cout << "Texture not found" << std::endl;
+		return;
+	}
 	sprite.setTexture(*spriteTexture);
 }
 

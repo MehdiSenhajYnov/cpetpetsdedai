@@ -14,11 +14,11 @@ class Animator : public Component
 {
 public:
     void Init(std::shared_ptr<GameObject> _gameObject);
-    void Init(std::shared_ptr<GameObject> _gameObject, std::vector<Animation*> _animations);
+    void Init(std::shared_ptr<GameObject> _gameObject, std::vector<Animation> _animations);
 
-    void AddAnimation(Animation* _animation);
+    void AddAnimation(Animation _animation);
 
-    std::vector<Animation*>* GetAnimations();
+    std::vector<Animation>* GetAnimations();
 
     AnimationState state = AnimationState::Stopped;
     
@@ -31,7 +31,7 @@ public:
     void Update(float deltaTime) override;
     ~Animator() override;
 private:
-    std::vector<Animation*> animations;
+    std::vector<Animation> animations;
     sf::Sprite baseSprite;
     Animation currentAnimation;
 

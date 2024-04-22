@@ -136,7 +136,7 @@ std::shared_ptr<GameObject> GameScene::CreateBackground()
 std::tuple<std::shared_ptr<GameObject>, std::shared_ptr<BoxCollider>> GameScene::CreatePlayer()
 {
 	auto _tempPlayer = CreateGameObject("Player", 20);
-	_tempPlayer->SetSprite("PLAYERIDLE");
+	_tempPlayer->SetSprite("PLAYERIDLE001");
 	_tempPlayer->GetSprite()->setScale(sf::Vector2f(1.25f, 1.25f));
 	_tempPlayer->SetPosition(300, 400);
 
@@ -145,11 +145,18 @@ std::tuple<std::shared_ptr<GameObject>, std::shared_ptr<BoxCollider>> GameScene:
 	_tempPlayerCollider->Gravity = true;
 
 	// create animator for player
-	// playerAnimator = Animator();
+	playerAnimator = Animator();
 
+	IdleAnimation = Animation();
+	IdleAnimation.Init("Idle", 1.0f, true, {"PLAYERIDLE001", "PLAYERIDLE002", "PLAYERIDLE003", "PLAYERIDLE004", "PLAYERIDLE005", "PLAYERIDLE006"});
+	playerAnimations.push_back(IdleAnimation);
+
+	playerAnimator.Init(_tempPlayer, playerAnimations);
+	playerAnimator.Play("Idle");
+	
 	// create animations for player
 	
-	
+	AddComponent(_tempPlayer, &playerAnimator);
 	
 	return std::make_tuple(_tempPlayer, _tempPlayerCollider);
 }

@@ -32,5 +32,7 @@ void LevelTwoScene::SetupElements()
 	targetCollider->Gravity = false;
 	targetObj->SetPosition(6900, 790);
 
+	
+	
 }
 

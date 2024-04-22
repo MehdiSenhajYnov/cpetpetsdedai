@@ -5,6 +5,7 @@
 #include <iostream>
 #include <ostream>
 
+
 class TextureManager
 {
 private:
@@ -15,6 +16,7 @@ private:
     void IncludeIdleAnimationTextures();
     void AutoInclude(const std::string& mapNamePattern, const std::string& path, const std::string& pattern, int _counterAmount, const std::string& fileExtension,int amount);
 public:
+    static void ResetInstance();
     void Init();
     static TextureManager* Instance();
     ~TextureManager();

@@ -11,6 +11,9 @@ public:
 	void Subscribe(void(Class::* funcToSubscribe)(Args...), Class* instance);
 	void Desubscribe(void(*funcToSubscribe)(Args...));
 	void InvokeEvent(Args... args);
+
+	void DesubscribeAll();
+
 private:
 	std::vector<std::function<void(Args...)>> functionSubscribbed;
 };
@@ -52,4 +55,10 @@ inline void Event<Args...>::InvokeEvent(Args ...args)
 			functionSubscribbed[i](args...);
 		}
 	}
+}
+
+template<typename ...Args>
+inline void Event<Args...>::DesubscribeAll()
+{
+	functionSubscribbed.clear();
 }

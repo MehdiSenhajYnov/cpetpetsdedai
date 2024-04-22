@@ -3,8 +3,7 @@
   "description": "cpetpetsdedai",
   "version-string": "0.1.0",
   "dependencies": [
-    {
-      "name": "sfml"
-    }
+    "sfml",
+    "jsoncpp"
   ]
 }
