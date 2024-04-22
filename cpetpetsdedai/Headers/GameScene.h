@@ -4,8 +4,8 @@
 #include "GraphicDebugger.h"
 #include "PhysicsEngine.h"
 #include "SceneManager.h"
-// #include "Animation.h"
-// #include "Animator.h"
+#include "Animation.h"
+#include "Animator.h"
 
 class GameScene : public Scene
 {
@@ -40,8 +40,9 @@ protected:
 	std::shared_ptr<GameObject> forceArrow;
 	std::shared_ptr<GameObject> BackgroundObject;
 
-	// Animator playerAnimator;
-	// std::vector<Animation> playerAnimations;
+	Animator playerAnimator;
+	Animation IdleAnimation;
+	std::vector<Animation> playerAnimations;
 	
 	std::shared_ptr<GameObject> CreateBackground();
 	std::tuple<std::shared_ptr<GameObject>, std::shared_ptr<BoxCollider>> CreatePlayer();

@@ -11,7 +11,8 @@ window(sf::VideoMode(1700, 1000), "Simple 2D Game", sf::Style::Fullscreen)
 
 void GameManager::Run()
 {
-	TextureManager::Instance()->Init();
+	SingletonManager singletonManager;
+	singletonManager.InitAll();
 	SceneManager::OnSceneChanged.Subscribe(&GameManager::OnChangeSceneAsked, this);
 	haveToChangeScene = false;
 	OnChangeSceneAsked(SceneManager::SceneEnum::Menu);
@@ -31,8 +32,7 @@ void GameManager::Run()
 		deltaTime = dtClock.restart().asSeconds();
 		currentScene->Update(deltaTime);
 	}
-
-	SingletonManager::DeleteAll();
+	
 }
 
 void GameManager::OnChangeSceneAsked(SceneManager::SceneEnum sceneToUse)

@@ -2,7 +2,23 @@
 
 #include "../Headers/TextureManager.h"
 
+SingletonManager::SingletonManager()
+{
+}
+
+SingletonManager::~SingletonManager()
+{
+    DeleteAll();
+}
+
+
+
 void SingletonManager::DeleteAll()
 {
-    delete TextureManager::Instance();
+    TextureManager::ResetInstance();
+}
+
+void SingletonManager::InitAll()
+{
+    TextureManager::Instance()->Init();
 }

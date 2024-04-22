@@ -9,18 +9,18 @@ void Animator::Init(std::shared_ptr<GameObject> _gameObject)
     
 }
 
-void Animator::Init(std::shared_ptr<GameObject> _gameObject, std::vector<Animation*> _animations)
+void Animator::Init(std::shared_ptr<GameObject> _gameObject, std::vector<Animation> _animations)
 {
     LoadComponentBase(std::move(_gameObject));
     animations = _animations;
 }
 
-void Animator::AddAnimation(Animation* _animation)
+void Animator::AddAnimation(Animation _animation)
 {
     animations.push_back(_animation);
 }
 
-std::vector<Animation*>* Animator::GetAnimations()
+std::vector<Animation>* Animator::GetAnimations()
 {
     return &animations;
 }
@@ -44,9 +44,9 @@ void Animator::Play(std::string _name)
 {
     for (auto& anim : animations)
     {
-        if (anim->name == _name)
+        if (anim.name == _name)
         {
-            currentAnimation = *anim;
+            currentAnimation = anim;
 
             currentTime = 0.0f;
             nextFrameTime = 0.0f;

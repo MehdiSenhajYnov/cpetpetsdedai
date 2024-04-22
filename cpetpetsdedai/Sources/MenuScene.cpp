@@ -46,7 +46,7 @@ void MenuScene::InitializeScene(sf::RenderWindow* _window)
 	playButtonObj = CreateGameObject("playButton", 10);
 	exitButtonObj = CreateGameObject("exitButton", 10);
 	
-	playButtonObj->SetSprite("./Assets/RoundedRectangle.png");
+	playButtonObj->SetSprite("RoundedRectangle");
 	playButtonObj->SetPosition(window->getSize().x / 2, window->getSize().y / 2 - 50);
 
 	playButtonComponent.Init(playButtonObj, "PLAY", &mainCamera);
@@ -56,7 +56,7 @@ void MenuScene::InitializeScene(sf::RenderWindow* _window)
 
 
 	exitButtonObj->SetPosition(window->getSize().x / 2, window->getSize().y / 2 + 50);
-	exitButtonObj->SetSprite("./Assets/RoundedRectangle.png");
+	exitButtonObj->SetSprite("RoundedRectangle");
 
 	exitButtonComponent.Init(exitButtonObj, "EXIT", &mainCamera);
 	exitButtonComponent.OnButtonClicked.Subscribe(&MenuScene::OnExitButtonClicked, this);
