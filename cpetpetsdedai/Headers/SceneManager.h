@@ -4,7 +4,7 @@
 class SceneManager
 {
 public:
-	enum SceneEnum { Menu, Level1, Level2, Level3 };
+	enum SceneEnum { Menu, Level1};
 	static SceneEnum currentScene;
 
 	static void SetLevel(int newLevel);

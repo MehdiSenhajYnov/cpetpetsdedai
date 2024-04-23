@@ -2,7 +2,12 @@
 
 #include "../Headers/TextureManager.h"
 
-GameObject::GameObject(std::string _name) : Name(_name)
+
+GameObject::GameObject(const std::string& typeName, Type* parentType): Object(typeName, parentType)
+{
+}
+
+void GameObject::InitGameObject(std::string _name)
 {
 }
 

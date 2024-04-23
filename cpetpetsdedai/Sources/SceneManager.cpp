@@ -19,14 +19,6 @@ void SceneManager::SetLevel(int newLevel)
     {
         ChangeScene(SceneEnum::Level1);
     }
-    else if (newLevel == 2) 
-    {
-        ChangeScene(SceneEnum::Level2);
-    }
-    else if (newLevel == 3) 
-    {
-        ChangeScene(SceneEnum::Level3);
-    }
     else
     {
         ChangeScene(SceneEnum::Menu);

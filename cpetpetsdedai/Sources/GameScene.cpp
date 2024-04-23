@@ -133,7 +133,7 @@ std::shared_ptr<GameObject> GameScene::CreateBackground()
 	return tempBackground;
 }
 
-std::tuple<std::shared_ptr<GameObject>, std::shared_ptr<BoxCollider>> GameScene::CreatePlayer()
+std::tuple<std::shared_ptr<GameObject>, std::shared_ptr<Collider>> GameScene::CreatePlayer()
 {
 	auto _tempPlayer = CreateGameObject("Player", 20);
 	_tempPlayer->SetSprite("PLAYERIDLE001");
@@ -141,6 +141,7 @@ std::tuple<std::shared_ptr<GameObject>, std::shared_ptr<BoxCollider>> GameScene:
 	_tempPlayer->SetPosition(300, 400);
 
 	auto _tempPlayerCollider = physicsEngine.CreateBoxCollider(_tempPlayer, sf::Vector2f(290, 150), sf::Vector2f(90, 160));
+	//auto _tempPlayerCollider = physicsEngine.CreateCustomCollider(_tempPlayer, {sf::Vector2f(0,0), sf::Vector2f(50,50), sf::Vector2f(0,100)});
 	//_tempPlayerCollider->OnCollisionEnter()->Subscribe(&GameScene::OnPlayerCollisionEnter, this);
 	_tempPlayerCollider->Gravity = true;
 
@@ -148,7 +149,7 @@ std::tuple<std::shared_ptr<GameObject>, std::shared_ptr<BoxCollider>> GameScene:
 	playerAnimator = Animator();
 
 	IdleAnimation = Animation();
-	IdleAnimation.Init("Idle", 1.0f, true, {"PLAYERIDLE001", "PLAYERIDLE002", "PLAYERIDLE003", "PLAYERIDLE004", "PLAYERIDLE005", "PLAYERIDLE006"});
+	IdleAnimation.Init("Idle", 0.5f, true, {"PLAYERIDLE001", "PLAYERIDLE002", "PLAYERIDLE003", "PLAYERIDLE004", "PLAYERIDLE005", "PLAYERIDLE006"});
 	playerAnimations.push_back(IdleAnimation);
 
 	playerAnimator.Init(_tempPlayer, playerAnimations);

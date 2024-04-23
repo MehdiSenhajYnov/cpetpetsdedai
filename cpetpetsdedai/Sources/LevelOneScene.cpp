@@ -29,6 +29,7 @@ void LevelOneScene::SetupElements()
 	groundCollider->Gravity = false;
 	
 	tie(Player, playerCollider) = CreatePlayer();
+	Player->SetPosition(-20, 600);
 	playerCollider->Gravity = true;
 
 	auto[targetObj, targetCollider] = CreateTarget();

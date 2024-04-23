@@ -14,8 +14,8 @@ private:
     std::map<std::string, sf::Texture*> textures;
 
     void IncludeIdleAnimationTextures();
-    void AutoInclude(const std::string& mapNamePattern, const std::string& path, const std::string& pattern, int _counterAmount, const std::string& fileExtension,int amount);
 public:
+    void AutoInclude(const std::string& mapNamePattern, const std::string& path, const std::string& pattern, int _counterAmount, const std::string& fileExtension,int amount);
     static void ResetInstance();
     void Init();
     static TextureManager* Instance();

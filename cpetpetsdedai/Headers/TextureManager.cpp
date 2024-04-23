@@ -67,7 +67,7 @@ TextureManager* TextureManager::Instance()
 
 void TextureManager::IncludeIdleAnimationTextures()
 {
-    AutoInclude("PLAYERIDLE", "./Assets/PlayerAnimations/Idle/", "PLAYERIDLE", 3, ".png", 3);
+    AutoInclude("PLAYERIDLE", "./Assets/PlayerAnimations/Idle/", "PLAYERIDLE", 3, ".png", 6);
     AddTexture("RoundedRectangle", "./Assets/RoundedRectangle.png");
 }
 
@@ -75,7 +75,7 @@ void TextureManager::AutoInclude(const std::string& mapNamePattern, const std::s
 {
     std::string nbString;
     int nbOfZeroToAdd;
-    for (int i = 1; i < amount; i++)
+    for (int i = 1; i <= amount; i++)
     {
         nbString = std::to_string(i);
         if (nbString.length() < _counterAmount)

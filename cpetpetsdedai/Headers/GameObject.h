@@ -3,10 +3,14 @@
 #include <iostream>
 #include <SFML/Graphics/Transformable.hpp>
 
-class GameObject
+#include "../../out/binaries/Object.h"
+
+class GameObject : Object
 {
 public:
-	GameObject(std::string _name);
+	GameObject(const std::string& typeName, Type* parentType);
+
+	void InitGameObject(std::string _name);
 	std::string Name;
 	sf::Sprite* GetSprite();
 	void SetSprite(const std::string& _spriteName);

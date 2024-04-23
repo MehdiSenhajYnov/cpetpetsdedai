@@ -51,10 +51,7 @@ void GameManager::ChangeScene(SceneManager::SceneEnum sceneToUse)
 	{
 		currentScene = std::make_unique<LevelOneScene>();
 	}
-	else if (sceneToUse == SceneManager::SceneEnum::Level2)
-	{
-		currentScene = std::make_unique<LevelTwoScene>();
-	}
+
 	currentScene->InitializeScene(&window);
 	haveToChangeScene = false;
 

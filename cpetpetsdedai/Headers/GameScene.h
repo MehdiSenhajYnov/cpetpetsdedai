@@ -45,7 +45,7 @@ protected:
 	std::vector<Animation> playerAnimations;
 	
 	std::shared_ptr<GameObject> CreateBackground();
-	std::tuple<std::shared_ptr<GameObject>, std::shared_ptr<BoxCollider>> CreatePlayer();
+	std::tuple<std::shared_ptr<GameObject>, std::shared_ptr<Collider>> CreatePlayer();
 	std::tuple<std::shared_ptr<GameObject>, std::shared_ptr<CustomCollider>> CreateTarget();
 
 

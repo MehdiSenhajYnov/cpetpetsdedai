@@ -2,7 +2,8 @@
 
 std::shared_ptr<GameObject> Scene::CreateGameObject(std::string _gameObjectName, int ZIndex)
 {
-	std::shared_ptr<GameObject> newGameObject = std::make_shared<GameObject>(_gameObjectName);
+	std::shared_ptr<GameObject> newGameObject = std::make_shared<GameObject>("GameObject", Object::ObjectType());
+	newGameObject->InitGameObject(_gameObjectName);
 	newGameObject->SetZIndex(ZIndex);
 	gamesObjectsComponents[newGameObject] = std::vector<Component*>();
 	gameObjectZIndex[ZIndex].push_back(newGameObject);
