@@ -3,7 +3,7 @@
 #include <iostream>
 #include <SFML/Graphics/Transformable.hpp>
 
-#include "../../out/binaries/Object.h"
+#include "Object.h"
 
 class GameObject : Object
 {
