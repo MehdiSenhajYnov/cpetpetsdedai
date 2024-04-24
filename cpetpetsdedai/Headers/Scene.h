@@ -10,6 +10,7 @@
 class Scene
 {
 public:
+	virtual ~Scene() = default;
 	virtual void InitializeScene(sf::RenderWindow* _window) = 0;
 	std::shared_ptr<GameObject> CreateGameObject(std::string _gameObjectName, int ZIndex);
 	void RemoveGameObject(std::shared_ptr<GameObject> _gameObjectToAdd);

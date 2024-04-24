@@ -5,22 +5,6 @@ Camera::Camera()
 {
 }
 
-void Camera::StartRenderingThread()
-{
-	window->setActive(false);
-	sf::Thread thread(&Camera::RenderingThread, this);
-	thread.launch();
-}
-
-void Camera::RenderingThread()
-{
-	window->setActive(true);
-	while (window->isOpen())
-	{
-		Render();
-	}
-}
-
 void Camera::Render()
 {
 	window->clear(sf::Color::White);
@@ -136,6 +120,7 @@ void Camera::Start()
 
 void Camera::Update(float deltaTime)
 {
+	Render();
 }
 
 void Camera::Initialize(std::shared_ptr<GameObject> _gameObject, sf::Vector2<float> _cameraView, sf::RenderWindow* _window, Scene* _scene)

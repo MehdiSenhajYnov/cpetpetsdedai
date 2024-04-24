@@ -1,17 +1,10 @@
-﻿#include "SingletonManager.h"
-
-#include "../Headers/TextureManager.h"
-
-SingletonManager::SingletonManager()
-{
-}
+﻿#include "../Headers/SingletonManager.h"
+SingletonManager::SingletonManager() = default;
 
 SingletonManager::~SingletonManager()
 {
     DeleteAll();
 }
-
-
 
 void SingletonManager::DeleteAll()
 {

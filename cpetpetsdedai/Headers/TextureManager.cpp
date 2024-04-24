@@ -1,12 +1,24 @@
 ﻿#include "TextureManager.h"
 
-
 TextureManager* TextureManager::instance;
+
+TextureManager::TextureManager() : GameSystem("TextureManager", Object::ObjectType())
+{
+}
 
 TextureManager::~TextureManager()
 {
     std::cout << "Deleting TextureManager" << std::endl;
     DeleteAllTextures();
+}
+
+TextureManager* TextureManager::Instance()
+{
+    if (instance == nullptr)
+    {
+        instance = new TextureManager();
+    }
+    return instance;
 }
 
 void TextureManager::AddTexture(std::string mapName, std::string _texturePath)
@@ -54,22 +66,12 @@ void TextureManager::DeleteAllTextures()
     textures.clear();
 }
 
-
-
-TextureManager* TextureManager::Instance()
-{
-    if (instance == nullptr)
-    {
-        instance = new TextureManager();
-    }
-    return instance;
-}
-
 void TextureManager::IncludeIdleAnimationTextures()
 {
     AutoInclude("PLAYERIDLE", "./Assets/PlayerAnimations/Idle/", "PLAYERIDLE", 3, ".png", 6);
     AddTexture("RoundedRectangle", "./Assets/RoundedRectangle.png");
 }
+
 
 void TextureManager::AutoInclude(const std::string& mapNamePattern, const std::string& path, const std::string& pattern, int _counterAmount, const std::string& fileExtension, int amount)
 {

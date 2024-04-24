@@ -2,6 +2,7 @@
 #include <vector>
 #include "Animation.h"
 #include "Component.h"
+#include "TextureManager.h"
 
 enum class AnimationState
 {

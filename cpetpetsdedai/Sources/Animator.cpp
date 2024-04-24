@@ -1,6 +1,5 @@
 ﻿#include "../Headers/Animator.h"
 
-#include "../Headers/TextureManager.h"
 
 void Animator::Init(std::shared_ptr<GameObject> _gameObject)
 {

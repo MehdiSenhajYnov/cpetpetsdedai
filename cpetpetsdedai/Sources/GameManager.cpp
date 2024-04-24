@@ -1,12 +1,16 @@
 #include "../Headers/GameManager.h"
 
-#include "SingletonManager.h"
-#include "../Headers/TextureManager.h"
+#include "../Headers/Level.h"
 
 GameManager::GameManager() :
 window(sf::VideoMode(1700, 1000), "Simple 2D Game", sf::Style::Fullscreen)
 {
 	iswindowFocus = true;
+}
+
+GameManager::~GameManager()
+{
+	std::cout << "GameManager destroyed" << std::endl;
 }
 
 void GameManager::Run()
@@ -49,13 +53,16 @@ void GameManager::ChangeScene(SceneManager::SceneEnum sceneToUse)
 	}
 	else if (sceneToUse == SceneManager::SceneEnum::Level1)
 	{
-		currentScene = std::make_unique<LevelOneScene>();
+		currentScene = std::make_unique<Level>();
 	}
 
 	currentScene->InitializeScene(&window);
 	haveToChangeScene = false;
 
 }
+
+
+
 
 
 

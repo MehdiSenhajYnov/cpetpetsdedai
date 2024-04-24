@@ -32,8 +32,9 @@ void GameScene::InitializeScene(sf::RenderWindow* _window)
 	mainCameraObject = CreateGameObject("mainCameraObject",0);
 	mainCamera = Camera();
 	mainCamera.Initialize(mainCameraObject, sf::Vector2f(10000, 10000), window, this);
-
 	AddComponent(mainCameraObject, &mainCamera);
+
+
 	graphicDebugger = GraphicDebugger();
 	graphicDebugger.Init(&mainCamera);
 	
@@ -62,14 +63,12 @@ void GameScene::InitializeScene(sf::RenderWindow* _window)
 
 void GameScene::Update(float deltaTime)
 {
-	mainCamera.Render();
 	GameLoop(deltaTime);
 }
 
 
 void GameScene::GameLoop(float deltaTime)
 {
-
 	mainCameraObject->SetPosition(sf::Vector2(Player->GetPosition().x - window->getSize().x/2, mainCameraObject->GetPosition().y));
 
 	CalUpdateOnAll(deltaTime);

@@ -6,7 +6,6 @@ LevelOneScene::LevelOneScene()
 
 void LevelOneScene::Update(float deltaTime)
 {
-	mainCamera.Render();
 	GameLoop(deltaTime);
 }
 

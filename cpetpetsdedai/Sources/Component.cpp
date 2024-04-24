@@ -1,10 +1,7 @@
 #pragma once
 #include "../Headers/Component.h"
-Component::Component()
-{
-}
 
-Component::~Component()
+Component::Component() : Object("Component", Object::ObjectType())
 {
 }
 

@@ -4,24 +4,27 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <iostream>
 #include <ostream>
+#include "GameSystem.h"
 
-
-class TextureManager
+class TextureManager : public GameSystem
 {
+
+public:
+    void Init();
+    
+    void AutoInclude(const std::string& mapNamePattern, const std::string& path, const std::string& pattern, int _counterAmount, const std::string& fileExtension,int amount);
+    sf::Texture* GetTexture(std::string _textureName);
+    void AddTexture(std::string mapName, std::string _texturePath);
+    void DeleteTexture(std::string _texturePath);
+    void DeleteAllTextures();
+
+    static void ResetInstance();
+    ~TextureManager() override;
+    static TextureManager* Instance();
 private:
-    static TextureManager* instance;
-    TextureManager() = default;
     std::map<std::string, sf::Texture*> textures;
 
     void IncludeIdleAnimationTextures();
-public:
-    void AutoInclude(const std::string& mapNamePattern, const std::string& path, const std::string& pattern, int _counterAmount, const std::string& fileExtension,int amount);
-    static void ResetInstance();
-    void Init();
-    static TextureManager* Instance();
-    ~TextureManager();
-    void AddTexture(std::string mapName, std::string _texturePath);
-    sf::Texture* GetTexture(std::string _textureName);
-    void DeleteTexture(std::string _texturePath);
-    void DeleteAllTextures();
+    TextureManager();
+    static TextureManager* instance;
 };

@@ -5,7 +5,7 @@
 
 #include "Object.h"
 
-class GameObject : Object
+class GameObject : public Object
 {
 public:
 	GameObject(const std::string& typeName, Type* parentType);

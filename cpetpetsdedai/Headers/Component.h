@@ -1,11 +1,10 @@
 #pragma once
 #include "GameObject.h"
 
-class Component
+class Component : public Object
 {
 public:
 	Component();
-	virtual ~Component();
 	virtual void Start() = 0;
 	virtual void Update(float deltaTime) = 0;
 

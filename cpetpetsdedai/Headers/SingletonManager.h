@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "TextureManager.h"
 
 class SingletonManager
 {

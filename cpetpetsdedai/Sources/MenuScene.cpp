@@ -9,7 +9,6 @@ void MenuScene::OnPlayButtonClicked()
 {
 	std::cout << "PLAY clicked !" << std::endl;
 	loadingButtonComponent.SetString("Loading ...");
-	mainCamera.Render();
 	SceneManager::SetLevel(1);
 
 	OnSceneChanged();
@@ -25,7 +24,6 @@ void MenuScene::OnExitButtonClicked()
 
 void MenuScene::Update(float deltaTime)
 {
-	mainCamera.Render();
 	GameLoop(deltaTime);
 
 	//std::cout << "drawing" << std::endl;

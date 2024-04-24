@@ -11,14 +11,31 @@
 #include "LevelOneScene.h"
 #include "MenuScene.h"
 #include "SceneManager.h"
+#include "SingletonManager.h"
+#include "TextureManager.h"
 
+template <typename T>
+concept IsSceneClass = requires (T t) {
+	t.InitializeScene();
+	t.Update();
+	t.OnKeyDown();
+	t.DestroyScene();
+};
 class GameManager
 {
 public:
 	GameManager();
+	~GameManager();
 	void Run();
 	void OnChangeSceneAsked(SceneManager::SceneEnum sceneToUse);
 	void ChangeScene(SceneManager::SceneEnum sceneToUse);
+
+	
+	template<typename T>
+	void afficher_args(const T& arg) {
+		std::cout << arg << std::endl;
+	}
+	
 private:
 	SceneManager::SceneEnum newScene;
 	bool haveToChangeScene;

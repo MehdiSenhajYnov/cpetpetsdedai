@@ -48,7 +48,6 @@ protected:
 	std::tuple<std::shared_ptr<GameObject>, std::shared_ptr<Collider>> CreatePlayer();
 	std::tuple<std::shared_ptr<GameObject>, std::shared_ptr<CustomCollider>> CreateTarget();
 
-
 	int currentLevel;
 
 
