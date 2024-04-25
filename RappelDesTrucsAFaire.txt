@@ -1,0 +1,37 @@
+structure temporire
+SceneName=MaScene
+GameObject=TestGameObject,0
+Component=Animator:Args1|Args2|Args3:AArg|
+
+
+
+
+GetAllClassOfType Component, pour que dans l'editor on peux faire :
+create object, et lui rajouter des component, mais pour lui rajouter des component il faut une liste avec tout les composant possible
+
+A faire demain : 
+refractor le button pour pouvoir utiliser le check si la souris est a l'interieure meme dans d'autre class,
+faire si que si on click sur un gameObject avec la souris lorsque on est en editor , y a des fleche qui se montre et qui nous permettent de le bouger (et ensuite sauvegarder ces valeur)
+(OPTIONAL) en plus en faisant cela ca va selectionner le gameobject clické avec le Z index majeur, et si on reclick ca reprends celui en bas et ainsi de suite
+
+creation d'un context menu avec le click droit pour creer des gameobject directement dans l'editeur, mais pour faire cela t'aura avant besoin de faire un vertical alignement
+
+
+
+
+
+faut faire si que le type reconnais si un type fait partie de ses descendant pour que lorsque on ajoute un composant on peut voir si il derive de drawablecomponent et l'ajouter a la bonne list
+
+je peux aussi faire un cache pour ca, pour que celle qui sont utilisé le plus restent en memoire sans avoir a recalculer
+
+
+je dios m'assurer d'inclure init dans DrawableComponent et Spriterenderer, appeler LoadComponentBase depuis.
+
+et ensuite dans le Init j'ajoute SpriteRenderer a la list de drawable du gameobject
+
+
+Question a poser au prof :
+
+System gamobject - composant (est-ce qu'il est bien comme ca ou c'etait mieux avant)
+
+Camera qui cast ducoup a l'update, est-ce améliorable et comment?
