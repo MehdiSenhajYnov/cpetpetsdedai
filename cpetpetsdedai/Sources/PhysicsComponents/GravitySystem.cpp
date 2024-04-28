@@ -10,10 +10,8 @@ GravitySystem::GravitySystem()
 
 }
 
-void GravitySystem::Init(std::shared_ptr<GameObject> _gameObject, BoxCollider* _boxCollider, PhysicsEngine* _physicsEngine)
+void GravitySystem::Init(BoxCollider* _boxCollider, PhysicsEngine* _physicsEngine)
 {
-	Component::Init(_gameObject);
-	
 	boxCollider = _boxCollider; 
 	physicsEngine = _physicsEngine; 
 	gravityForce = 9.0f; 

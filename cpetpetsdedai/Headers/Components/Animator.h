@@ -2,8 +2,10 @@
 #include <vector>
 #include <SFML/Graphics/Sprite.hpp>
 #include "Component.h"
-#include "SpriteRenderer.h"
 #include "../Animation.h"
+
+class SpriteRenderer;
+
 enum class AnimationState
 {
     Playing,

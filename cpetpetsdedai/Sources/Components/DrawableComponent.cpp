@@ -14,8 +14,7 @@ DrawableComponent::~DrawableComponent()
 {
 }
 
-void DrawableComponent::Init(std::shared_ptr<GameObject> _gameObject)
+void DrawableComponent::Init()
 {
-    Component::Init(_gameObject);
-    gameObject-> AddDrawableComponent(this);
+    gameObject->AddDrawableComponent(this);
 }

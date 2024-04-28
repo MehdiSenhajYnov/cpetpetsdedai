@@ -1,8 +1,8 @@
 #pragma once
 #include "../../Headers/Components/Camera.h"
+#include "../../Headers/Components/DrawableComponent.h"
 #include "../../Headers/Scenes/Scene.h"
 #include "../../Headers/Engine/GameObject.h"
-
 Camera::Camera()
 {
 }
@@ -13,7 +13,7 @@ void Camera::Render()
 	if (gameObject == nullptr)
 	{
 		std::cout << "CAMERA NOT INITIALIZED" << std::endl;
-		return;
+		return; 
 	}
 	for (auto& _gameObject: *scene->GetGameObjects())
 	{
@@ -22,7 +22,7 @@ void Camera::Render()
 			if (spriteRenderer == nullptr) continue;
 			if (spriteRenderer->GetDrawable() == nullptr) continue;
 			
-			if (!IsOnDisplay(spriteRenderer->GetAttachedObject().get()))
+			if (!IsOnDisplay(spriteRenderer->GetAttachedObject()))
 			{
 				continue;
 			}
@@ -39,7 +39,7 @@ void Camera::Render()
 	{
 		if (attachedObj != nullptr)
 		{
-			if (!IsOnDisplay(attachedObj.get()))
+			if (!IsOnDisplay(attachedObj))
 			{
 				continue;
 			}
@@ -80,7 +80,7 @@ bool Camera::IsOnDisplay(GameObject* toCheck)
 }
 
 
-void Camera::AddToPermanentDrawablesObjects(sf::Shape* drawableToAdd, std::shared_ptr<GameObject> attachedObject)
+void Camera::AddToPermanentDrawablesObjects(sf::Shape* drawableToAdd, GameObject* attachedObject)
 {
 	PermanentDrawablesObjects[drawableToAdd] = attachedObject;
 }
@@ -126,7 +126,6 @@ void Camera::Update(float deltaTime)
 
 void Camera::Initialize(std::shared_ptr<GameObject> _gameObject, sf::Vector2f _cameraView, sf::RenderWindow* _window, Scene* _scene)
 {
-	Init(_gameObject);
 	CameraView = _cameraView;
 	window = _window; 
 	scene = _scene;

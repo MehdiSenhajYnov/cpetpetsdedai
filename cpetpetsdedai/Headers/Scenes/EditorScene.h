@@ -1,6 +1,5 @@
 #pragma once
 #include "Scene.h"
-#include "../Components/Camera.h"
 
 class EditorScene : public Scene
 {
@@ -15,7 +14,7 @@ public:
 
 
     std::shared_ptr<GameObject> mainCameraObject;
-    Camera mainCamera;
+    Camera* mainCamera;
 
 protected:
     sf::Vector2f mousePosition;

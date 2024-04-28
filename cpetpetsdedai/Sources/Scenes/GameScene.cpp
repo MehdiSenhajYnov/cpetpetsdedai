@@ -1,8 +1,12 @@
 #include "../../Headers/Scenes/GameScene.h"
+
+#include "../../Headers/Components/Animator.h"
 #include "../../Headers/Engine/GameObject.h"
 #include "../../Headers/PhysicsComponents/BoxCollider.h"
 #include "../../Headers/Scenes/SceneManager.h"
 #include "../../Headers/PhysicsComponents/CustomCollider.h"
+#include "../../Headers/Components/SpriteRenderer.h"
+#include "../../Headers/Components/Camera.h"
 
 
 GameScene::GameScene() : Scene("GameScene", Scene::GetStaticType())
@@ -35,7 +39,7 @@ void GameScene::InitializeScene(sf::RenderWindow* _window)
 	window = _window;
 
 	graphicDebugger = GraphicDebugger();
-	graphicDebugger.Init(&mainCamera);
+	graphicDebugger.Init(mainCamera);
 	
 	physicsEngine = PhysicsEngine();
 	physicsEngine.Init(this, &graphicDebugger);
@@ -53,8 +57,8 @@ void GameScene::InitializeScene(sf::RenderWindow* _window)
 	LevelText.setString("Level" + std::to_string(currentLevel));
 	LevelText.setPosition(sf::Vector2f(window->getSize().x / 2, 20));
 
-	mainCamera.AddToTexts(&ThrowsText);
-	mainCamera.AddToTexts(&LevelText);
+	mainCamera->AddToTexts(&ThrowsText);
+	mainCamera->AddToTexts(&LevelText);
 
 	physicsEngine.EnterModifyMode();
 
@@ -131,14 +135,13 @@ std::shared_ptr<GameObject> GameScene::CreateBackground()
 	return tempBackground;
 }
 
-std::tuple<std::shared_ptr<GameObject>, std::shared_ptr<Collider>> GameScene::CreatePlayer()
+std::tuple<std::shared_ptr<GameObject>, Collider*> GameScene::CreatePlayer()
 {
 	auto _tempPlayer = CreateGameObject("Player", 20);
-	playerSpriteRenderer.Init(_tempPlayer);
-	playerSpriteRenderer.SetSprite("PLAYERIDLE001");
-	_tempPlayer->AddComponent(&playerSpriteRenderer);
+	SpriteRenderer* playerSpriteRenderer = _tempPlayer->AddComponent<SpriteRenderer>();
+	playerSpriteRenderer->SetSprite("PLAYERIDLE001");
+	playerSpriteRenderer->GetSprite()->setScale(sf::Vector2f(1.25f, 1.25f));
 	
-	playerSpriteRenderer.GetSprite()->setScale(sf::Vector2f(1.25f, 1.25f));
 	_tempPlayer->SetPosition(300, 400);
 
 	auto _tempPlayerCollider = physicsEngine.CreateBoxCollider(_tempPlayer, sf::Vector2f(290, 150), sf::Vector2f(90, 160));
@@ -147,28 +150,26 @@ std::tuple<std::shared_ptr<GameObject>, std::shared_ptr<Collider>> GameScene::Cr
 	_tempPlayerCollider->Gravity = true;
 
 	// create animator for player
-	playerAnimator = Animator();
-
+	Animator* playerAnimator = _tempPlayer->AddComponent<Animator>();
 	IdleAnimation = Animation();
 	IdleAnimation.Init("Idle", 0.5f, true, {"PLAYERIDLE001", "PLAYERIDLE002", "PLAYERIDLE003", "PLAYERIDLE004", "PLAYERIDLE005", "PLAYERIDLE006"});
 	playerAnimations.push_back(IdleAnimation);
 
-	playerAnimator.Init(_tempPlayer, playerAnimations);
-	playerAnimator.Play("Idle");
+	playerAnimator->Init(_tempPlayer, playerAnimations);
+	playerAnimator->Play("Idle");
 	
 	// create animations for player
 	
-	_tempPlayer->AddComponent(&playerAnimator);
 	
 	return std::make_tuple(_tempPlayer, _tempPlayerCollider);
 }
 
-std::tuple<std::shared_ptr<GameObject>, std::shared_ptr<CustomCollider>> GameScene::CreateTarget()
+std::tuple<std::shared_ptr<GameObject>, CustomCollider*> GameScene::CreateTarget()
 {
 
 	std::shared_ptr<GameObject> target = CreateGameObject("Target", 20);
 	
-	std::shared_ptr<CustomCollider> targetCollider = physicsEngine.CreateCustomCollider(target, {
+	CustomCollider* targetCollider = physicsEngine.CreateCustomCollider(target, {
 		sf::Vector2f(15,70),
 		sf::Vector2f(45,70),
 		sf::Vector2f(60,79),

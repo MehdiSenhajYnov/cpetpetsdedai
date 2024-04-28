@@ -13,6 +13,6 @@ public:
 
     virtual const sf::Drawable* GetDrawable() = 0;
     virtual void setPosition(sf::Vector2f pos) = 0;
-    void Init(std::shared_ptr<GameObject> _gameObject) override;
+    void Init();
 
 };

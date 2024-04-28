@@ -1,21 +1,12 @@
 #pragma once
 #include "Scene.h"
 #include "../Animation.h"
-#include "../Components/Animator.h"
-#include "../Components/Camera.h"
 #include "../GameSystem/PhysicsEngine.h"
 #include "../Utilities/GraphicDebugger.h"
-// #include "Camera.h"
-// #include "GraphicDebugger.h"
-// #include "PhysicsEngine.h"
-// #include "SceneManager.h"
-// #include "Animation.h"
-// #include "Animator.h"
 
 class Collider;
 class BoxCollider;
 class CustomCollider;
-
 
 class GameScene : public Scene
 {
@@ -31,7 +22,7 @@ public:
 	void DestroyScene() override;
 	void OnKeyDown(sf::Keyboard::Key pressedKey) override;
 	void OnPlayerCollisionEnter(Collider* _collideWith, sf::Vector2f _collisionPoint);
-	std::shared_ptr<Collider> playerCollider;
+	Collider* playerCollider;
 protected:
 	virtual void InitLevel() = 0;
 	virtual void SetupMapElements() = 0;
@@ -43,21 +34,18 @@ protected:
 	GraphicDebugger graphicDebugger;
 	
 	std::shared_ptr<GameObject> Player;
-	SpriteRenderer playerSpriteRenderer;
 	
 	std::shared_ptr<GameObject> Ground;
-	std::shared_ptr<BoxCollider> groundCollider;
 	std::shared_ptr<GameObject> directionArrow;
 	std::shared_ptr<GameObject> forceArrow;
 	std::shared_ptr<GameObject> BackgroundObject;
 
-	Animator playerAnimator;
 	Animation IdleAnimation;
 	std::vector<Animation> playerAnimations;
 	
 	std::shared_ptr<GameObject> CreateBackground();
-	std::tuple<std::shared_ptr<GameObject>, std::shared_ptr<Collider>> CreatePlayer();
-	std::tuple<std::shared_ptr<GameObject>, std::shared_ptr<CustomCollider>> CreateTarget();
+	std::tuple<std::shared_ptr<GameObject>, Collider*> CreatePlayer();
+	std::tuple<std::shared_ptr<GameObject>, CustomCollider*> CreateTarget();
 
 	int currentLevel;
 

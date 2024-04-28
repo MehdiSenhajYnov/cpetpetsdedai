@@ -1,6 +1,5 @@
 #pragma once
 #include "../../Headers/Components/Component.h"
-
 #include "../../Headers/Engine/GameObject.h"
 
 Component::Component() : Object("Component", Object::GetStaticType())
@@ -11,12 +10,12 @@ Component::Component(const std::string& _typeName, Type* parentType) : Object(_t
 {
 }
 
-void Component::Init(std::shared_ptr<GameObject> _gameObject)
+void Component::InitBaseComponent(GameObject* _gameObject)
 {
 	gameObject = _gameObject;
 }
 
-std::shared_ptr<GameObject> Component::GetAttachedObject()
+GameObject* Component::GetAttachedObject()
 {
 	return gameObject;
 }

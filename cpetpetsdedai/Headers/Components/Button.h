@@ -1,8 +1,12 @@
 #pragma once
+#include <SFML/Graphics/Text.hpp>
+
 #include "Component.h"
-#include "Camera.h"
-#include "SpriteRenderer.h"
 #include "../Utilities/Event.h"
+
+class SpriteRenderer;
+class Camera;
+
 enum class ButtonState
 {
 	Normal,
@@ -17,7 +21,6 @@ public:
 	Button();
 	void Init(std::shared_ptr<GameObject> _gameObject, std::string _buttonString, Camera* _camera);
 	void SetString(std::string _buttonString);
-
 	sf::Text* GetText();
 
 	Event<Button*> OnButtonClicked;
@@ -62,7 +65,7 @@ private:
 	ButtonState tempState;
 	ButtonState buttonState;
 
-	SpriteRenderer spriteRenderer;
+	SpriteRenderer* spriteRenderer;
 
 };
 

@@ -1,6 +1,10 @@
 #include "../../Headers/Engine/GameObject.h"
 #include "../../Headers/GameSystem/TextureManager.h"
 #include "../../Headers/Components/Component.h"
+#include "../../Headers/Utilities/Utilities.h"
+
+#define SameTypeOfT() \
+[](Component* component) { return component->GetType()->Equals(T::GetStaticType()); }
 
 GameObject::GameObject(): Object("GameObject", Object::GetStaticType()), positionType(World), ZIndex(0)
 {
@@ -10,8 +14,18 @@ GameObject::GameObject(std::string _name, Type* parentType) : Object(_name, pare
 {
 }
 
+GameObject::~GameObject()
+{
+	for (auto& _componentToDelete : components)
+	{
+		delete _componentToDelete;
+		_componentToDelete = nullptr;
+	}
+}
+
 void GameObject::Init(std::string _name)
 {
+	Name = _name;
 }
 
 void GameObject::SetPosition(sf::Vector2f _newposition)
@@ -93,16 +107,16 @@ std::vector<std::string> GameObject::GetTags()
 	return _tags;
 }
 
-void GameObject::AddTags(std::string tagToAdd)
+void GameObject::AddTags(const std::string& _tagToAdd)
 {
-	_tags.push_back(tagToAdd);
+	_tags.push_back(_tagToAdd);
 }
 
-void GameObject::RemoveTags(std::string tagToRemove)
+void GameObject::RemoveTags(const std::string& _tagToRemove)
 {
 	for (int i = 0; i < _tags.size(); i++)
 	{
-		if (_tags[i] == tagToRemove)
+		if (_tags[i] == _tagToRemove)
 		{
 			_tags.erase(_tags.begin() + i);
 			return;
@@ -118,23 +132,6 @@ int GameObject::GetZIndex()
 void GameObject::SetZIndex(int _zIndex)
 {
 	ZIndex = _zIndex;
-}
-
-void GameObject::AddComponent(Component* _component)
-{
-	components.push_back(_component);
-}
-
-void GameObject::RemoveComponent(Component* _component)
-{
-	for (int i = 0; i < components.size(); i++)
-	{
-		if (components[i] == _component)
-		{
-			components.erase(components.begin() + i);
-			return;
-		}
-	}
 }
 
 std::vector<Component*>* GameObject::GetComponents()
@@ -162,4 +159,63 @@ void GameObject::RemoveDrawableComponent(DrawableComponent* _drawableComponent)
 std::vector<DrawableComponent*>* GameObject::GetDrawableComponents()
 {
 	return &drawableComponents;
+}
+
+
+
+template <typename T, typename... Args>
+T* GameObject::AddComponent(Args... args)
+{
+	T* newComponent = new T();
+	
+	newComponent->InitBaseComponent(this);
+	newComponent->Init(std::forward<Args>(args)...);
+	components.push_back(newComponent);
+	//componentsToDelete.push_back(newComponent);
+	return newComponent;
+}
+
+template <typename T>
+T* GameObject::AddComponent()
+{
+	T* newComponent = new T();
+	newComponent->InitBaseComponent(this);
+	components.push_back(newComponent);
+	return newComponent;
+}
+
+template <typename T>
+bool GameObject::RemoveComponent()
+{
+	Component* deletedComponent = nullptr;
+	components.RemoveFirstWith(SameTypeOfT(), deletedComponent);
+	if (deletedComponent != nullptr) {
+		delete deletedComponent;
+		return true;
+	}
+	return false;
+}
+
+template <typename T>
+int GameObject::RemoveAllComponents()
+{
+	int count = 0;
+	bool result = RemoveComponent<T>();
+	while (result) {
+		count++;
+		result = RemoveComponent<T>();
+	}
+	return count;
+}
+
+template <typename T>
+Component* GameObject::GetComponent()
+{
+	return components.GetFirstWith(SameTypeOfT());
+}
+
+template <typename T>
+TList<Component*> GameObject::GetAllComponents()
+{
+	return components.GetAllWith(SameTypeOfT());
 }

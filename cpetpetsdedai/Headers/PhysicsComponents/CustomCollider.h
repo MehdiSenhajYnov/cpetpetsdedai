@@ -10,7 +10,7 @@ class CustomCollider : public Collider
 {
 public:
 	CustomCollider();
-	void Init(std::shared_ptr<GameObject> _gameObject, std::vector<sf::Vector2f> allPoints);
+	void Init(std::vector<sf::Vector2f> allPoints);
 private:
 
 	void Start() override;

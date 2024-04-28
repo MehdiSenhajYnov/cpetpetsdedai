@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include <functional>
 #include <string>
 #include <vector>
 #include <SFML/System/Vector2.hpp>

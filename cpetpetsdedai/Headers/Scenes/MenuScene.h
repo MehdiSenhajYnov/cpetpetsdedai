@@ -1,8 +1,7 @@
 #pragma once
 #include "Scene.h"
-#include "SceneManager.h"
-#include "../Components/Camera.h"
-#include "../Components/Button.h"
+
+class Button;
 
 class MenuScene : public Scene
 {
@@ -16,8 +15,8 @@ private:
 	std::shared_ptr<GameObject> playButtonObj;
 	std::shared_ptr<GameObject> exitButtonObj;
 
-	Button playButtonComponent;
-	Button exitButtonComponent;
+	Button* playButtonComponent;
+	Button* exitButtonComponent;
 
 
 	//std::shared_ptr<GameObject> LoadingObj;
@@ -32,7 +31,7 @@ private:
 	void OnPlayButtonClicked(Button* btn);
 	void OnExitButtonClicked(Button* btn);
 
-	// Hérité via Scene
+	// HÃ©ritÃ© via Scene
 	void Update(float deltaTime) override;
 	void InitializeScene(sf::RenderWindow* _window) override;
 	void OnSceneChanged();

@@ -10,8 +10,8 @@ class GravitySystem : public Component
 {
 public:
 	GravitySystem();
-	void Init(std::shared_ptr<GameObject> _gameObject, BoxCollider* _boxCollider, PhysicsEngine* _physicsEngine);
-	// Hérité via Component
+	void Init(BoxCollider* _boxCollider, PhysicsEngine* _physicsEngine);
+	// HÃ©ritÃ© via Component
 	void Start() override;
 	void Update(float deltaTime) override;
 

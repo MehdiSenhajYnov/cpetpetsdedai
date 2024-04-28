@@ -27,7 +27,8 @@ void LevelOneScene::SetupMapElements()
 void LevelOneScene::SetupElements()
 {
 	Ground = CreateGameObject("ground",-1);
-	groundCollider = physicsEngine.CreateBoxCollider(Ground, sf::Vector2f(0,0), sf::Vector2f(800, 200));
+	BoxCollider* groundCollider = physicsEngine.CreateBoxCollider(Ground, sf::Vector2f(0,0), sf::Vector2f(800, 200));
+	
 	Ground->SetPosition(0, 900);
 	groundCollider->Gravity = false;
 	

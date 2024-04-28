@@ -7,9 +7,8 @@
 Collider::Collider(){}
 
 
-void Collider::Init(std::shared_ptr<GameObject> _gameObject, std::vector<sf::Vector2f>  _allPoints)
+void Collider::Init(std::vector<sf::Vector2f> _allPoints)
 {
-	Component::Init(_gameObject);
 	IsStatic = false;
 
 	allPoints = _allPoints;

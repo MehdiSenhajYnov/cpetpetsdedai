@@ -11,9 +11,12 @@ EditorMove::EditorMove(const std::string& _typeName, Type* parentType): GameObje
 
 EditorMove::~EditorMove()
 {
+    GameObject::~GameObject();
 }
 
 void EditorMove::Init(std::string _name)
 {
+    
     GameObject::Init(_name);
+    
 }

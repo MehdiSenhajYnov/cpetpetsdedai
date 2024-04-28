@@ -1,5 +1,6 @@
 #include "../../Headers/Scenes/Scene.h"
 #include "../../Headers/Components/Component.h"
+#include "../../Headers/Components/SpriteRenderer.h"
 #include "../../Headers/Engine/GameObject.h"
 
 Scene::Scene() : Object("Scene", Object::GetStaticType())
@@ -55,9 +56,8 @@ void Scene::InitializeScene(sf::RenderWindow* _window)
 	window = _window;
 
 	mainCameraObject = CreateGameObject("mainCameraObject", 0);
-	mainCamera = Camera();
-	mainCamera.Initialize(mainCameraObject, sf::Vector2f(10000, 10000), window, this);
-	mainCameraObject->AddComponent(&mainCamera);
+	mainCamera = mainCameraObject->AddComponent<Camera>(sf::Vector2f(10000, 10000), window, this);
+	
 }
 
 void Scene::RemoveGameObject(std::shared_ptr<GameObject> _gameObjectToRemove)

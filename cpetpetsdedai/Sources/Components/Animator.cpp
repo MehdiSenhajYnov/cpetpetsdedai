@@ -1,12 +1,11 @@
-﻿#pragma once
-#include "../../Headers/Components/Animator.h"
+﻿#include "../../Headers/Components/Animator.h"
+
+#include "../../Headers/Components/SpriteRenderer.h"
 #include "../../Headers/Engine/GameObject.h"
 #include "../../Headers/GameSystem/TextureManager.h"
 
-
 void Animator::Init(std::shared_ptr<GameObject> _gameObject, SpriteRenderer* _spriteRenderer)
 {
-    Component::Init(_gameObject);
     spriteRenderer = _spriteRenderer;
     baseSprite = *spriteRenderer->GetSprite();
     
@@ -14,7 +13,6 @@ void Animator::Init(std::shared_ptr<GameObject> _gameObject, SpriteRenderer* _sp
 
 void Animator::Init(std::shared_ptr<GameObject> _gameObject, std::vector<Animation> _animations)
 {
-    Component::Init(_gameObject);
     animations = _animations;
 }
 

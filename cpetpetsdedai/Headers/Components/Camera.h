@@ -15,7 +15,7 @@ public:
 	Camera();
 	void Render();
 	bool IsOnDisplay(GameObject* toCheck);
-	void AddToPermanentDrawablesObjects(sf::Shape* drawableToAdd, std::shared_ptr<GameObject> attachedObject);
+	void AddToPermanentDrawablesObjects(sf::Shape* drawableToAdd, GameObject* attachedObject);
 	void RemoveFromPermanentDrawablesObjects(sf::Shape* drawableToRemove);
 
 	void AddToTexts(sf::Text* textToAdd);
@@ -27,7 +27,7 @@ public:
 	void Initialize(std::shared_ptr<GameObject> _gameObject, sf::Vector2f _cameraView, sf::RenderWindow* _window, Scene* _scene);
 private:
 	std::vector<sf::Text*> Texts;
-	std::map <sf::Shape*, std::shared_ptr<GameObject>> PermanentDrawablesObjects;
+	std::map <sf::Shape*, GameObject*> PermanentDrawablesObjects;
 	sf::Vector2f CameraView;
 	sf::RenderWindow* window;
 	Scene* scene;

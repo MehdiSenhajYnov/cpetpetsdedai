@@ -30,7 +30,7 @@ bool PhysicsEngine::SomeObjecsAreColliding()
 
 		for (int j = i+1; j < AllColliders.size(); j++)
 		{
-			if (TwoObjectAreColliding(AllColliders[i].get(), AllColliders[j].get()))
+			if (TwoObjectAreColliding(AllColliders[i], AllColliders[j]))
 			{
 				return true;
 			}
@@ -41,51 +41,42 @@ bool PhysicsEngine::SomeObjecsAreColliding()
 }
 
 
-std::shared_ptr<BoxCollider> PhysicsEngine::CreateBoxCollider(std::shared_ptr<GameObject> _gameObject, sf::Vector2f _topLeftPoint, sf::Vector2f _size)
+BoxCollider* PhysicsEngine::CreateBoxCollider(std::shared_ptr<GameObject> _gameObject, sf::Vector2f _topLeftPoint, sf::Vector2f _size)
 {
-	std::shared_ptr<BoxCollider> newCollider = std::make_shared<BoxCollider>();
-	newCollider->Init(_gameObject, _topLeftPoint, _size);
-
+	BoxCollider* newCollider = _gameObject->AddComponent<BoxCollider>( _topLeftPoint, _size);
 	AllColliders.push_back(newCollider);
-	_gameObject->AddComponent(newCollider.get());
 	return newCollider;
 }
 
-std::shared_ptr<CircleCollider> PhysicsEngine::CreateCircleCollider(std::shared_ptr<GameObject> _gameObject, sf::Vector2f _topLeftPoint, float radius, int accuracy)
+CircleCollider* PhysicsEngine::CreateCircleCollider(std::shared_ptr<GameObject> _gameObject, sf::Vector2f _topLeftPoint, float radius, int accuracy)
 {
-	std::shared_ptr<CircleCollider> newCollider = std::make_shared<CircleCollider>();
-	newCollider->Init(_gameObject, _topLeftPoint, radius, accuracy);
-
+	CircleCollider* newCollider = _gameObject->AddComponent<CircleCollider>(_topLeftPoint, radius, accuracy);
 	AllColliders.push_back(newCollider);
-	_gameObject->AddComponent(newCollider.get());
 	return newCollider;
 }
 
 
-std::shared_ptr<CustomCollider> PhysicsEngine::CreateCustomCollider(std::shared_ptr<GameObject> _gameObject, std::vector<sf::Vector2f> allPoints)
+CustomCollider* PhysicsEngine::CreateCustomCollider(std::shared_ptr<GameObject> _gameObject, std::vector<sf::Vector2f> allPoints)
 {
-	std::shared_ptr<CustomCollider> newCollider = std::make_shared<CustomCollider>();
-	newCollider->Init(_gameObject, allPoints);
-
+	CustomCollider* newCollider = _gameObject->AddComponent<CustomCollider>(allPoints);
 	AllColliders.push_back(newCollider);
-	_gameObject->AddComponent(newCollider.get());
 	return newCollider;
 }
 
-std::shared_ptr<BoxCollider> PhysicsEngine::CreateBoxCollider(std::shared_ptr<GameObject> _gameObject,
+BoxCollider* PhysicsEngine::CreateBoxCollider(std::shared_ptr<GameObject> _gameObject,
 	sf::Vector2f _topLeftPoint, sf::Vector2f _size, std::string _colliderID)
 {
 	  
 	return CreateBoxCollider(_gameObject, _topLeftPoint, _size);
 }
 
-std::shared_ptr<CircleCollider> PhysicsEngine::CreateCircleCollider(std::shared_ptr<GameObject> _gameObject,
+CircleCollider* PhysicsEngine::CreateCircleCollider(std::shared_ptr<GameObject> _gameObject,
 	sf::Vector2f _topLeftPoint, float radius, int accuracy, std::string _colliderID)
 {
 	return CreateCircleCollider(_gameObject, _topLeftPoint, radius, accuracy);
 }
 
-std::shared_ptr<CustomCollider> PhysicsEngine::CreateCustomCollider(std::shared_ptr<GameObject> _gameObject,
+CustomCollider* PhysicsEngine::CreateCustomCollider(std::shared_ptr<GameObject> _gameObject,
 	std::vector<sf::Vector2f> allPoints, std::string _colliderID)
 {
 	return CreateCustomCollider(_gameObject, allPoints);
@@ -97,13 +88,13 @@ void PhysicsEngine::DestroyCollider(Collider* _colliderToRemove)
 	int index = -1;
 	for (int i = 0; i < AllColliders.size(); i++)
 	{
-		if (AllColliders[i].get() == _colliderToRemove)
+		if (AllColliders[i] == _colliderToRemove)
 		{
 			index = i;
 			break;
 		}
 	}
-	_colliderToRemove->GetAttachedObject()->RemoveComponent(_colliderToRemove);
+	//_colliderToRemove->GetAttachedObject()->RemoveComponent(_colliderToRemove);
 	if (index != -1)
 	{
 		AllColliders.erase(AllColliders.begin() + index);
@@ -136,7 +127,7 @@ void PhysicsEngine::UpdatePhysics(float deltaTime)
 			bool isStatic = AllColliders[i]->GetIsStatic();
 			if (isStatic) continue;
 			//std::cout << "velocity moving" << std::endl;
-			movementResult = MoveObject(AllColliders[i].get(), AllColliders[i]->GetVelocity(), deltaTime);
+			movementResult = MoveObject(AllColliders[i], AllColliders[i]->GetVelocity(), deltaTime);
 			//if (!movementResult)
 			//{
 			//	AllColliders[i]->SetVelocity(sf::Vector2f(0, 0));

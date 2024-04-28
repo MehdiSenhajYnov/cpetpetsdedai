@@ -8,9 +8,9 @@ CustomCollider::CustomCollider()
 {
 }
 
-void CustomCollider::Init(std::shared_ptr<GameObject> _gameObject, std::vector<sf::Vector2f> allPoints)
+void CustomCollider::Init(std::vector<sf::Vector2f> allPoints)
 {
-	Collider::Init(_gameObject, allPoints);
+	Collider::Init(allPoints);
 }
 
 void CustomCollider::Start()

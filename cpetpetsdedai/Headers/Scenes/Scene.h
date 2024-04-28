@@ -3,11 +3,12 @@
 #include <memory>
 #include <SFML/Graphics.hpp>
 
-#include "../Components/Camera.h"
-#include "../Components/SpriteRenderer.h"
+#include "../Engine/Object.h"
 
 class GameObject;
 class Component;
+class SpriteRenderer;
+class Camera;
 
 enum SceneMode
 {
@@ -44,7 +45,7 @@ public:
 	SceneMode sceneMode = SceneMode::PlayMode;
 
 	std::shared_ptr<GameObject> mainCameraObject;
-	Camera mainCamera;
+	Camera* mainCamera;
 	
 protected:
 

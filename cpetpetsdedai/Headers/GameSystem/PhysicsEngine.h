@@ -23,13 +23,13 @@ public:
 	bool ObjectCanMoveBy(Collider* colliderToCheck, sf::Vector2f _moveBy);
 	//bool IsColliderTouchingCollider(Collider* firstCollider, Collider* Collider);
 	bool SomeObjecsAreColliding();
-	std::shared_ptr<BoxCollider> CreateBoxCollider(std::shared_ptr<GameObject> _gameObject, sf::Vector2f _topLeftPoint, sf::Vector2f _size);
-	std::shared_ptr<CircleCollider> CreateCircleCollider(std::shared_ptr<GameObject> _gameObject, sf::Vector2f _topLeftPoint, float radius, int accuracy);
-	std::shared_ptr<CustomCollider> CreateCustomCollider(std::shared_ptr<GameObject> _gameObject, std::vector<sf::Vector2f> allPoints);
+	BoxCollider* CreateBoxCollider(std::shared_ptr<GameObject> _gameObject, sf::Vector2f _topLeftPoint, sf::Vector2f _size);
+	CircleCollider* CreateCircleCollider(std::shared_ptr<GameObject> _gameObject, sf::Vector2f _topLeftPoint, float radius, int accuracy);
+	CustomCollider* CreateCustomCollider(std::shared_ptr<GameObject> _gameObject, std::vector<sf::Vector2f> allPoints);
 	
-	std::shared_ptr<BoxCollider> CreateBoxCollider(std::shared_ptr<GameObject> _gameObject, sf::Vector2f _topLeftPoint, sf::Vector2f _size, std::string _colliderID);
-	std::shared_ptr<CircleCollider> CreateCircleCollider(std::shared_ptr<GameObject> _gameObject, sf::Vector2f _topLeftPoint, float radius, int accuracy, std::string _colliderID);
-	std::shared_ptr<CustomCollider> CreateCustomCollider(std::shared_ptr<GameObject> _gameObject, std::vector<sf::Vector2f> allPoints, std::string _colliderID);
+	BoxCollider* CreateBoxCollider(std::shared_ptr<GameObject> _gameObject, sf::Vector2f _topLeftPoint, sf::Vector2f _size, std::string _colliderID);
+	CircleCollider* CreateCircleCollider(std::shared_ptr<GameObject> _gameObject, sf::Vector2f _topLeftPoint, float radius, int accuracy, std::string _colliderID);
+	CustomCollider* CreateCustomCollider(std::shared_ptr<GameObject> _gameObject, std::vector<sf::Vector2f> allPoints, std::string _colliderID);
 
 	
 	void DestroyCollider(Collider* _colliderToRemove);
@@ -42,7 +42,7 @@ public:
 
 private:
 	Scene* scene;
-	std::vector<std::shared_ptr<Collider>> AllColliders;
+	std::vector<Collider*> AllColliders;
 	sf::FloatRect TestRect;
 	bool modifyMode;
 	bool ShapeAreTouching(sf::Vector2f CenterShape1, sf::Vector2f OffsetShape1, std::vector<sf::Vector2f> Shape1AllPoints, sf::Vector2f CenterShape2, sf::Vector2f OffsetShape2, std::vector<sf::Vector2f> Shape2AllPoints);

@@ -22,10 +22,12 @@ public:
 	virtual void Start() = 0;
 	virtual void Update(float deltaTime) = 0;
 
-	std::shared_ptr<GameObject> GetAttachedObject();
+	GameObject* GetAttachedObject();
 	ComponentWorkType componentWorkType;
+	
+	void InitBaseComponent(GameObject* _gameObject);
 protected:
-	virtual void Init(std::shared_ptr<GameObject> _gameObject);
-	std::shared_ptr<GameObject> gameObject;
+
+	GameObject* gameObject;
 };
 
