@@ -36,3 +36,18 @@ std::vector<std::string> Utilities::SplitString(std::string _stringToSplit, std:
     res.push_back (_stringToSplit.substr (pos_start));
     return res;
 }
+
+bool Utilities::IsInBounds(const sf::Vector2f& _positionToCheck, const sf::Vector2f& _position, const sf::Vector2f& _size)
+{
+    if (_positionToCheck.x < _position.x || _positionToCheck.x > _position.x + _size.x)
+    {
+        return false;
+    }
+
+    if (_positionToCheck.y < _position.y || _positionToCheck.y > _position.y + _size.y)
+    {
+        return false;
+    }
+
+    return true;
+}

@@ -3,6 +3,13 @@
 
 class GameObject;
 
+enum ComponentWorkType
+{
+	Play,
+	Editor,
+	PlayAndEditor,
+};
+
 class Component : public Object
 {
 public:
@@ -16,7 +23,7 @@ public:
 	virtual void Update(float deltaTime) = 0;
 
 	std::shared_ptr<GameObject> GetAttachedObject();
-
+	ComponentWorkType componentWorkType;
 protected:
 	virtual void Init(std::shared_ptr<GameObject> _gameObject);
 	std::shared_ptr<GameObject> gameObject;

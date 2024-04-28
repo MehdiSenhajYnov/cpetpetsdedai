@@ -36,7 +36,7 @@ void MenuScene::OnBtnMouseClickUp(Button* btn)
 void MenuScene::OnPlayButtonClicked(Button* btn)
 {
 	std::cout << "PLAY clicked !" << std::endl;
-	loadingButtonComponent.SetString("Loading ...");
+	//loadingButtonComponent.SetString("Loading ...");
 	SceneManager::SetLevel(1);
 	OnSceneChanged();
 }
@@ -67,12 +67,7 @@ void MenuScene::GameLoop(float deltaTime)
 
 void MenuScene::InitializeScene(sf::RenderWindow* _window)
 {
-	window = _window;
-
-	mainCameraObject = CreateGameObject("mainCameraObject", 0);
-	mainCamera = Camera();
-	mainCamera.Initialize(mainCameraObject, sf::Vector2f(10000, 10000), window, this);
-	mainCameraObject->AddComponent(&mainCamera);
+	Scene::InitializeScene(_window);
 
 	playButtonObj = CreateGameObject("playButton", 10);
 	exitButtonObj = CreateGameObject("exitButton", 10);
@@ -92,21 +87,21 @@ void MenuScene::InitializeScene(sf::RenderWindow* _window)
 
 	exitButtonObj->AddComponent(&exitButtonComponent);
 
-	LoadingObj = CreateGameObject("Loading", 10);
-	LoadingObj->SetPosition(playButtonObj->GetPosition().x + 105, playButtonObj->GetPosition().y - 40);
-
-	loadingButtonComponent.Init(LoadingObj, "", &mainCamera);
-	LoadingObj->AddComponent(&loadingButtonComponent);
+	// LoadingObj = CreateGameObject("Loading", 10);
+	// LoadingObj->SetPosition(playButtonObj->GetPosition().x + 105, playButtonObj->GetPosition().y - 40);
+	//
+	// loadingButtonComponent.Init(LoadingObj, "", &mainCamera);
+	// LoadingObj->AddComponent(&loadingButtonComponent);
 
 	playButtonComponent.SetColor(normalButtonColor);
 	exitButtonComponent.SetColor(normalButtonColor);
 
-	playButtonComponent.OnMouseEnter.Subscribe(&MenuScene::OnBtnMouseEnter, this);
-	playButtonComponent.OnMouseExit.Subscribe(&MenuScene::OnBtnMouseExit, this);
+	playButtonComponent.OnButtonHover.Subscribe(&MenuScene::OnBtnMouseEnter, this);
+	playButtonComponent.OnButtonUnHover.Subscribe(&MenuScene::OnBtnMouseExit, this);
 	playButtonComponent.OnMouseClickDown.Subscribe(&MenuScene::OnBtnMouseClickDown, this);
 	playButtonComponent.OnMouseClickUp.Subscribe(&MenuScene::OnBtnMouseClickUp, this);
-	exitButtonComponent.OnMouseEnter.Subscribe(&MenuScene::OnBtnMouseEnter, this);
-	exitButtonComponent.OnMouseExit.Subscribe(&MenuScene::OnBtnMouseExit, this);
+	exitButtonComponent.OnButtonHover.Subscribe(&MenuScene::OnBtnMouseEnter, this);
+	exitButtonComponent.OnButtonUnHover.Subscribe(&MenuScene::OnBtnMouseExit, this);
 	exitButtonComponent.OnMouseClickDown.Subscribe(&MenuScene::OnBtnMouseClickDown, this);
 	exitButtonComponent.OnMouseClickUp.Subscribe(&MenuScene::OnBtnMouseClickUp, this);
 }

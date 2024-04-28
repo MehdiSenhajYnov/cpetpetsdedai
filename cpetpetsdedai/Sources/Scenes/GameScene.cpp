@@ -11,7 +11,7 @@ GameScene::GameScene() : Scene("GameScene", Scene::GetStaticType())
 
 void GameScene::InitializeScene(sf::RenderWindow* _window)
 {
-
+	Scene::InitializeScene(_window);
 
 	if (!font.loadFromFile("./Fonts/Arial.ttf"))
 	{
@@ -33,12 +33,6 @@ void GameScene::InitializeScene(sf::RenderWindow* _window)
 
 	std::cout << "Game Scene initialize begin" << std::endl;
 	window = _window;
-
-	mainCameraObject = CreateGameObject("mainCameraObject",0);
-	mainCamera = Camera();
-	mainCamera.Initialize(mainCameraObject, sf::Vector2f(10000, 10000), window, this);
-	mainCameraObject->AddComponent(&mainCamera);
-
 
 	graphicDebugger = GraphicDebugger();
 	graphicDebugger.Init(&mainCamera);
@@ -140,6 +134,7 @@ std::shared_ptr<GameObject> GameScene::CreateBackground()
 std::tuple<std::shared_ptr<GameObject>, std::shared_ptr<Collider>> GameScene::CreatePlayer()
 {
 	auto _tempPlayer = CreateGameObject("Player", 20);
+	playerSpriteRenderer.Init(_tempPlayer);
 	playerSpriteRenderer.SetSprite("PLAYERIDLE001");
 	_tempPlayer->AddComponent(&playerSpriteRenderer);
 	

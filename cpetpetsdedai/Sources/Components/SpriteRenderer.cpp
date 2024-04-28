@@ -94,3 +94,11 @@ void SpriteRenderer::setPosition(sf::Vector2f pos)
 {
     sprite.setPosition(pos);
 }
+
+sf::Vector2f SpriteRenderer::GetSize()
+{
+	return sf::Vector2f(
+        GetSprite()->getTexture()->getSize().x,
+        GetSprite()->getTexture()->getSize().y
+    );
+}

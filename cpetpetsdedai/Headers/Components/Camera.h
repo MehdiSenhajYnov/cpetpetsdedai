@@ -6,11 +6,10 @@
 #include <SFML/System/Vector2.hpp>
 
 #include "Component.h"
-#include "EditorComponent.h"
 
 class Scene;
 
-class Camera : public EditorComponent
+class Camera : public Component
 {
 public:
 	Camera();
@@ -25,11 +24,11 @@ public:
 	sf::RenderWindow* GetCurrentWindow();
 
 
-	void Initialize(std::shared_ptr<GameObject> _gameObject, sf::Vector2<float> _cameraView, sf::RenderWindow* _window, Scene* _scene);
+	void Initialize(std::shared_ptr<GameObject> _gameObject, sf::Vector2f _cameraView, sf::RenderWindow* _window, Scene* _scene);
 private:
 	std::vector<sf::Text*> Texts;
 	std::map <sf::Shape*, std::shared_ptr<GameObject>> PermanentDrawablesObjects;
-	sf::Vector2<float> CameraView;
+	sf::Vector2f CameraView;
 	sf::RenderWindow* window;
 	Scene* scene;
 

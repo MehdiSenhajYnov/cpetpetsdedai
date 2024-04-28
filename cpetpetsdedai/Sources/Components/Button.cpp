@@ -35,13 +35,14 @@ void Button::Init(std::shared_ptr<GameObject> _gameObject, std::string _buttonSt
 	buttonText.setFillColor(sf::Color::Black);
 	SetString(_buttonString);
 
-	UpdatePosition();
 
 	camera = _camera;
 	camera->AddToTexts(&buttonText);
 
+	spriteRenderer.Init(_gameObject);
 	spriteRenderer.SetSprite("RoundedRectangle");
 	_gameObject->AddComponent(&spriteRenderer);
+	UpdatePosition();
 }
 
 void Button::SetString(std::string _buttonString)
@@ -57,64 +58,22 @@ sf::Text* Button::GetText()
 	return &buttonText;
 }
 
-bool Button::IsInButton(sf::Vector2i positionToCheck)
+bool Button::IsInButton(const sf::Vector2i& positionToCheck)
 {
 	if (!camera->IsOnDisplay(gameObject.get()))
 	{
 		return false;
 	}
-	//if (gameObject->Name == "exitButton")
-	//{
-	//	Logs(positionToCheck);
-	//}
 
-	if (positionToCheck.x < (gameObject->GetPosition().x - camera->GetAttachedObject()->GetPosition().x))
-	{
-		return false;
-	}
-
-	if (positionToCheck.y < (gameObject->GetPosition().y - camera->GetAttachedObject()->GetPosition().y))
-	{
-		return false;
-	}
-
-	if (spriteRenderer.GetSprite()->getTexture() != nullptr)
-	{
-		if (positionToCheck.x > (gameObject->GetPosition().x - camera->GetAttachedObject()->GetPosition().x) +
-			(spriteRenderer.GetSprite()->getTexture()->getSize().x * spriteRenderer.GetSprite()->getScale().x))
-		{
-			return false;
-
-		}
-
-
-		if (positionToCheck.y > (gameObject->GetPosition().y - camera->GetAttachedObject()->GetPosition().y) +
-			(spriteRenderer.GetSprite()->getTexture()->getSize().y * spriteRenderer.GetSprite()->getScale().y))
-		{
-			return false;
-		}
-
-	}
-	else
-	{
-		if (positionToCheck.x > (gameObject->GetPosition().x - camera->GetAttachedObject()->GetPosition().x) + spriteRenderer.GetSprite()->getScale().x)
-		{
-			return false;
-		}
-
-		if (positionToCheck.y > (gameObject->GetPosition().y - camera->GetAttachedObject()->GetPosition().y) + spriteRenderer.GetSprite()->getScale().y)
-		{
-			return false;
-		}
-
-	}
-	return true;
+	return Utilities::IsInBounds(sf::Vector2f(positionToCheck.x, positionToCheck.y),
+	                             gameObject->GetPosition() - camera->GetAttachedObject()->GetPosition(),
+	                             GetCurrentSize());
 }
 
-void Button::SetColor(sf::Color color)
+void Button::SetColor(const sf::Color& _color)
 {
-	spriteRenderer.SetColor(color);
-	buttonText.setFillColor(color);
+	spriteRenderer.SetColor(_color);
+	buttonText.setFillColor(_color);
 }
 
 sf::Color Button::GetColor()
@@ -138,24 +97,8 @@ void Button::Start()
 {
 }
 
-void Button::Logs(sf::Vector2i positionToCheck)
-{
-	std::cout << std::endl << std::endl << std::endl;
-	std::cout << "mouse position : " << Utilities::VectorToString(sf::Vector2f(positionToCheck.x, positionToCheck.y)) << std::endl;
-	std::cout << "gameObject position : " << Utilities::VectorToString(gameObject->GetPosition()) << std::endl;
-	std::cout << "gameObjectWithCamereOffset position : " << Utilities::VectorToString(gameObject->GetPosition() - camera->GetAttachedObject()->GetPosition()) << std::endl;
 
-	sf::Vector2f limits = gameObject->GetPosition() - camera->GetAttachedObject()->GetPosition();
-	limits = limits + sf::Vector2f(
-		spriteRenderer.GetSprite()->getTexture()->getSize().x * spriteRenderer.GetSprite()->getScale().x,
-		spriteRenderer.GetSprite()->getTexture()->getSize().y * spriteRenderer.GetSprite()->getScale().y
-	);
-
-	std::cout << "limits : " << Utilities::VectorToString(limits) << std::endl;
-	std::cout << std::endl << std::endl << std::endl;
-}
-
-void Button::Update(float deltaTime)
+void Button::Update(float _deltaTime)
 {
 	mousePosition = sf::Mouse::getPosition(*camera->GetCurrentWindow());
 	if (oldObjPosition != gameObject->GetPosition())
@@ -167,19 +110,27 @@ void Button::Update(float deltaTime)
 	{
 		if (!isMouseHover)
 		{
-			tempState = ButtonState::Hover;
-			isMouseHover = true;
 			OnMouseEnter.InvokeEvent(this);
+			if (buttonState != ButtonState::Pressed)
+			{
+				tempState = ButtonState::Hover;
+				OnButtonHover.InvokeEvent(this);
+			}
 		}
+		isMouseHover = true;
 	} 
-	else if (isMouseHover)
+	else
 	{
-		if (buttonState != ButtonState::Pressed)
+		if (isMouseHover)
 		{
-			tempState = ButtonState::Normal;
+			if (buttonState != ButtonState::Pressed)
+			{
+				tempState = ButtonState::Normal;
+				OnButtonUnHover.InvokeEvent(this);
+			}
+			OnMouseExit.InvokeEvent(this);
 		}
 		isMouseHover = false;
-		OnMouseExit.InvokeEvent(this);
 	}
 
 	
@@ -221,10 +172,22 @@ void Button::Update(float deltaTime)
 	buttonState = tempState;
 }
 
+sf::Vector2f Button::GetSize()
+{
+	return spriteRenderer.GetSize();
+}
+
+sf::Vector2f Button::GetCurrentSize()
+{
+	return sf::Vector2f(
+		spriteRenderer.GetSprite()->getTexture()->getSize().x * spriteRenderer.GetSprite()->getScale().x,
+		spriteRenderer.GetSprite()->getTexture()->getSize().y * spriteRenderer.GetSprite()->getScale().y
+	);
+}
 
 
 void Button::UpdatePosition()
-{
+{ 
 	sf::Vector2f newPos;
 	if (spriteRenderer.GetSprite()->getTexture() != nullptr)
 	{

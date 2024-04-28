@@ -1,12 +1,19 @@
 #include "../../Headers/Scenes/Scene.h"
 #include "../../Headers/Components/Component.h"
-#include "../../Headers/Components/EditorComponent.h"
 #include "../../Headers/Engine/GameObject.h"
+
+Scene::Scene() : Object("Scene", Object::GetStaticType())
+{
+}
+
+Scene::Scene(std::string _typeName, Type* parentType) : Object(_typeName, parentType)
+{
+}
 
 std::shared_ptr<GameObject> Scene::CreateGameObject(std::string _gameObjectName, int ZIndex)
 {
 	std::shared_ptr<GameObject> newGameObject = std::make_shared<GameObject>();
-	newGameObject->InitGameObject(_gameObjectName);
+	newGameObject->Init(_gameObjectName);
 	newGameObject->SetZIndex(ZIndex);
 	gameObjects.push_back(newGameObject);
 	//gamesObjectsComponents[newGameObject] = std::vector<Component*>();
@@ -43,12 +50,14 @@ std::shared_ptr<GameObject> Scene::CreateGameObject(std::string _gameObjectName,
 // }
 
 
-Scene::Scene() : Object("Scene", Object::GetStaticType())
+void Scene::InitializeScene(sf::RenderWindow* _window)
 {
-}
+	window = _window;
 
-Scene::Scene(std::string _typeName, Type* parentType) : Object(_typeName, parentType)
-{
+	mainCameraObject = CreateGameObject("mainCameraObject", 0);
+	mainCamera = Camera();
+	mainCamera.Initialize(mainCameraObject, sf::Vector2f(10000, 10000), window, this);
+	mainCameraObject->AddComponent(&mainCamera);
 }
 
 void Scene::RemoveGameObject(std::shared_ptr<GameObject> _gameObjectToRemove)
@@ -72,12 +81,16 @@ void Scene::CalUpdateOnAll(float deltaTime)
 	{
 		for (auto& component : *_gameObject->GetComponents())
 		{
-			if (sceneMode == SceneMode::EditMode && !component->GetType()->Equals(EditorComponent::GetStaticType()))
+			if (sceneMode == SceneMode::EditMode && component->componentWorkType == ComponentWorkType::Play)
 			{
 				continue;
 			}
+			if (sceneMode == SceneMode::PlayMode && component->componentWorkType == ComponentWorkType::Editor)
+			{
+				continue;
+			}
+			
 			component->Update(deltaTime);
 		}
 	}
 }
-

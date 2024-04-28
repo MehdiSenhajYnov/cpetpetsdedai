@@ -34,6 +34,8 @@ void TextureManager::AddTexture(std::string mapName, std::string _texturePath)
 void TextureManager::Init()
 {
     std::cout << "TextureManager initializing ..." << std::endl;
+
+    AddTexture("TestObj", "./Assets/TestObj.png");
     AddTexture("RoundedRectangle", "./Assets/RoundedRectangle.png");
     IncludeIdleAnimationTextures();
 }

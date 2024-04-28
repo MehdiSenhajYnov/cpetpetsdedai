@@ -26,8 +26,10 @@ void Camera::Render()
 			{
 				continue;
 			}
-			
-			spriteRenderer->setPosition(spriteRenderer->GetAttachedObject()->GetPosition() - gameObject->GetPosition());
+			if (_gameObject->positionType != PositionType::UI)
+			{
+				spriteRenderer->setPosition(spriteRenderer->GetAttachedObject()->GetPosition() - gameObject->GetPosition());
+			}
 			//std::cout << "drawing " << _gameObject->Name << std::endl;
 			window->draw(*spriteRenderer->GetDrawable());
 		}
@@ -122,12 +124,13 @@ void Camera::Update(float deltaTime)
 	Render();
 }
 
-void Camera::Initialize(std::shared_ptr<GameObject> _gameObject, sf::Vector2<float> _cameraView, sf::RenderWindow* _window, Scene* _scene)
+void Camera::Initialize(std::shared_ptr<GameObject> _gameObject, sf::Vector2f _cameraView, sf::RenderWindow* _window, Scene* _scene)
 {
 	Init(_gameObject);
 	CameraView = _cameraView;
 	window = _window; 
 	scene = _scene;
+	componentWorkType = ComponentWorkType::PlayAndEditor;
 }
 
 

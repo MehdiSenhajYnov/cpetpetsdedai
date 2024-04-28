@@ -2,67 +2,29 @@
 #include "../../Headers/GameSystem/TextureManager.h"
 #include "../../Headers/Components/Component.h"
 
-GameObject::GameObject(): Object("GameObject", Object::GetStaticType())
+GameObject::GameObject(): Object("GameObject", Object::GetStaticType()), positionType(World), ZIndex(0)
 {
 }
 
-void GameObject::InitGameObject(std::string _name)
+GameObject::GameObject(std::string _name, Type* parentType) : Object(_name, parentType), positionType(World), ZIndex(0)
 {
 }
 
-// sf::Sprite* GameObject::GetSprite()
-// {
-// 	return &sprite;
-// }
-//
-// void GameObject::SetSprite(const std::string& texturepath)
-// {
-// 	spriteTexture = TextureManager::Instance()->GetTexture(texturepath);
-// 	if (spriteTexture == nullptr)
-// 	{
-// 		std::cout << "Texture not found" << '\n';
-// 		return;
-// 	}
-// 	sprite.setTexture(*spriteTexture);
-// }
-//
-//
-// void GameObject::SetSprite(const std::string& _spriteName, sf::IntRect textureRect)
-// {
-// 	spriteTexture = TextureManager::Instance()->GetTexture(_spriteName);
-// 	//TODO: Set the texture rectangle
-//
-// 	if (spriteTexture == nullptr)
-// 	{
-// 		std::cout << "Texture not found" << '\n';
-// 		return;
-// 	}
-// 	sprite.setTexture(*spriteTexture);
-//
-// }
-//
-// void GameObject::SetTexture(sf::Texture* _texture)
-// {
-// 	spriteTexture = _texture;
-// 	if (spriteTexture == nullptr)
-// 	{
-// 		std::cout << "Texture not found" << '\n';
-// 		return;
-// 	}
-// 	sprite.setTexture(*spriteTexture);
-// }
+void GameObject::Init(std::string _name)
+{
+}
 
-void GameObject::SetPosition(sf::Vector2<float> _newposition)
+void GameObject::SetPosition(sf::Vector2f _newposition)
 {
 	position = _newposition;
 }
 
 void GameObject::SetPosition(float _x, float _y)
 {
-	position = sf::Vector2<float>(_x, _y);
+	position = sf::Vector2f(_x, _y);
 }
 
-void GameObject::SetScale(sf::Vector2<float> _newScale)
+void GameObject::SetScale(sf::Vector2f _newScale)
 {
 	scale = _newScale;
 }
@@ -83,13 +45,13 @@ void GameObject::SetScale(float _x, float _y)
 // 	return sprite.getColor();
 // }
 
-sf::Vector2<float> GameObject::GetPosition()
+sf::Vector2f GameObject::GetPosition()
 {
 	return position;
 }
 
 
-sf::Vector2<float>* GameObject::GetPositionPointer()
+sf::Vector2f* GameObject::GetPositionPointer()
 {
 	return &position;
 }

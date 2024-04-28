@@ -25,9 +25,12 @@ public:
     
     int GetZIndex();
     void SetZIndex(int _zIndex);
+    
     const sf::Drawable* GetDrawable() override;
     void setPosition(sf::Vector2f pos) override;
 
+    sf::Vector2f GetSize();
+    
 private:
     int ZIndex;
     sf::Texture* spriteTexture;

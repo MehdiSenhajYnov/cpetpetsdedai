@@ -3,7 +3,7 @@
 #include <ranges>
 #include "../../Headers/Scenes/SceneEditor.h"
 
-#include "../../Headers/Scenes/Level.h"
+#include "../../Headers/Scenes/EditorScene.h"
 #include "../../Headers/Scenes/Scene.h"
 #include "../../Headers/Utilities/FileUtilities.h"
 #include "../../Headers/Utilities/Utilities.h"
@@ -39,7 +39,7 @@ void SceneEditor::LoadScene(std::string _sceneName)
 
     std::vector<std::string> sceneFileLines = FileUtilities::ReadLinesFromFile(sceneFilePath);
 
-    Level level;
+    EditorScene level;
     std::shared_ptr<GameObject> currentGameObject; 
     for (auto& line : sceneFileLines)
     {

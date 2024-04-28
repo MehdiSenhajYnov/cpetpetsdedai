@@ -13,9 +13,6 @@ public:
 	void GameLoop(float deltaTime);
 
 private:
-	std::shared_ptr<GameObject> mainCameraObject;
-	Camera mainCamera;
-
 	std::shared_ptr<GameObject> playButtonObj;
 	std::shared_ptr<GameObject> exitButtonObj;
 
@@ -23,8 +20,8 @@ private:
 	Button exitButtonComponent;
 
 
-	std::shared_ptr<GameObject> LoadingObj;
-	Button loadingButtonComponent;
+	//std::shared_ptr<GameObject> LoadingObj;
+	//Button loadingButtonComponent;
 
 
 	void OnBtnMouseEnter(Button* btn);
@@ -45,7 +42,7 @@ private:
 
 	const sf::Color normalButtonColor = sf::Color(0, 0, 0);
 	const sf::Color hoverButtonColor = sf::Color(110, 110, 110);
-	const sf::Color pressedButtonColor = sf::Color(60, 60, 60);
+	const sf::Color pressedButtonColor = sf::Color(80, 80, 80);
 	
 };
 

@@ -1,6 +1,6 @@
 #include "../../Headers/Engine/GameManager.h"
 #include "../../Headers/GameSystem/SingletonManager.h"
-#include "../../Headers/Scenes/Level.h"
+#include "../../Headers/Scenes/EditorScene.h"
 #include "../../Headers/Scenes/MenuScene.h"
 #include "../../Headers/Utilities/Event.h"
 #include "../../Headers/Scenes/Scene.h"
@@ -58,7 +58,7 @@ void GameManager::ChangeScene(SceneManager::SceneEnum sceneToUse)
 	}
 	else if (sceneToUse == SceneManager::SceneEnum::Level1)
 	{
-		currentScene = std::make_unique<Level>();
+		currentScene = std::make_unique<EditorScene>();
 	}
 
 	currentScene->InitializeScene(&window);

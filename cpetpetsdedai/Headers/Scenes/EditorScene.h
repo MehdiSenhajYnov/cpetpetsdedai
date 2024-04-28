@@ -2,10 +2,10 @@
 #include "Scene.h"
 #include "../Components/Camera.h"
 
-class Level : public Scene
+class EditorScene : public Scene
 {
 public:
-    Level();
+    EditorScene();
     AddType(Level, Scene::GetStaticType())
     
     void InitializeScene(sf::RenderWindow* _window) override;
@@ -16,6 +16,11 @@ public:
 
     std::shared_ptr<GameObject> mainCameraObject;
     Camera mainCamera;
+
+protected:
+    sf::Vector2f mousePosition;
+    void EditorUpdate(float deltaTime);
+    bool isMousePressed = false;
 };
 
 

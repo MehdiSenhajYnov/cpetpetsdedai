@@ -39,9 +39,6 @@ protected:
 
 	void OnSceneChanged();
 
-
-	std::shared_ptr<GameObject> mainCameraObject;
-	Camera mainCamera;
 	PhysicsEngine physicsEngine;
 	GraphicDebugger graphicDebugger;
 	

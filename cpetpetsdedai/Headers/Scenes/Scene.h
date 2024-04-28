@@ -2,6 +2,8 @@
 #include <map>
 #include <memory>
 #include <SFML/Graphics.hpp>
+
+#include "../Components/Camera.h"
 #include "../Components/SpriteRenderer.h"
 
 class GameObject;
@@ -20,7 +22,9 @@ public:
 	Scene(std::string _typeName, Type* parentType);
 	AddType(Scene, Object::GetStaticType());
 	virtual ~Scene() = default;
-	virtual void InitializeScene(sf::RenderWindow* _window) = 0;
+
+	virtual void InitializeScene(sf::RenderWindow* _window);
+	
 	void RemoveGameObject(std::shared_ptr<GameObject> _gameObjectToAdd);
 	std::string sceneName;
 	std::shared_ptr<GameObject> CreateGameObject(std::string _gameObjectName, int ZIndex);
@@ -38,6 +42,10 @@ public:
 
 	virtual void DestroyScene() = 0;
 	SceneMode sceneMode = SceneMode::PlayMode;
+
+	std::shared_ptr<GameObject> mainCameraObject;
+	Camera mainCamera;
+	
 protected:
 
 	bool sceneChanged;
