@@ -19,7 +19,7 @@ class Button : public Component
 {
 public:
 	Button();
-	void Init(std::shared_ptr<GameObject> _gameObject, std::string _buttonString, Camera* _camera);
+	void Init(std::string _buttonString, Camera* _camera);
 	void SetString(std::string _buttonString);
 	sf::Text* GetText();
 

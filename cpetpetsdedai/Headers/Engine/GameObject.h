@@ -3,8 +3,11 @@
 #include <iostream>
 #include "Object.h"
 #include "../../TList.h"
+#include "../Components/Component.h"
 
-class Component;
+#define SameTypeOfT() \
+[](Component* component) { return component->GetType()->Equals(T::GetStaticType()); }
+
 class DrawableComponent;
 
 enum PositionType
@@ -84,3 +87,61 @@ private:
 	std::vector<DrawableComponent*> drawableComponents;
 };
 
+
+
+template <typename T, typename... Args>
+T* GameObject::AddComponent(Args... args)
+{
+	T* newComponent = new T();
+	
+	newComponent->InitBaseComponent(this);
+	newComponent->Init(std::forward<Args>(args)...);
+	components.push_back(newComponent);
+	//componentsToDelete.push_back(newComponent);
+	return newComponent;
+}
+
+template <typename T>
+T* GameObject::AddComponent()
+{
+	T* newComponent = new T();
+	newComponent->InitBaseComponent(this);
+	components.push_back(newComponent);
+	return newComponent;
+}
+
+template <typename T>
+bool GameObject::RemoveComponent()
+{
+	Component* deletedComponent = nullptr;
+	components.RemoveFirstWith(SameTypeOfT(), deletedComponent);
+	if (deletedComponent != nullptr) {
+		delete deletedComponent;
+		return true;
+	}
+	return false;
+}
+
+template <typename T>
+int GameObject::RemoveAllComponents()
+{
+	int count = 0;
+	bool result = RemoveComponent<T>();
+	while (result) {
+		count++;
+		result = RemoveComponent<T>();
+	}
+	return count;
+}
+
+template <typename T>
+Component* GameObject::GetComponent()
+{
+	return components.GetFirstWith(SameTypeOfT());
+}
+
+template <typename T>
+TList<Component*> GameObject::GetAllComponents()
+{
+	return components.GetAllWith(SameTypeOfT());
+}

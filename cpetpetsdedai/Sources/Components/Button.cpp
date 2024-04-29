@@ -11,7 +11,7 @@ Button::Button() :camera(nullptr), isMousePressed(false), ClickOnTheButton(false
 {
 }
 
-void Button::Init(std::shared_ptr<GameObject> _gameObject, std::string _buttonString, Camera* _camera)
+void Button::Init(std::string _buttonString, Camera* _camera)
 {
 	if (!fontLoaded)
 	{
@@ -38,7 +38,7 @@ void Button::Init(std::shared_ptr<GameObject> _gameObject, std::string _buttonSt
 	camera = _camera;
 	camera->AddToTexts(&buttonText);
 
-	spriteRenderer = _gameObject->AddComponent<SpriteRenderer>();
+	spriteRenderer = gameObject->AddComponent<SpriteRenderer>();
 	spriteRenderer->SetSprite("RoundedRectangle");
 	UpdatePosition();
 }

@@ -1,4 +1,6 @@
 #include "../../Headers/Scenes/Scene.h"
+
+#include "../../Headers/Components/Camera.h"
 #include "../../Headers/Components/Component.h"
 #include "../../Headers/Components/SpriteRenderer.h"
 #include "../../Headers/Engine/GameObject.h"

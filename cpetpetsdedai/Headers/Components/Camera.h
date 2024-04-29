@@ -24,7 +24,7 @@ public:
 	sf::RenderWindow* GetCurrentWindow();
 
 
-	void Initialize(std::shared_ptr<GameObject> _gameObject, sf::Vector2f _cameraView, sf::RenderWindow* _window, Scene* _scene);
+	void Init(sf::Vector2f _cameraView, sf::RenderWindow* _window, Scene* _scene);
 private:
 	std::vector<sf::Text*> Texts;
 	std::map <sf::Shape*, GameObject*> PermanentDrawablesObjects;

@@ -3,8 +3,6 @@
 #include "../../Headers/Components/Component.h"
 #include "../../Headers/Utilities/Utilities.h"
 
-#define SameTypeOfT() \
-[](Component* component) { return component->GetType()->Equals(T::GetStaticType()); }
 
 GameObject::GameObject(): Object("GameObject", Object::GetStaticType()), positionType(World), ZIndex(0)
 {
@@ -161,61 +159,3 @@ std::vector<DrawableComponent*>* GameObject::GetDrawableComponents()
 	return &drawableComponents;
 }
 
-
-
-template <typename T, typename... Args>
-T* GameObject::AddComponent(Args... args)
-{
-	T* newComponent = new T();
-	
-	newComponent->InitBaseComponent(this);
-	newComponent->Init(std::forward<Args>(args)...);
-	components.push_back(newComponent);
-	//componentsToDelete.push_back(newComponent);
-	return newComponent;
-}
-
-template <typename T>
-T* GameObject::AddComponent()
-{
-	T* newComponent = new T();
-	newComponent->InitBaseComponent(this);
-	components.push_back(newComponent);
-	return newComponent;
-}
-
-template <typename T>
-bool GameObject::RemoveComponent()
-{
-	Component* deletedComponent = nullptr;
-	components.RemoveFirstWith(SameTypeOfT(), deletedComponent);
-	if (deletedComponent != nullptr) {
-		delete deletedComponent;
-		return true;
-	}
-	return false;
-}
-
-template <typename T>
-int GameObject::RemoveAllComponents()
-{
-	int count = 0;
-	bool result = RemoveComponent<T>();
-	while (result) {
-		count++;
-		result = RemoveComponent<T>();
-	}
-	return count;
-}
-
-template <typename T>
-Component* GameObject::GetComponent()
-{
-	return components.GetFirstWith(SameTypeOfT());
-}
-
-template <typename T>
-TList<Component*> GameObject::GetAllComponents()
-{
-	return components.GetAllWith(SameTypeOfT());
-}

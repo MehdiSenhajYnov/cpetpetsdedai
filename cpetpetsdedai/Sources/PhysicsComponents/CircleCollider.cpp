@@ -7,7 +7,7 @@ CircleCollider::CircleCollider()
 {
 }
 
-void CircleCollider::Init(std::shared_ptr<GameObject> _gameObject, sf::Vector2f _topLeftPoint, float radius, int accuracy)
+void CircleCollider::Init(sf::Vector2f _topLeftPoint, float radius, int accuracy)
 {
 	std::vector<sf::Vector2f> _allpoints = MyMath::GetPointsOfPolygonInCircle(_topLeftPoint,radius, accuracy);
 	Collider::Init(_allpoints);

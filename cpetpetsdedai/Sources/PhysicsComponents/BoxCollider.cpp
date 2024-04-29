@@ -7,7 +7,7 @@ BoxCollider::BoxCollider()
 
 }
 
-void BoxCollider::Init(std::shared_ptr<GameObject> _gameObject, sf::Vector2f _topLeftPoint, sf::Vector2f _size)
+void BoxCollider::Init(sf::Vector2f _topLeftPoint, sf::Vector2f _size)
 {
 	Collider::Init(
 		{

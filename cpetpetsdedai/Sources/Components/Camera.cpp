@@ -124,7 +124,7 @@ void Camera::Update(float deltaTime)
 	Render();
 }
 
-void Camera::Initialize(std::shared_ptr<GameObject> _gameObject, sf::Vector2f _cameraView, sf::RenderWindow* _window, Scene* _scene)
+void Camera::Init(sf::Vector2f _cameraView, sf::RenderWindow* _window, Scene* _scene)
 {
 	CameraView = _cameraView;
 	window = _window; 

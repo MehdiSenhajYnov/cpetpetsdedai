@@ -10,6 +10,11 @@ Component::Component(const std::string& _typeName, Type* parentType) : Object(_t
 {
 }
 
+void Component::Init(ComponentInitParams* Params)
+{
+		
+}
+
 void Component::InitBaseComponent(GameObject* _gameObject)
 {
 	gameObject = _gameObject;

@@ -77,14 +77,15 @@ void MenuScene::InitializeScene(sf::RenderWindow* _window)
 	
 	playButtonObj->SetPosition(window->getSize().x / 2, window->getSize().y / 2 - 50);
 
-	playButtonComponent = playButtonObj->AddComponent<Button>("PLAY", &mainCamera);
+	playButtonComponent = playButtonObj->AddComponent<Button>();
+	playButtonComponent->Init("PLAY", mainCamera);
 	playButtonComponent->OnButtonClicked.Subscribe(&MenuScene::OnPlayButtonClicked, this);
 	
 	
 	exitButtonObj->SetPosition(window->getSize().x / 2, window->getSize().y / 2 + 50);
 
 	exitButtonComponent = exitButtonObj->AddComponent<Button>();
-	exitButtonComponent->Init(exitButtonObj, "EXIT", mainCamera);
+	exitButtonComponent->Init("EXIT", mainCamera);
 	exitButtonComponent->OnButtonClicked.Subscribe(&MenuScene::OnExitButtonClicked, this);
 
 

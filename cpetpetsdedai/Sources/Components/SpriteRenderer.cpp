@@ -102,3 +102,7 @@ sf::Vector2f SpriteRenderer::GetSize()
         GetSprite()->getTexture()->getSize().y
     );
 }
+
+void SpriteRenderer::Init(ComponentInitParams* Params)
+{
+}

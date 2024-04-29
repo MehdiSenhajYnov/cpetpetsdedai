@@ -155,11 +155,10 @@ std::tuple<std::shared_ptr<GameObject>, Collider*> GameScene::CreatePlayer()
 	IdleAnimation.Init("Idle", 0.5f, true, {"PLAYERIDLE001", "PLAYERIDLE002", "PLAYERIDLE003", "PLAYERIDLE004", "PLAYERIDLE005", "PLAYERIDLE006"});
 	playerAnimations.push_back(IdleAnimation);
 
-	playerAnimator->Init(_tempPlayer, playerAnimations);
+	playerAnimator->Init(playerAnimations);
 	playerAnimator->Play("Idle");
 	
 	// create animations for player
-	
 	
 	return std::make_tuple(_tempPlayer, _tempPlayerCollider);
 }

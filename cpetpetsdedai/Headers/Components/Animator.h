@@ -16,8 +16,8 @@ enum class AnimationState
 class Animator : public Component
 {
 public:
-    void Init(std::shared_ptr<GameObject> _gameObject, SpriteRenderer* _spriteRenderer);
-    void Init(std::shared_ptr<GameObject> _gameObject, std::vector<Animation> _animations);
+    void Init(SpriteRenderer* _spriteRenderer);
+    void Init(std::vector<Animation> _animations);
 
     void AddAnimation(Animation _animation);
 

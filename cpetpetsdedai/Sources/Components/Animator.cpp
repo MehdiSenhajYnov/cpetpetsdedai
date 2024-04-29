@@ -4,14 +4,14 @@
 #include "../../Headers/Engine/GameObject.h"
 #include "../../Headers/GameSystem/TextureManager.h"
 
-void Animator::Init(std::shared_ptr<GameObject> _gameObject, SpriteRenderer* _spriteRenderer)
+void Animator::Init(SpriteRenderer* _spriteRenderer)
 {
     spriteRenderer = _spriteRenderer;
     baseSprite = *spriteRenderer->GetSprite();
     
 }
 
-void Animator::Init(std::shared_ptr<GameObject> _gameObject, std::vector<Animation> _animations)
+void Animator::Init(std::vector<Animation> _animations)
 {
     animations = _animations;
 }

@@ -30,7 +30,8 @@ public:
     void setPosition(sf::Vector2f pos) override;
 
     sf::Vector2f GetSize();
-    
+
+    void Init(ComponentInitParams* Params) override;
 private:
     int ZIndex;
     sf::Texture* spriteTexture;
