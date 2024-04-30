@@ -13,8 +13,6 @@ class Camera : public Component
 {
 public:
 	Camera();
-	void Render();
-	bool IsOnDisplay(GameObject* toCheck);
 	void AddToPermanentDrawablesObjects(sf::Shape* drawableToAdd, GameObject* attachedObject);
 	void RemoveFromPermanentDrawablesObjects(sf::Shape* drawableToRemove);
 
@@ -22,9 +20,11 @@ public:
 	void RemoveFromTexts(sf::Text* textToRemove);
 
 	sf::RenderWindow* GetCurrentWindow();
-
+	void UpdateCameraRect();
 
 	void Init(sf::Vector2f _cameraView, sf::RenderWindow* _window, Scene* _scene);
+	sf::FloatRect GetCameraRect();
+
 private:
 	std::vector<sf::Text*> Texts;
 	std::map <sf::Shape*, GameObject*> PermanentDrawablesObjects;
@@ -32,6 +32,8 @@ private:
 	sf::RenderWindow* window;
 	Scene* scene;
 
+	sf::FloatRect CameraRect;
+	
 	void Start() override;
 	void Update(float deltaTime) override;
 

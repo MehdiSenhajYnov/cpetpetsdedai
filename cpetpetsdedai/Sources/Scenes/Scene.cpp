@@ -1,5 +1,6 @@
 #include "../../Headers/Scenes/Scene.h"
 
+#include "../../CameraManager.h"
 #include "../../Headers/Components/Camera.h"
 #include "../../Headers/Components/Component.h"
 #include "../../Headers/Components/SpriteRenderer.h"
@@ -13,74 +14,70 @@ Scene::Scene(std::string _typeName, Type* parentType) : Object(_typeName, parent
 {
 }
 
-std::shared_ptr<GameObject> Scene::CreateGameObject(std::string _gameObjectName, int ZIndex)
+GameObject* Scene::CreateGameObject(std::string _gameObjectName)
 {
-	std::shared_ptr<GameObject> newGameObject = std::make_shared<GameObject>();
+	GameObject* newGameObject = new GameObject();
 	newGameObject->Init(_gameObjectName);
-	newGameObject->SetZIndex(ZIndex);
 	gameObjects.push_back(newGameObject);
 	//gamesObjectsComponents[newGameObject] = std::vector<Component*>();
 	return newGameObject;
 }
 
-// void Scene::AddComponent(std::shared_ptr<GameObject> _gameObject, Component* _component)
-// {
-// 	//gamesObjectsComponents[_gameObject].push_back(_component);
-// 	_gameObject->AddComponent(_component);
-// 	
-// 	if (_component->GetType()->Equals(SpriteRenderer::GetStaticType()))
-// 	{
-// 		SpriteRenderer* spriteRenderer = dynamic_cast<SpriteRenderer*>(_component);
-// 		SpriteRenderersByZIndex[spriteRenderer->GetZIndex()].push_back(spriteRenderer);
-// 	}
-// }
-
-// void Scene::RemoveComponent(std::shared_ptr<GameObject> _gameObject, Component* _component)
-// {
-	// if (gamesObjectsComponents.contains(_gameObject))
-	// {
-	// 	for (int i = 0; i < gamesObjectsComponents[_gameObject].size(); i++)
-	// 	{
-	// 		if (gamesObjectsComponents[_gameObject][i] == _component)
-	// 		{
-	// 			gamesObjectsComponents[_gameObject].erase(gamesObjectsComponents[_gameObject].begin() + i);
-	// 			return;
-	// 		}
-	// 		gamesObjectsComponents.erase(_gameObject);
-	// 	}
-	// }
-// 	_gameObject->RemoveComponent(_component);
-// }
-
+Scene::~Scene()
+{
+	std::cout << "Cleaning scene" << std::endl;
+	for(auto& element : gameObjects)
+	{
+		delete element;
+		element = nullptr;
+	}
+	gameObjects.clear();
+}
 
 void Scene::InitializeScene(sf::RenderWindow* _window)
 {
 	window = _window;
 
-	mainCameraObject = CreateGameObject("mainCameraObject", 0);
-	mainCamera = mainCameraObject->AddComponent<Camera>(sf::Vector2f(10000, 10000), window, this);
-	
+	mainCameraObject = CreateGameObject("mainCameraObject");
+	mainCamera = mainCameraObject->AddComponent<Camera>();
+	mainCamera->Init(sf::Vector2f(1920, 1080), window, this);
+	CameraManager::GetInstance()->SetMainCamera(mainCamera);
 }
 
-void Scene::RemoveGameObject(std::shared_ptr<GameObject> _gameObjectToRemove)
+void Scene::RemoveGameObject(GameObject* _gameObjectToRemove)
 {
-	//gamesObjectsComponents.erase(_gameObjectToRemove);
+	gameObjects.RemoveElement(_gameObjectToRemove);
+	delete _gameObjectToRemove;
+	_gameObjectToRemove = nullptr;
 }
 
-std::vector<std::shared_ptr<GameObject>>* Scene::GetGameObjects()
+TList<GameObject*>* Scene::GetGameObjects()
 {
 	return &gameObjects;
 }
 
-std::map<int, std::vector<SpriteRenderer*>>* Scene::GetSpriteRenderersByZIndex()
+TList<DrawableLayer*> Scene::GetDrawableLayers()
 {
-	return &SpriteRenderersByZIndex;
+	TList<DrawableLayer*> drawableLayers;
+	for (auto& _gameObject : gameObjects)
+	{
+		for (auto& _drawableComponent : *(_gameObject->GetDrawableComponents()))
+		{
+			drawableLayers.push_back(&_drawableComponent);
+		}
+	}
+
+	return drawableLayers;
 }
 
 void Scene::CalUpdateOnAll(float deltaTime)
 {
 	for (auto& _gameObject : gameObjects)
 	{
+		if (!_gameObject->GetIsActive())
+		{
+			continue;
+		}
 		for (auto& component : *_gameObject->GetComponents())
 		{
 			if (sceneMode == SceneMode::EditMode && component->componentWorkType == ComponentWorkType::Play)

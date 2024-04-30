@@ -128,19 +128,20 @@ void GameScene::OnSceneChanged()
 
 
 
-std::shared_ptr<GameObject> GameScene::CreateBackground()
+GameObject* GameScene::CreateBackground()
 {
-	auto tempBackground = CreateGameObject("Background", 0);
+	auto tempBackground = CreateGameObject("Background");
 	//tempBackground->SetSprite("./Assets/Background.png");
 	return tempBackground;
 }
 
-std::tuple<std::shared_ptr<GameObject>, Collider*> GameScene::CreatePlayer()
+std::tuple<GameObject*, Collider*> GameScene::CreatePlayer()
 {
-	auto _tempPlayer = CreateGameObject("Player", 20);
+	auto _tempPlayer = CreateGameObject("Player");
 	SpriteRenderer* playerSpriteRenderer = _tempPlayer->AddComponent<SpriteRenderer>();
 	playerSpriteRenderer->SetSprite("PLAYERIDLE001");
-	playerSpriteRenderer->GetSprite()->setScale(sf::Vector2f(1.25f, 1.25f));
+	playerSpriteRenderer->SetZIndex(20);
+	playerSpriteRenderer->SetScale(sf::Vector2f(1.25f, 1.25f));
 	
 	_tempPlayer->SetPosition(300, 400);
 
@@ -163,10 +164,10 @@ std::tuple<std::shared_ptr<GameObject>, Collider*> GameScene::CreatePlayer()
 	return std::make_tuple(_tempPlayer, _tempPlayerCollider);
 }
 
-std::tuple<std::shared_ptr<GameObject>, CustomCollider*> GameScene::CreateTarget()
+std::tuple<GameObject*, CustomCollider*> GameScene::CreateTarget()
 {
 
-	std::shared_ptr<GameObject> target = CreateGameObject("Target", 20);
+	GameObject* target = CreateGameObject("Target");
 	
 	CustomCollider* targetCollider = physicsEngine.CreateCustomCollider(target, {
 		sf::Vector2f(15,70),

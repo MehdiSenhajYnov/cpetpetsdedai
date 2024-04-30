@@ -1,62 +1,102 @@
 #include <ranges>
 #include "../../Headers/Scenes/EditorScene.h"
+
+#include "../../RoundedRectangle.h"
 #include "../../Headers/Engine/GameObject.h"
 #include "../../Headers/Utilities/Utilities.h"
 #include "../../Headers/Components/SpriteRenderer.h"
 #include "../../Headers/Components/Camera.h"
 
 
-EditorScene::EditorScene() : Scene("Level", Scene::GetStaticType())
+EditorScene::EditorScene() : Scene("EditorScene", Scene::GetStaticType()),
+editorMove(nullptr), contextMenu()
 {
+    contextMenu = ContextMenu();
 }
 
 void EditorScene::InitializeScene(sf::RenderWindow* _window)
 {
-    window = _window;
+    Scene::InitializeScene(_window);
     
-    mainCameraObject = CreateGameObject("mainCameraObject",0);
-    
-    mainCamera = mainCameraObject->AddComponent<Camera>(sf::Vector2f(10000, 10000), window, this);
-    
+    editorMove = CreateGameObject("EditorMove");
+    SpriteRenderer* editorMoveSpriteRenderer = editorMove->AddComponent<SpriteRenderer>();
+    editorMoveSpriteRenderer->SetSprite("EditorMove");
+    editorMoveSpriteRenderer->SetScale(sf::Vector2f(0.1f,0.1f));
+    editorMoveSpriteRenderer->SetColor(sf::Color::Green);
+    editorMoveSpriteRenderer->SetZIndex(2);
+    editorMove->SetPosition(100, 200);
+    editorMove->SetIsActive(false);
+
+    contextMenu.Init("ContextMenu");
+    contextMenu.AddToContextMenu("Create Game Object", &EditorScene::CreateGameObjectContextMenu, this);
 }
 
 void EditorScene::Update(float deltaTime)
 {
-
-    
-    
     CalUpdateOnAll(deltaTime);
-}
-
-void EditorScene::OnKeyDown(sf::Keyboard::Key pressedKey)
-{
+    EditorUpdate(deltaTime);
 }
 
 void EditorScene::DestroyScene()
 {
 }
 
+void EditorScene::OnMouseKeyDown(sf::Mouse::Button pressedKey)
+{
+    if (pressedKey == sf::Mouse::Right)
+    {
+        CreateContextMenu();
+    } else if (pressedKey == sf::Mouse::Left)
+    {
+        if (!contextMenu.IsInBounds(mousePositionWorld))
+        {
+            DisableContextMenu();
+        }
+    }
+}
+
+void EditorScene::CreateGameObjectContextMenu(Button* btn)
+{
+    std::cout << "Create Game Object" << std::endl;
+}
+
+void EditorScene::CreateContextMenu()
+{
+
+    contextMenu.SetPosition(mousePosition);
+    contextMenu.SetIsActive(true);
+    
+    // contextMenuBackground = CreateGameObject("ContextMenuBackground");
+    // contextMenuBackgroundSpriteRenderer = contextMenuBackground->AddComponent<SpriteRenderer>();
+    // contextMenuBackgroundSpriteRenderer->SetSprite("Square");
+    // contextMenuBackgroundSpriteRenderer->SetColor(sf::Color(200,200,200));
+    // contextMenuBackgroundSpriteRenderer->SetZIndex(100);
+    // contextMenuBackground->positionType = PositionType::UI;
+    // contextMenuBackground->SetPosition(mousePosition);
+    // contextMenuBackground->SetScale(1, 0.3f);
+}
+
+void EditorScene::DisableContextMenu()
+{
+    contextMenu.SetIsActive(false);
+}
+
+
 void EditorScene::EditorUpdate(float deltaTime)
 {
-    mousePosition = sf::Vector2f(sf::Mouse::getPosition(*mainCamera->GetCurrentWindow()));
+    if (mainCamera == nullptr)
+    {
+        std::cout << "mainCamera is nullptr" << '\n';
+        return;
+    }
+    mousePosition = sf::Vector2f(sf::Mouse::getPosition(*(mainCamera->GetCurrentWindow())));
+    mousePositionWorld = mainCamera->GetAttachedObject()->GetPosition() + mousePosition;
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
         if (!isMousePressed)
         {
             isMousePressed = true;
-    
-            // TODO : reverse loop sur GetSpriteRenderersByZIndex, et checker si je touche un sprite renderer, si c'est le cas afficher le move
-            for(auto& [zIndex, spriteRenderers] :  std::ranges::views::reverse(*GetSpriteRenderersByZIndex())) {
-                for (auto _spriterenderer : spriteRenderers)
-                {
-                    if (Utilities::IsInBounds(mousePosition, _spriterenderer->GetAttachedObject()->GetPosition(), _spriterenderer->GetSize()))
-                    {
-                        
-                    }
-
-                }
-            }
-            
+            CheckMouseSelection();
         }
     }
     else
@@ -64,7 +104,43 @@ void EditorScene::EditorUpdate(float deltaTime)
         if (isMousePressed)
         {
             isMousePressed = false;
+            selectedObject = nullptr;
+        }
+    }
     
+    if (isMousePressed && selectedObject != nullptr)
+    {
+        selectedObject->SetPosition(mousePositionWorld + selectedObjectOffset);
+        editorMove->SetPosition(selectedObject->GetPosition());
+    }
+}
+
+void EditorScene::CheckMouseSelection()
+{
+    for(auto& _gameObject : gameObjects) {
+        if (_gameObject == editorMove)
+        {
+            continue;
+        }
+
+        if (_gameObject == &contextMenu)
+        {
+            continue;
+        }
+        
+        for (auto drawableLayer : *(_gameObject->GetDrawableComponents()))
+        {
+            for (auto& _spriterenderer : drawableLayer.drawableComponents)
+            {
+                if (Utilities::IsInBounds(mousePositionWorld, _spriterenderer->GetAttachedObject()->GetPosition(), _spriterenderer->GetSize()))
+                {
+                    selectedObject = _spriterenderer->GetAttachedObject();
+                    selectedObjectOffset = selectedObject->GetPosition() - mousePositionWorld;
+                    editorMove->SetIsActive(true);
+                    editorMove->SetPosition(selectedObject->GetPosition());
+                    return;
+                }
+            }
         }
     }
 

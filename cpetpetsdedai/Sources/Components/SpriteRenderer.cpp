@@ -11,9 +11,6 @@ void SpriteRenderer::Start()
 {
 }
 
-void SpriteRenderer::Update(float deltaTime)
-{
-}
 
 SpriteRenderer::~SpriteRenderer()
 {
@@ -75,16 +72,6 @@ sf::Color SpriteRenderer::GetColor()
     return color;
 }
 
-int SpriteRenderer::GetZIndex()
-{
-    return ZIndex;
-}
-
-void SpriteRenderer::SetZIndex(int _zIndex)
-{
-    ZIndex = _zIndex;
-}
-
 const sf::Drawable* SpriteRenderer::GetDrawable()
 {
     return &sprite;
@@ -95,6 +82,11 @@ void SpriteRenderer::setPosition(sf::Vector2f pos)
     sprite.setPosition(pos);
 }
 
+sf::FloatRect SpriteRenderer::GetBounds()
+{
+    return sprite.getLocalBounds();
+}
+
 sf::Vector2f SpriteRenderer::GetSize()
 {
 	return sf::Vector2f(
@@ -103,6 +95,14 @@ sf::Vector2f SpriteRenderer::GetSize()
     );
 }
 
-void SpriteRenderer::Init(ComponentInitParams* Params)
+void SpriteRenderer::SetOrigin(sf::Vector2f origin)
 {
+    sprite.setOrigin(origin);
 }
+
+void SpriteRenderer::SetDrawScale(sf::Vector2f _drawScale)
+{
+    sprite.setScale(_drawScale);
+}
+
+

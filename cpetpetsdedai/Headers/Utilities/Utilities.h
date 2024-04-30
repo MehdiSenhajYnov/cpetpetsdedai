@@ -4,6 +4,12 @@
 #include <vector>
 #include <SFML/System/Vector2.hpp>
 
+enum InBoundsInputType
+{
+    TopLeft,
+    Center
+};
+
 class Utilities
 {
 public:
@@ -14,4 +20,6 @@ public:
     static std::vector<std::string> SplitString(std::string _stringToSplit, std::string _delimiter);
 
     static bool IsInBounds(const sf::Vector2f& _positionToCheck, const sf::Vector2f& _position, const sf::Vector2f& _size);
+    static bool IsInBounds(const sf::Vector2f& _positionToCheck, const sf::Vector2f& _position, const sf::Vector2f& _size, InBoundsInputType _inputType);
+
 };

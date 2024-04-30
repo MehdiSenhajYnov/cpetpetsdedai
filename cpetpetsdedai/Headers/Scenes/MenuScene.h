@@ -12,14 +12,14 @@ public:
 	void GameLoop(float deltaTime);
 
 private:
-	std::shared_ptr<GameObject> playButtonObj;
-	std::shared_ptr<GameObject> exitButtonObj;
+	GameObject* playButtonObj;
+	GameObject* exitButtonObj;
 
 	Button* playButtonComponent;
 	Button* exitButtonComponent;
 
 
-	//std::shared_ptr<GameObject> LoadingObj;
+	//GameObject* LoadingObj;
 	//Button loadingButtonComponent;
 
 

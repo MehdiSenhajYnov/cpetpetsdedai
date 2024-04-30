@@ -12,6 +12,7 @@ concept IsSceneClass = requires (T t) {
 	t.OnKeyDown();
 	t.DestroyScene();
 };
+
 class GameManager
 {
 public:
@@ -33,7 +34,7 @@ private:
 	bool iswindowFocus;
 	void WindowsEvents();
 
-	std::shared_ptr<Scene> currentScene;
+	Scene* currentScene;
 	sf::RenderWindow window;
 };
 

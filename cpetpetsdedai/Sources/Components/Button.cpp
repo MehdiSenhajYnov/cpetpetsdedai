@@ -1,77 +1,85 @@
 #include "../../Headers/Components/Button.h"
 
+#include "../../CameraManager.h"
+#include "../../RendererManager.h"
 #include "../../Headers/Components/Camera.h"
 #include "../../Headers/Components/SpriteRenderer.h"
 #include "../../Headers/Engine/GameObject.h"
 #include "../../Headers/Utilities/Utilities.h"
+#include "../../TextComponent.h"
 
-sf::Font Button::font;
-bool Button::fontLoaded;
-Button::Button() :camera(nullptr), isMousePressed(false), ClickOnTheButton(false), buttonState(ButtonState::Normal)
+
+Button::Button() :isMousePressed(false), ClickOnTheButton(false), buttonState(ButtonState::Normal)
 {
 }
 
-void Button::Init(std::string _buttonString, Camera* _camera)
+void Button::Init(SpriteRenderer* _spriteRenderer)
 {
-	if (!fontLoaded)
-	{
-		if (!font.loadFromFile("./Fonts/Arial.ttf"))
-		{
-			std::cout << "ERROR" << std::endl;
-		}
-		else
-		{
-			fontLoaded = true;
-		}
+	buttonInitialized = true;
+	spriteRenderer = _spriteRenderer;
+}
 
-	}
+sf::Vector2f operator/(const sf::Vector2f& _vectorToDivide, float _divideValue)
+{
+	return sf::Vector2f(_vectorToDivide.x / _divideValue, _vectorToDivide.y / _divideValue);
+}
+
+void Button::InitDefaultButton(std::string _buttonString)
+{
+	buttonInitialized = true;
+
+	InitDefaultSpriteRenderer();
+	InitDefaultTextComponent(_buttonString);
 	
-	buttonText.setFont(font); // font is a sf::Font
-
-	// set the character size
-	buttonText.setCharacterSize(48); // in pixels, not points!
-	buttonText.setStyle(sf::Text::Bold | sf::Text::Underlined);
-	// set the color
-	buttonText.setFillColor(sf::Color::Black);
-	SetString(_buttonString);
-
-	camera = _camera;
-	camera->AddToTexts(&buttonText);
-
-	spriteRenderer = gameObject->AddComponent<SpriteRenderer>();
-	spriteRenderer->SetSprite("RoundedRectangle");
 	UpdatePosition();
 }
 
+void Button::InitDefaultSpriteRenderer()
+{
+	spriteRenderer = gameObject->AddComponent<SpriteRenderer>();
+	spriteRenderer->SetSprite("RoundedRectangle");
+	spriteRenderer->SetZIndex(20);
+	spriteRenderer->SetOrigin(GetSize()/2);
+}
+
+void Button::InitDefaultTextComponent(std::string _buttonString)
+{
+	textComponent = gameObject->AddComponent<TextComponent>();
+	textComponent->Init(_buttonString);
+}
+
+
 void Button::SetString(std::string _buttonString)
 {
-	buttonText.setString(_buttonString);
-	sf::FloatRect textRect = buttonText.getLocalBounds();
-	buttonText.setOrigin(textRect.left + textRect.width / 2.0f,
-		textRect.top + textRect.height / 2.0f);
+	if (textComponent == nullptr)
+	{
+		InitDefaultButton(_buttonString);
+		return;
+	}
+	textComponent->SetString(_buttonString);
 }
 
 sf::Text* Button::GetText()
 {
-	return &buttonText;
+	return &textComponent->Text;
 }
 
 bool Button::IsInButton(const sf::Vector2i& positionToCheck)
 {
-	if (!camera->IsOnDisplay(gameObject))
+	if (!RendererManager::GetInstance()->isOnDisplay(spriteRenderer))
 	{
 		return false;
 	}
 
 	return Utilities::IsInBounds(sf::Vector2f(positionToCheck.x, positionToCheck.y),
-	                             gameObject->GetPosition() - camera->GetAttachedObject()->GetPosition(),
-	                             GetCurrentSize());
+	                             gameObject->GetPosition() - CameraManager::GetInstance()->GetMainCamera()->GetAttachedObject()->GetPosition(),
+	                             GetSize(), Center);
 }
 
 void Button::SetColor(const sf::Color& _color)
 {
 	spriteRenderer->SetColor(_color);
-	buttonText.setFillColor(_color);
+	textComponent->SetColor(_color);
 }
 
 sf::Color Button::GetColor()
@@ -98,7 +106,11 @@ void Button::Start()
 
 void Button::Update(float _deltaTime)
 {
-	mousePosition = sf::Mouse::getPosition(*camera->GetCurrentWindow());
+	if (!buttonInitialized)
+	{
+		return;
+	}
+	mousePosition = sf::Mouse::getPosition(*CameraManager::GetInstance()->GetMainCamera()->GetCurrentWindow());
 	if (oldObjPosition != gameObject->GetPosition())
 	{
 		UpdatePosition();
@@ -175,22 +187,18 @@ sf::Vector2f Button::GetSize()
 	return spriteRenderer->GetSize();
 }
 
-sf::Vector2f Button::GetCurrentSize()
+SpriteRenderer* Button::GetSpriteRenderer()
 {
-	return sf::Vector2f(
-		spriteRenderer->GetSprite()->getTexture()->getSize().x * spriteRenderer->GetSprite()->getScale().x,
-		spriteRenderer->GetSprite()->getTexture()->getSize().y * spriteRenderer->GetSprite()->getScale().y
-	);
+	 return spriteRenderer;
 }
-
 
 void Button::UpdatePosition()
 { 
 	sf::Vector2f newPos;
 	if (spriteRenderer->GetSprite()->getTexture() != nullptr)
 	{
-		newPos.x = gameObject->GetPosition().x + ((spriteRenderer->GetSprite()->getTexture()->getSize().x * spriteRenderer->GetSprite()->getScale().x) / 2);
-		newPos.y = gameObject->GetPosition().y + ((spriteRenderer->GetSprite()->getTexture()->getSize().y * spriteRenderer->GetSprite()->getScale().y) / 2);
+		newPos.x = gameObject->GetPosition().x + ((GetSize().x * spriteRenderer->GetSprite()->getScale().x) / 2);
+		newPos.y = gameObject->GetPosition().y + ((GetSize().y * spriteRenderer->GetSprite()->getScale().y) / 2);
 	}
 	else
 	{
@@ -198,7 +206,7 @@ void Button::UpdatePosition()
 		newPos.y = gameObject->GetPosition().y + (spriteRenderer->GetSprite()->getScale().y / 2);
 	}
 
-	buttonText.setPosition(newPos);
+	textComponent->setPosition(newPos);
 
 	oldObjPosition = gameObject->GetPosition();
 }

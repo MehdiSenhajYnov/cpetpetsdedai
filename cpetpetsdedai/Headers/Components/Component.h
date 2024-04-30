@@ -25,12 +25,14 @@ public:
 	
 	virtual void Start() = 0;
 	virtual void Update(float deltaTime) = 0;
+	virtual void PreDestroy(){};
 
 	GameObject* GetAttachedObject();
 	ComponentWorkType componentWorkType;
 
-	virtual void Init(ComponentInitParams* Params);;
-	void         InitBaseComponent(GameObject* _gameObject);
+	virtual void Init();
+
+	virtual void InitBaseComponent(GameObject* _gameObject);
 protected:
 
 	GameObject* gameObject;

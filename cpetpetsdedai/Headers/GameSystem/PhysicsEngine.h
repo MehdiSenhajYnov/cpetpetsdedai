@@ -23,13 +23,13 @@ public:
 	bool ObjectCanMoveBy(Collider* colliderToCheck, sf::Vector2f _moveBy);
 	//bool IsColliderTouchingCollider(Collider* firstCollider, Collider* Collider);
 	bool SomeObjecsAreColliding();
-	BoxCollider* CreateBoxCollider(std::shared_ptr<GameObject> _gameObject, sf::Vector2f _topLeftPoint, sf::Vector2f _size);
-	CircleCollider* CreateCircleCollider(std::shared_ptr<GameObject> _gameObject, sf::Vector2f _topLeftPoint, float radius, int accuracy);
-	CustomCollider* CreateCustomCollider(std::shared_ptr<GameObject> _gameObject, std::vector<sf::Vector2f> allPoints);
+	BoxCollider* CreateBoxCollider(GameObject* _gameObject, sf::Vector2f _topLeftPoint, sf::Vector2f _size);
+	CircleCollider* CreateCircleCollider(GameObject* _gameObject, sf::Vector2f _topLeftPoint, float radius, int accuracy);
+	CustomCollider* CreateCustomCollider(GameObject* _gameObject, std::vector<sf::Vector2f> allPoints);
 	
-	BoxCollider* CreateBoxCollider(std::shared_ptr<GameObject> _gameObject, sf::Vector2f _topLeftPoint, sf::Vector2f _size, std::string _colliderID);
-	CircleCollider* CreateCircleCollider(std::shared_ptr<GameObject> _gameObject, sf::Vector2f _topLeftPoint, float radius, int accuracy, std::string _colliderID);
-	CustomCollider* CreateCustomCollider(std::shared_ptr<GameObject> _gameObject, std::vector<sf::Vector2f> allPoints, std::string _colliderID);
+	BoxCollider* CreateBoxCollider(GameObject* _gameObject, sf::Vector2f _topLeftPoint, sf::Vector2f _size, std::string _colliderID);
+	CircleCollider* CreateCircleCollider(GameObject* _gameObject, sf::Vector2f _topLeftPoint, float radius, int accuracy, std::string _colliderID);
+	CustomCollider* CreateCustomCollider(GameObject* _gameObject, std::vector<sf::Vector2f> allPoints, std::string _colliderID);
 
 	
 	void DestroyCollider(Collider* _colliderToRemove);

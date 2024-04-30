@@ -41,14 +41,14 @@ bool PhysicsEngine::SomeObjecsAreColliding()
 }
 
 
-BoxCollider* PhysicsEngine::CreateBoxCollider(std::shared_ptr<GameObject> _gameObject, sf::Vector2f _topLeftPoint, sf::Vector2f _size)
+BoxCollider* PhysicsEngine::CreateBoxCollider(GameObject* _gameObject, sf::Vector2f _topLeftPoint, sf::Vector2f _size)
 {
 	BoxCollider* newCollider = _gameObject->AddComponent<BoxCollider>( _topLeftPoint, _size);
 	AllColliders.push_back(newCollider);
 	return newCollider;
 }
 
-CircleCollider* PhysicsEngine::CreateCircleCollider(std::shared_ptr<GameObject> _gameObject, sf::Vector2f _topLeftPoint, float radius, int accuracy)
+CircleCollider* PhysicsEngine::CreateCircleCollider(GameObject* _gameObject, sf::Vector2f _topLeftPoint, float radius, int accuracy)
 {
 	CircleCollider* newCollider = _gameObject->AddComponent<CircleCollider>(_topLeftPoint, radius, accuracy);
 	AllColliders.push_back(newCollider);
@@ -56,27 +56,27 @@ CircleCollider* PhysicsEngine::CreateCircleCollider(std::shared_ptr<GameObject> 
 }
 
 
-CustomCollider* PhysicsEngine::CreateCustomCollider(std::shared_ptr<GameObject> _gameObject, std::vector<sf::Vector2f> allPoints)
+CustomCollider* PhysicsEngine::CreateCustomCollider(GameObject* _gameObject, std::vector<sf::Vector2f> allPoints)
 {
 	CustomCollider* newCollider = _gameObject->AddComponent<CustomCollider>(allPoints);
 	AllColliders.push_back(newCollider);
 	return newCollider;
 }
 
-BoxCollider* PhysicsEngine::CreateBoxCollider(std::shared_ptr<GameObject> _gameObject,
+BoxCollider* PhysicsEngine::CreateBoxCollider(GameObject* _gameObject,
 	sf::Vector2f _topLeftPoint, sf::Vector2f _size, std::string _colliderID)
 {
 	  
 	return CreateBoxCollider(_gameObject, _topLeftPoint, _size);
 }
 
-CircleCollider* PhysicsEngine::CreateCircleCollider(std::shared_ptr<GameObject> _gameObject,
+CircleCollider* PhysicsEngine::CreateCircleCollider(GameObject* _gameObject,
 	sf::Vector2f _topLeftPoint, float radius, int accuracy, std::string _colliderID)
 {
 	return CreateCircleCollider(_gameObject, _topLeftPoint, radius, accuracy);
 }
 
-CustomCollider* PhysicsEngine::CreateCustomCollider(std::shared_ptr<GameObject> _gameObject,
+CustomCollider* PhysicsEngine::CreateCustomCollider(GameObject* _gameObject,
 	std::vector<sf::Vector2f> allPoints, std::string _colliderID)
 {
 	return CreateCustomCollider(_gameObject, allPoints);

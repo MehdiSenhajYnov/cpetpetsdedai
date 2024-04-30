@@ -13,6 +13,40 @@ public:
 
     virtual const sf::Drawable* GetDrawable() = 0;
     virtual void setPosition(sf::Vector2f pos) = 0;
-    void Init();
+
+    virtual sf::Vector2f GetSize() = 0;
+
+    virtual int GetZIndex()
+    {
+        return ZIndex;
+    }
+    virtual void SetZIndex(int _zIndex)
+    {
+        ZIndex = _zIndex;
+    }
+
+    int ZIndex = 0;
+    
+    virtual sf::FloatRect GetBounds() = 0;
+
+    virtual void InitBaseComponent(GameObject* _gameObject);
+    virtual void Init() override;
+    void PreDestroy() override;
+    virtual void Start() override = 0;
+    virtual void Update(float deltaTime) override;
+
+    virtual void SetDrawScale(sf::Vector2f _drawScale) = 0;
+
+    sf::Vector2f GetScale() const;
+    void SetScale(sf::Vector2f _scale);
+
+    sf::Vector2f GetOffsetPosition() const;
+    void SetOffsetPosition(sf::Vector2f _offsetPosition);
+    
+private:
+    bool alreadyInit = false;
+    sf::Vector2f Scale;
+    sf::Vector2f OffsetPosition;
+
 
 };

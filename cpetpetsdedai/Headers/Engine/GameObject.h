@@ -10,6 +10,19 @@
 
 class DrawableComponent;
 
+struct DrawableLayer
+{
+	int ZIndex;	
+	TList<DrawableComponent*> drawableComponents;
+
+	DrawableComponent* operator[](const int& index) {
+		return drawableComponents[index];
+	}
+	const DrawableComponent* operator[](const int& index) const {
+		return drawableComponents[index];
+	}
+};
+
 enum PositionType
 {
 	World,
@@ -30,7 +43,6 @@ public:
 	
 	void SetPosition(sf::Vector2f _newposition);
 	void SetPosition(float _x, float _y);
-
 	void SetScale(sf::Vector2f _newScale);
 	void SetScale(float _x, float _y);
 
@@ -39,21 +51,18 @@ public:
 	void Move(float _x, float _y);
 	void Move(sf::Vector2f _moveBy);
 
-	std::vector<std::string> GetTags();
+	sf::Vector2f GetScale();
+	
+	TList<std::string> GetTags();
 	void AddTags(const std::string& _tagToAdd);
 	void RemoveTags(const std::string& _tagToAdd);
 
-	int GetZIndex();
-	void SetZIndex(int _zIndex);
-
-	//void AddComponent(Component* _component);
-	//void RemoveComponent(Component* _component);
-	
-	std::vector<Component*>* GetComponents();
+	TList<Component*>* GetComponents();
 
 	void AddDrawableComponent(DrawableComponent* _drawableComponent);
 	void RemoveDrawableComponent(DrawableComponent* _drawableComponent);
-	std::vector<DrawableComponent*>* GetDrawableComponents();
+	
+	TList<DrawableLayer>* GetDrawableComponents();
 	
 	PositionType positionType;
 
@@ -74,30 +83,35 @@ public:
 
 	template <typename T>
 	TList<Component*> GetAllComponents();
-	
+
 private:
 	sf::Vector2f position;
 	sf::Vector2f scale;
-	std::vector<std::string> _tags;
-	int ZIndex;
+	TList<std::string> _tags;
 	
 	TList<Component*> components;
-	//TList<Component*> componentsToDelete;
-	
-	std::vector<DrawableComponent*> drawableComponents;
+	GameObject* parent;
+
+public:
+	GameObject* GetParent() const;
+	void SetParent(GameObject* _parent);
+
+private:
+	TList<DrawableLayer> drawableComponents;
+	bool isActive;
+
+public:
+	bool GetIsActive() const;
+	void SetIsActive(bool is_active);
 };
-
-
 
 template <typename T, typename... Args>
 T* GameObject::AddComponent(Args... args)
 {
 	T* newComponent = new T();
-	
 	newComponent->InitBaseComponent(this);
 	newComponent->Init(std::forward<Args>(args)...);
 	components.push_back(newComponent);
-	//componentsToDelete.push_back(newComponent);
 	return newComponent;
 }
 
@@ -117,6 +131,7 @@ bool GameObject::RemoveComponent()
 	components.RemoveFirstWith(SameTypeOfT(), deletedComponent);
 	if (deletedComponent != nullptr) {
 		delete deletedComponent;
+		deletedComponent = nullptr;
 		return true;
 	}
 	return false;

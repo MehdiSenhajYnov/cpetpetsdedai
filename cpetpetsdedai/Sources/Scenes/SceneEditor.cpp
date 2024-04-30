@@ -40,7 +40,7 @@ void SceneEditor::LoadScene(std::string _sceneName)
     std::vector<std::string> sceneFileLines = FileUtilities::ReadLinesFromFile(sceneFilePath);
 
     EditorScene level;
-    std::shared_ptr<GameObject> currentGameObject; 
+    GameObject* currentGameObject; 
     for (auto& line : sceneFileLines)
     {
         std::vector<std::string> lineParts = Utilities::SplitString(line, "=");
@@ -50,9 +50,7 @@ void SceneEditor::LoadScene(std::string _sceneName)
         } else if (lineParts[0] == "GameObject")
         {
             std::vector<std::string> GameObjectInfo = Utilities::SplitString(lineParts[1], ",");
-            currentGameObject = level.CreateGameObject(GameObjectInfo[0], std::stoi(lineParts[1]));
-
-            
+            currentGameObject = level.CreateGameObject(GameObjectInfo[0]);
         }
     }
     

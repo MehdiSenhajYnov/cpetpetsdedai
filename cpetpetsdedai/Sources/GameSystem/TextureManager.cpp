@@ -28,15 +28,17 @@ void TextureManager::AddTexture(std::string mapName, std::string _texturePath)
         textures[mapName] = new sf::Texture();
     }
     textures[mapName]->loadFromFile(_texturePath);
+    textures[mapName]->setSmooth(true);
 }
-
 
 void TextureManager::Init()
 {
     std::cout << "TextureManager initializing ..." << std::endl;
 
     AddTexture("TestObj", "./Assets/TestObj.png");
+    AddTexture("Square", "./Assets/Square.png");
     AddTexture("RoundedRectangle", "./Assets/RoundedRectangle.png");
+    AddTexture("EditorMove", "./Assets/Editor/MoveArrow.png");
     IncludeIdleAnimationTextures();
 }
 
@@ -54,8 +56,12 @@ void TextureManager::DeleteTexture(std::string _texturePath)
 {
     if (textures.contains(_texturePath))
     {
-        delete textures[_texturePath];
+        auto test = textures[_texturePath];
+        delete test;
+        test = nullptr;
         textures.erase(_texturePath);
+
+        
     }
 }
 

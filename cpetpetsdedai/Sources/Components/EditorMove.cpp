@@ -1,5 +1,7 @@
 ﻿#include "../../Headers/Components/EditorMove.h"
 
+#include "../../Headers/Components/SpriteRenderer.h"
+
 EditorMove::EditorMove() : GameObject("EditorMovable", GameObject::GetStaticType())
 {
 }
@@ -16,7 +18,7 @@ EditorMove::~EditorMove()
 
 void EditorMove::Init(std::string _name)
 {
-    
     GameObject::Init(_name);
-    
+    auto spriteRenderer = AddComponent<SpriteRenderer>();
+    spriteRenderer->SetSprite("EditorMove");
 }

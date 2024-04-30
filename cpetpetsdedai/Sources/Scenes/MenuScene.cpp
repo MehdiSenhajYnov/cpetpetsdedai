@@ -18,13 +18,11 @@ void MenuScene::OnBtnMouseExit(Button* btn)
 
 void MenuScene::OnBtnMouseClickDown(Button* btn)
 {
-	std::cout << "Mouse click down" << std::endl;
 	btn->SetColor(pressedButtonColor);
 }
 
 void MenuScene::OnBtnMouseClickUp(Button* btn)
 {
-	std::cout << "Mouse click up" << std::endl;
 	if (btn->GetButtonState() != ButtonState::Hover)
 	{
 		btn->SetColor(normalButtonColor);
@@ -72,28 +70,21 @@ void MenuScene::InitializeScene(sf::RenderWindow* _window)
 {
 	Scene::InitializeScene(_window);
 
-	playButtonObj = CreateGameObject("playButton", 10);
-	exitButtonObj = CreateGameObject("exitButton", 10);
+	playButtonObj = CreateGameObject("playButton");
+	exitButtonObj = CreateGameObject("exitButton");
 	
 	playButtonObj->SetPosition(window->getSize().x / 2, window->getSize().y / 2 - 50);
 
 	playButtonComponent = playButtonObj->AddComponent<Button>();
-	playButtonComponent->Init("PLAY", mainCamera);
+	playButtonComponent->InitDefaultButton("PLAY");
 	playButtonComponent->OnButtonClicked.Subscribe(&MenuScene::OnPlayButtonClicked, this);
 	
 	
 	exitButtonObj->SetPosition(window->getSize().x / 2, window->getSize().y / 2 + 50);
 
 	exitButtonComponent = exitButtonObj->AddComponent<Button>();
-	exitButtonComponent->Init("EXIT", mainCamera);
+	exitButtonComponent->InitDefaultButton("EXIT");
 	exitButtonComponent->OnButtonClicked.Subscribe(&MenuScene::OnExitButtonClicked, this);
-
-
-	// LoadingObj = CreateGameObject("Loading", 10);
-	// LoadingObj->SetPosition(playButtonObj->GetPosition().x + 105, playButtonObj->GetPosition().y - 40);
-	//
-	// loadingButtonComponent.Init(LoadingObj, "", &mainCamera);
-	// LoadingObj->AddComponent(&loadingButtonComponent);
 
 	playButtonComponent->SetColor(normalButtonColor);
 	exitButtonComponent->SetColor(normalButtonColor);

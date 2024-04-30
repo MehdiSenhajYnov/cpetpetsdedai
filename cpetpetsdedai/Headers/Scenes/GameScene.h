@@ -33,19 +33,19 @@ protected:
 	PhysicsEngine physicsEngine;
 	GraphicDebugger graphicDebugger;
 	
-	std::shared_ptr<GameObject> Player;
+	GameObject* Player;
 	
-	std::shared_ptr<GameObject> Ground;
-	std::shared_ptr<GameObject> directionArrow;
-	std::shared_ptr<GameObject> forceArrow;
-	std::shared_ptr<GameObject> BackgroundObject;
+	GameObject* Ground;
+	GameObject* directionArrow;
+	GameObject* forceArrow;
+	GameObject* BackgroundObject;
 
 	Animation IdleAnimation;
 	std::vector<Animation> playerAnimations;
 	
-	std::shared_ptr<GameObject> CreateBackground();
-	std::tuple<std::shared_ptr<GameObject>, Collider*> CreatePlayer();
-	std::tuple<std::shared_ptr<GameObject>, CustomCollider*> CreateTarget();
+	GameObject* CreateBackground();
+	std::tuple<GameObject*, Collider*> CreatePlayer();
+	std::tuple<GameObject*, CustomCollider*> CreateTarget();
 
 	int currentLevel;
 

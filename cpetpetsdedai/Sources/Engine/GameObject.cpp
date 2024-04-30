@@ -1,24 +1,33 @@
 #include "../../Headers/Engine/GameObject.h"
 #include "../../Headers/GameSystem/TextureManager.h"
 #include "../../Headers/Components/Component.h"
+#include "../../Headers/Components/DrawableComponent.h"
 #include "../../Headers/Utilities/Utilities.h"
 
-
-GameObject::GameObject(): Object("GameObject", Object::GetStaticType()), positionType(World), ZIndex(0)
+GameObject::GameObject(): GameObject("GameObject", Object::GetStaticType())
 {
+	
 }
 
-GameObject::GameObject(std::string _name, Type* parentType) : Object(_name, parentType), positionType(World), ZIndex(0)
+GameObject::GameObject(std::string _name, Type* parentType) : Object(_name, parentType), positionType(World)
 {
+	scale = sf::Vector2f(1, 1);
+	position = sf::Vector2f(0, 0);
+	isActive = true;
+	parent = nullptr;
 }
 
 GameObject::~GameObject()
 {
 	for (auto& _componentToDelete : components)
 	{
+		_componentToDelete->PreDestroy();
 		delete _componentToDelete;
 		_componentToDelete = nullptr;
 	}
+	components.clear();
+	drawableComponents.clear();
+	_tags.clear();
 }
 
 void GameObject::Init(std::string _name)
@@ -46,22 +55,10 @@ void GameObject::SetScale(float _x, float _y)
 	scale = sf::Vector2f(_x, _y);
 }
 
-
-// void GameObject::SetColor(sf::Color _color)
-// {
-// 	sprite.setColor(_color);
-// }
-//
-// sf::Color GameObject::GetColor()
-// {
-// 	return sprite.getColor();
-// }
-
 sf::Vector2f GameObject::GetPosition()
 {
 	return position;
 }
-
 
 sf::Vector2f* GameObject::GetPositionPointer()
 {
@@ -100,7 +97,12 @@ void GameObject::Move(sf::Vector2f _moveBy)
 	SetPosition(GetPosition() + _moveBy);
 }
 
-std::vector<std::string> GameObject::GetTags()
+sf::Vector2f GameObject::GetScale()
+{
+	return scale;
+}
+
+TList<std::string> GameObject::GetTags()
 {
 	return _tags;
 }
@@ -122,40 +124,74 @@ void GameObject::RemoveTags(const std::string& _tagToRemove)
 	}
 }
 
-int GameObject::GetZIndex()
-{
-	return ZIndex;
-}
 
-void GameObject::SetZIndex(int _zIndex)
-{
-	ZIndex = _zIndex;
-}
-
-std::vector<Component*>* GameObject::GetComponents()
+TList<Component*>* GameObject::GetComponents()
 {
 	return &components;
 }
 
 void GameObject::AddDrawableComponent(DrawableComponent* _drawableComponent)
 {
-	drawableComponents.push_back(_drawableComponent);
+	bool added = false;
+	for(int i = 0; i < drawableComponents.size(); ++i)
+	{
+		if (drawableComponents[i].ZIndex == _drawableComponent->GetZIndex())
+		{
+			drawableComponents[i].drawableComponents.push_back(_drawableComponent);
+			added = true;
+			return;
+		}
+		if (drawableComponents[i].ZIndex > _drawableComponent->GetZIndex())
+		{
+			drawableComponents.insert(drawableComponents.begin() + i, DrawableLayer(_drawableComponent->GetZIndex()));
+			drawableComponents[i].drawableComponents.push_back(_drawableComponent);
+			added = true;
+			return;
+		}
+	}
+
+	if (!added)
+	{
+		drawableComponents.push_back(DrawableLayer(_drawableComponent->GetZIndex()));
+		drawableComponents[drawableComponents.size() - 1].drawableComponents.push_back(_drawableComponent);
+	}
+	
 }
 
 void GameObject::RemoveDrawableComponent(DrawableComponent* _drawableComponent)
 {
 	for (int i = 0; i < drawableComponents.size(); i++)
 	{
-		if (drawableComponents[i] == _drawableComponent)
+		if (i == _drawableComponent->GetZIndex())
 		{
-			drawableComponents.erase(drawableComponents.begin() + i);
-			return;
+			drawableComponents[i].drawableComponents.RemoveElement(_drawableComponent);
+			break;
 		}
 	}
 }
 
-std::vector<DrawableComponent*>* GameObject::GetDrawableComponents()
+TList<DrawableLayer>* GameObject::GetDrawableComponents()
 {
 	return &drawableComponents;
+}
+
+GameObject* GameObject::GetParent() const
+{
+	return parent;
+}
+
+void GameObject::SetParent(GameObject* _parent)
+{
+	this->parent = _parent;
+}
+
+bool GameObject::GetIsActive() const
+{
+	return isActive;
+}
+
+void GameObject::SetIsActive(bool is_active)
+{
+	isActive = is_active;
 }
 

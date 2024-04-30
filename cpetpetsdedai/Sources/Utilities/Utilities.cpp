@@ -51,3 +51,23 @@ bool Utilities::IsInBounds(const sf::Vector2f& _positionToCheck, const sf::Vecto
 
     return true;
 }
+
+bool Utilities::IsInBounds(const sf::Vector2f& _positionToCheck, const sf::Vector2f& _position, const sf::Vector2f& _size, InBoundsInputType _inputType)
+{
+    if (_inputType == InBoundsInputType::TopLeft)
+    {
+        return IsInBounds(_positionToCheck, _position, _size);
+    }
+    
+    if (_positionToCheck.x < _position.x - (_size.x/2)|| _positionToCheck.x > _position.x + (_size.x/2))
+    {
+        return false;
+    }
+
+    if (_positionToCheck.y < _position.y - (_size.y/2)|| _positionToCheck.y > _position.y + (_size.y/2))
+    {
+        return false;
+    }
+
+    return true;
+}

@@ -4,6 +4,7 @@
 #include "Component.h"
 #include "../Utilities/Event.h"
 
+class TextComponent;
 class SpriteRenderer;
 class Camera;
 
@@ -19,7 +20,13 @@ class Button : public Component
 {
 public:
 	Button();
-	void Init(std::string _buttonString, Camera* _camera);
+
+	void Init(SpriteRenderer* _spriteRenderer);
+	void InitDefaultButton(std::string _buttonString);
+	void InitDefaultSpriteRenderer();
+	void InitDefaultTextComponent(std::string _buttonString);
+
+
 	void SetString(std::string _buttonString);
 	sf::Text* GetText();
 
@@ -31,8 +38,6 @@ public:
 	Event<Button*> OnMouseExit;
 	Event<Button*> OnMouseClickDown;
 	Event<Button*> OnMouseClickUp;
-
-	
 	
 	bool IsInButton(const sf::Vector2i& positionToCheck);
 
@@ -46,17 +51,15 @@ public:
 	void Update(float _deltaTime) override;
 
 	sf::Vector2f GetSize();
-	sf::Vector2f GetCurrentSize();
-private:
-	static sf::Font font;
-	static bool fontLoaded;
 
+	SpriteRenderer* GetSpriteRenderer();
+	
+private:
+	bool buttonInitialized;
 	void UpdatePosition();
 
 	sf::Vector2f oldObjPosition;
 	sf::Vector2i mousePosition;
-	Camera* camera;
-	sf::Text buttonText;
 
 	bool isMousePressed;
 	bool ClickOnTheButton;
@@ -66,6 +69,6 @@ private:
 	ButtonState buttonState;
 
 	SpriteRenderer* spriteRenderer;
-
+	TextComponent* textComponent;
 };
 

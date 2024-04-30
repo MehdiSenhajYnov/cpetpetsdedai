@@ -7,9 +7,11 @@ template<typename T>
 class TList : public std::vector<T>
 {
 public:
-
+    TList(std::initializer_list<T> List) : std::vector<T>(List){}
+    TList() : std::vector<T>(){}
+    
     void RemoveElement(const T& element) {
-        erase(std::remove(this->begin(), this->end(), element), this->end());
+        this->erase(std::remove(this->begin(), this->end(), element), this->end());
     }
     
     bool RemoveFirstWith(const std::function<bool(const T&)>& _predicate)

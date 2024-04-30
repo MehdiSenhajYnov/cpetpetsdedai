@@ -1,5 +1,6 @@
 #pragma once
 #include "../../Headers/Utilities/MyMath.h"
+#include <iostream>
 
 std::vector<sf::Vector2f> MyMath::GetPointsOfPolygonInCircle(sf::Vector2f topLeftPoint, float radius, float nbOfPoints)
 {
@@ -99,7 +100,7 @@ float MyMath::AngleBetweenVectors(sf::Vector2f& a, sf::Vector2f& b)
 
 	if (norm_a == 0 || norm_b == 0) {
 		std::cerr << "Au moins l'un des vecteurs est un vecteur nul." << std::endl;
-		return 0.0f; // Angle indéfini pour des vecteurs nuls
+		return 0.0f; // Angle indÃ©fini pour des vecteurs nuls
 	}
 
 	float cos_theta = dot / (norm_a * norm_b);
@@ -111,8 +112,8 @@ float MyMath::AngleBetweenVectors(sf::Vector2f& a, sf::Vector2f& b)
 
 
 
-// Calculer l'équation de la droite passant par B et C
-// La forme de l'équation de la droite est ax + by + c = 0
+// Calculer l'Ã©quation de la droite passant par B et C
+// La forme de l'Ã©quation de la droite est ax + by + c = 0
 std::tuple<float, float, float> MyMath::CalculateLineEquation(const sf::Vector2f& B, const sf::Vector2f& C) {
 	float a = C.y - B.y;
 	float b = B.x - C.x;
@@ -125,12 +126,12 @@ float MyMath::CalculateVectorNorm(float a, float b) {
 	return std::sqrt(a * a + b * b);
 }
 
-// Calculer les coordonnées du point D symétrique de A par rapport à la droite BC
+// Calculer les coordonnÃ©es du point D symÃ©trique de A par rapport Ã  la droite BC
 sf::Vector2f MyMath::CalculateSymmetricPoint(const sf::Vector2f& A, const sf::Vector2f& B, const sf::Vector2f& C) {
-	// Calculer l'équation de la droite passant par BC
+	// Calculer l'Ã©quation de la droite passant par BC
 	auto [a, b, c] = CalculateLineEquation(B, C);
 
-	// Calculer les composantes de la normale à la droite
+	// Calculer les composantes de la normale Ã  la droite
 	float n_x = a / CalculateVectorNorm(a, b);
 	float n_y = b / CalculateVectorNorm(a, b);
 
@@ -138,10 +139,10 @@ sf::Vector2f MyMath::CalculateSymmetricPoint(const sf::Vector2f& A, const sf::Ve
 	float BA_x = A.x - B.x;
 	float BA_y = A.y - B.y;
 
-	// Calculer la composante de BA parallèle à la normale
+	// Calculer la composante de BA parallÃ¨le Ã  la normale
 	float component_parallel = (BA_x * n_x + BA_y * n_y);
 
-	// Inverser cette composante et l'ajouter à A pour obtenir les coordonnées de D
+	// Inverser cette composante et l'ajouter Ã  A pour obtenir les coordonnÃ©es de D
 	float D_x = A.x - 2 * component_parallel * n_x;
 	float D_y = A.y - 2 * component_parallel * n_y;
 
@@ -150,7 +151,7 @@ sf::Vector2f MyMath::CalculateSymmetricPoint(const sf::Vector2f& A, const sf::Ve
 
 
 float MyMath::CalculerAngle(const sf::Vector2f& A, const sf::Vector2f& B, const sf::Vector2f& C) {
-	// Calcul des longueurs des côtés du triangle
+	// Calcul des longueurs des cÃ´tÃ©s du triangle
 	float AB = sqrt(pow(B.x - C.x, 2) + pow(B.y - C.y, 2));
 	float BC = sqrt(pow(A.x - B.x, 2) + pow(A.y - B.y, 2));
 	float CA = sqrt(pow(C.x - A.x, 2) + pow(C.y - A.y, 2));
@@ -172,7 +173,7 @@ float MyMath::CalculerAngle(const sf::Vector2f& A, const sf::Vector2f& B, const 
 	}
 	float angleRad = acos(cosA);
 
-	// Conversion de l'angle en radians en degrés
+	// Conversion de l'angle en radians en degrÃ©s
 	float angleDeg = angleRad * (180.0 / PI);
 
 	return angleDeg;

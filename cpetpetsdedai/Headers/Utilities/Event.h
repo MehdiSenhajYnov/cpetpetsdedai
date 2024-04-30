@@ -1,39 +1,49 @@
 #pragma once
 #include <iostream>
-#include <vector>
+#include <map>
 #include <functional>
 
 template <typename... Args>
 class Event
 {
 public:
+	~Event();
+	int currentCount = 0;
 	template<typename Class>
-	void Subscribe(void(Class::* funcToSubscribe)(Args...), Class* instance);
-	void Desubscribe(void(*funcToSubscribe)(Args...));
+	int Subscribe(void(Class::* funcToSubscribe)(Args...), Class* instance);
+	void Desubscribe(int id);
 	void InvokeEvent(Args... args);
 
 	void DesubscribeAll();
 
 private:
-	std::vector<std::function<void(Args...)>> functionSubscribbed;
+	std::map<int,std::function<void(Args...)>> functionSubscribbed;
 };
+
+template <typename ... Args>
+Event<Args...>::~Event()
+{
+	DesubscribeAll();
+}
 
 template <typename... Args>
 template<typename Class>
-inline void Event<Args...>::Subscribe(void(Class::*funcToSubscribe)(Args...), Class* instance)
+int Event<Args...>::Subscribe(void(Class::*funcToSubscribe)(Args...), Class* instance)
 {
+	currentCount++;
 	std::function<void(Args...)> lambda = [funcToSubscribe, instance](Args... args) {
         (instance->*funcToSubscribe)(args...);
     };
-    functionSubscribbed.push_back(lambda);
+    functionSubscribbed[currentCount] = lambda;
+	return currentCount;
 }
 
-template<typename ...Args>
-inline void Event<Args...>::Desubscribe(void(*funcToSubscribe)(Args...))
+template <typename ... Args>
+void Event<Args...>::Desubscribe(int id)
 {
 	for (int i = 0; i < functionSubscribbed.size(); i++)
 	{
-		if (functionSubscribbed[i] == funcToSubscribe)
+		if (functionSubscribbed[i].first == id)
 		{
 			functionSubscribbed.erase(functionSubscribbed.begin() + i);
 			return;
@@ -42,17 +52,18 @@ inline void Event<Args...>::Desubscribe(void(*funcToSubscribe)(Args...))
 }
 
 template<typename ...Args>
-inline void Event<Args...>::InvokeEvent(Args ...args)
+void Event<Args...>::InvokeEvent(Args ...args)
 {
 
 	if (functionSubscribbed.size() > 741382308990216) return;
 
 	if (functionSubscribbed.size() > 0)
 	{
-		for (int i = 0; i < functionSubscribbed.size(); i++)
+		for(auto& [id, functionToCall] : functionSubscribbed)
 		{
-			if (functionSubscribbed[i] == nullptr) continue;
-			functionSubscribbed[i](args...);
+			if (functionToCall == nullptr) continue;
+			functionToCall(args...);
+			
 		}
 	}
 }

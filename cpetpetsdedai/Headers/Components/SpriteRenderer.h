@@ -11,7 +11,6 @@ public:
     ~SpriteRenderer() override;
 
     void Start() override;
-    void Update(float deltaTime) override;
 
     sf::Sprite* GetSprite();
     void SetSprite(const std::string& texturepath);
@@ -23,17 +22,18 @@ public:
     void SetColor(sf::Color _color);
     sf::Color GetColor();
     
-    int GetZIndex();
-    void SetZIndex(int _zIndex);
-    
     const sf::Drawable* GetDrawable() override;
     void setPosition(sf::Vector2f pos) override;
 
-    sf::Vector2f GetSize();
+    sf::FloatRect GetBounds() override;
+    
+    sf::Vector2f GetSize() override;
 
-    void Init(ComponentInitParams* Params) override;
+    void SetOrigin(sf::Vector2f origin);
+    void SetDrawScale(sf::Vector2f _drawScale) override;
+
 private:
-    int ZIndex;
+
     sf::Texture* spriteTexture;
     sf::Sprite sprite;
     sf::Color color;
