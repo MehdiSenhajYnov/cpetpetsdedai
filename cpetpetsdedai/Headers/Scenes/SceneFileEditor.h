@@ -51,13 +51,22 @@ void SceneFileEditor::CreateObject(T* _object) const
 	std::string newContent =
 		NEWLINE_PREFIX + TYPE_PREFIX + std::to_string(GameObject::GetStaticType()->GetId()) + ID_PREFIX +
 		std::to_string(_object->GetId()) + "\n";
-
 	
-	for (auto& _field : obj->GetType()->GetAllFields())
-	{
-		newContent += _field->name + ": " + _field->GetValueAsString() + "\n";
-	}
 		
 	
-	FileUtilities::AppendInFile(GetScenePath(), newContent);
+	std::fstream file;
+	file.open(GetScenePath(), std::ios::app);
+	if (file.is_open())
+	{
+		file << newContent << obj << "\n";
+
+		if (GameObject* _go = dynamic_cast<GameObject*>(obj))
+		{
+			std::cout << "GameObject: " << _go->GetName() << " created" << std::endl;
+			std::cout << _go << std::endl;
+		}
+		
+		file.close();
+	}
+	
 }

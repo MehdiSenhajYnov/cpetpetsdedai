@@ -30,6 +30,7 @@ private:
     GameObject* editorMove;
     
     GameObject* selectedObject = nullptr;
+    SpriteRenderer* selectedSpriteRenderer;
     sf::Vector2f selectedObjectOffset;
 
     //GameObject* contextMenuBackground;

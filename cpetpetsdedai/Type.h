@@ -63,20 +63,7 @@ void Type::CreateField(std::string fieldName)
 template <CanString T>
 void Type::CreateField(std::string fieldName, std::function<void(T)>)
 {
-    int Test = 23;
-    typeid(Test)
-
-    
-    
     this->CreateField<T>(fieldName);
-
-    T (*func)() = []() -> T {
-        T testValue = T();
-        return testValue;
-    };
-
-
-    
 }
 
 template <CanString T>

@@ -164,11 +164,13 @@ void EditorScene::CheckMouseSelection()
         
         for (auto drawableLayer : *(_gameObject->GetDrawableComponents()))
         {
-            for (auto& _spriterenderer : drawableLayer.drawableComponents)
+            for (auto& drawableComponent : drawableLayer.drawableComponents)
             {
-                if (Utilities::IsInBounds(mousePositionWorld, _spriterenderer->GetAttachedObject()->GetPosition(), _spriterenderer->GetOriginalSize()))
+                if (Utilities::IsInBounds(mousePositionWorld, drawableComponent->GetAttachedObject()->GetPosition(), drawableComponent->GetOriginalSize()))
                 {
-                    selectedObject = _spriterenderer->GetAttachedObject();
+                    selectedObject = drawableComponent->GetAttachedObject();
+                    selectedSpriteRenderer = dynamic_cast<SpriteRenderer*>(drawableComponent);
+
                     selectedObjectOffset = selectedObject->GetPosition() - mousePositionWorld;
                     editorMove->SetIsActive(true);
                     editorMove->SetPosition(selectedObject->GetPosition());

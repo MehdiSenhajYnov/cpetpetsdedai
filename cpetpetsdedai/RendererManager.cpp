@@ -1,6 +1,7 @@
 ﻿#include "RendererManager.h"
 
 #include "CameraManager.h"
+#include "EngineUI.h"
 #include "TextComponent.h"
 #include "Headers/Components/DrawableComponent.h"
 #include "Headers/Engine/GameObject.h"
@@ -72,8 +73,52 @@ void RendererManager::Draw()
 	{
 		window->draw(element);
 	}
+
+	DrawEngineUI();
+	
 	window->display();
 }
+
+void RendererManager::DrawEngineUI()
+{
+	for (auto& _uiElement : EngineUI::GetInstance()->GetUIElements())
+	{
+		if (_uiElement == nullptr) continue;
+
+		sf::Vertex line[2];
+		line[0].position = sf::Vector2f(10, 0);
+		line[0].color  = sf::Color::Red;
+		line[1].position = sf::Vector2f(20, 0);
+		line[1].color = sf::Color::Red;
+
+		switch (_uiElement->GetAnchorSide())
+		{
+		case Left:
+			line[0].position = sf::Vector2f(_uiElement->GetSize(), 0);
+			line[1].position = sf::Vector2f(_uiElement->GetSize(), window->getSize().y);
+			break;
+		case Right:
+			line[0].position = sf::Vector2f(((float)window->getSize().x)- _uiElement->GetSize(), 0);
+			line[1].position = sf::Vector2f(((float)window->getSize().x)- _uiElement->GetSize(), window->getSize().y);
+			break;
+		case Top:
+			line[0].position = sf::Vector2f(0, _uiElement->GetSize());
+			line[1].position = sf::Vector2f(window->getSize().x, _uiElement->GetSize());
+			break;
+		case Bottom:
+			line[0].position = sf::Vector2f(0, ((float)window->getSize().y)-_uiElement->GetSize());
+			line[1].position = sf::Vector2f(window->getSize().x, ((float)window->getSize().y)-_uiElement->GetSize());
+			break;
+		}
+
+		window->draw(line, 2, sf::Lines);
+
+		
+
+	}
+	
+}
+
 
 void RendererManager::AddDrawableLayer(DrawableComponent* _drawableComponent)
 {

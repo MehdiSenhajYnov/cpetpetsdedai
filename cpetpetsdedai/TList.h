@@ -12,17 +12,19 @@ class TList : public std::vector<T>
 {
 
 public:
-    // friend std::ostream& operator<<(std::ostream& _os, const TList& _obj)
-    // {
-    //     _os << "[ ";
-    //     for (auto& element : _obj)
-    //     {
-    //         _os << element << "!&!";
-    //     }
-    //     _os << " ]";
-    //
-    //     return _os;
-    // }
+    friend std::ostream& operator<<(std::ostream& _os, const TList& _obj)
+    {
+        _os << "[ ";
+        for (auto& element : _obj)
+        {
+            _os << element << "!&!";
+        }
+        _os << " ]";
+    
+        return _os;
+    }
+
+    
     TList(std::initializer_list<T> List) : std::vector<T>(List){}
     TList() : std::vector<T>(){}
     

@@ -22,8 +22,8 @@ public:
 	sf::FloatRect       GetBounds() override;
 	sf::Text            Text;
 
-	void      SetColor(const sf::Color& _color);
-	sf::Color GetColor() const;
+	void      SetColor(const sf::Color& _color) override;
+	sf::Color GetColor() const override;
 	void      SetDrawScale(sf::Vector2f _drawScale) override;
 	sf::Vector2f GetCenter() const ;
 

@@ -11,6 +11,9 @@ public:
 	void Init(sf::RenderWindow* _window);
 	void Clear();
 	void Draw();
+
+	void DrawEngineUI();
+	
 	void AddDrawableLayer(DrawableComponent* _drawableComponent);
 	static RendererManager* GetInstance();
 	static void ResetInstance();

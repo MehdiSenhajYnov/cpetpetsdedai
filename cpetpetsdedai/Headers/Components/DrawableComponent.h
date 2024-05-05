@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <SFML/Graphics/Drawable.hpp>
+#include <SFML/Graphics/Color.hpp>
 #include "Component.h"
 
 
@@ -44,6 +45,10 @@ public:
 
     sf::Vector2f GetOffsetPosition() const;
     void SetOffsetPosition(sf::Vector2f _offsetPosition);
+
+    virtual sf::Color GetColor() const = 0;
+    virtual void SetColor(const sf::Color& _color) = 0;
+    
     
 private:
     bool alreadyInit = false;

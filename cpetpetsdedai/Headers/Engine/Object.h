@@ -2,7 +2,10 @@
 #include <string>
 #include <map>
 #include <iostream>
+#include <ostream>
+
 #include "../../Type.h"
+#include "../Utilities/AllMacros.h"
 
 #define AddType(Object, Value) \
 static Type* GetStaticType() \
@@ -20,7 +23,20 @@ GetType()->CreateField<type>(#name, _change##name##Invoke)
 
 
 class Object {
+	friend std::ostream& operator<<(std::ostream& _os, const Object& _obj)
+	{
+		Object& _objRef = const_cast<Object&>(_obj);
+		_os << "id: " << _obj.id;
+		for (auto& _field : _objRef.GetType()->GetAllFields())
+		{
+			_os << (_field->name + ": " + _field->GetValueAsString() + "\n");
+		}
+		
+		return _os;		
+	}
+
 public:
+
 	AddType(Object, nullptr)
 
 	//Object(std::string typeName, Type* parentType);
@@ -29,7 +45,7 @@ public:
 	virtual ~Object() = default ;
 
 	int GetId() const { return id; }
-	
+
 private:
 	uint64_t id;
 	Type type;

@@ -32,24 +32,14 @@ GameObject::GameObject(const std::string& _name, Type* parentType) : Object(_nam
 
 
 	SerializeField(std::string, name);
-	
 	SerializeField(sf::Vector2f, position);
 	SerializeField(sf::Vector2f, scale);
 	SerializeField(PositionType, positionType);
 	SerializeField(bool, isActive);
 	SerializeField(GameObject*, parent);
-	// SerializeField(TList<std::string>, _tags);
-	// SerializeField(TList<Component*>, components);
+	SerializeField(TList<std::string>, _tags);
+	SerializeField(TList<Component*>, components);
 
-	
-	// GetType()->CreateField<sf::Vector2f>("position");
-	// GetType()->CreateField<sf::Vector2f>("scale");
-	// GetType()->CreateField<PositionType>("positionType");
-	// GetType()->CreateField<bool>("isActive");
-	// GetType()->CreateField<GameObject*>("parent");
-	// GetType()->CreateField<TList<std::string>>("tags");
-	// GetType()->CreateField<TList<Component*>>("components");
-	
 }
 
 GameObject::~GameObject()

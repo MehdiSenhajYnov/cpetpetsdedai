@@ -19,8 +19,8 @@ public:
     void SetTexture(sf::Texture* _texture);
     void SetTexture(const sf::Texture* _texture);
 
-    void SetColor(sf::Color _color);
-    sf::Color GetColor();
+    void      SetColor(const sf::Color& _color) override;
+    sf::Color GetColor() const override;
     
     const sf::Drawable* GetDrawable() override;
     void setPosition(sf::Vector2f pos) override;

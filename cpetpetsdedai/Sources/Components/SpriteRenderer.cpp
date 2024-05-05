@@ -66,13 +66,13 @@ void SpriteRenderer::SetTexture(const sf::Texture* _texture)
     ResetOrigin();
 }
 
-void SpriteRenderer::SetColor(sf::Color _color)
+void SpriteRenderer::SetColor(const sf::Color& _color)
 {
     color = _color;
     sprite.setColor(color);
 }
 
-sf::Color SpriteRenderer::GetColor()
+sf::Color SpriteRenderer::GetColor() const
 {
     return color;
 }
