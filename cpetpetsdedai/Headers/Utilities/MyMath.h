@@ -15,6 +15,7 @@ public:
 
 	static float DotProduct(const sf::Vector2f& a, const sf::Vector2f& b);
 	static float VectorNorm(const sf::Vector2f& vec);
+	static sf::Vector2f VectorAbs(const sf::Vector2f& vec);
 	static float AngleBetweenVectors(sf::Vector2f& a, sf::Vector2f& b);
 	static std::tuple<float, float, float> CalculateLineEquation(const sf::Vector2f& B, const sf::Vector2f& C);
 	static float CalculateVectorNorm(float a, float b);

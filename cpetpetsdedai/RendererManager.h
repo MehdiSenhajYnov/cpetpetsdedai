@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "TList.h"
 
@@ -20,4 +21,6 @@ private:
 	sf::RenderWindow* window;
 	TList<DrawableLayer> drawableLayers;
 	static RendererManager* instance;
+
+	std::vector<sf::CircleShape> fordebug;
 };

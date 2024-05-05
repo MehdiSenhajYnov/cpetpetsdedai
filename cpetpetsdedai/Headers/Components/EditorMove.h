@@ -9,7 +9,7 @@ public:
     AddType(EditorMovable, GameObject::GetStaticType())
 
     ~EditorMove() override;
-    void Init(std::string _name) override;
+    void Init(const std::string& _name) override;
 
 protected:
 };

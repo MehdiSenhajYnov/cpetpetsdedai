@@ -2,6 +2,7 @@
 #include "../../Headers/Scenes/EditorScene.h"
 
 #include "../../RoundedRectangle.h"
+#include "../../Headers/Components/Animator.h"
 #include "../../Headers/Engine/GameObject.h"
 #include "../../Headers/Utilities/Utilities.h"
 #include "../../Headers/Components/SpriteRenderer.h"
@@ -9,16 +10,15 @@
 
 
 EditorScene::EditorScene() : Scene("EditorScene", Scene::GetStaticType()),
-editorMove(nullptr), contextMenu()
+editorMove(nullptr), contextMenu(nullptr)
 {
-    contextMenu = ContextMenu();
 }
 
 void EditorScene::InitializeScene(sf::RenderWindow* _window)
 {
     Scene::InitializeScene(_window);
     
-    editorMove = CreateGameObject("EditorMove");
+    editorMove = CreateGameObjectImmediate("EditorMove");
     SpriteRenderer* editorMoveSpriteRenderer = editorMove->AddComponent<SpriteRenderer>();
     editorMoveSpriteRenderer->SetSprite("EditorMove");
     editorMoveSpriteRenderer->SetScale(sf::Vector2f(0.1f,0.1f));
@@ -27,8 +27,21 @@ void EditorScene::InitializeScene(sf::RenderWindow* _window)
     editorMove->SetPosition(100, 200);
     editorMove->SetIsActive(false);
 
-    contextMenu.Init("ContextMenu");
-    contextMenu.AddToContextMenu("Create Game Object", &EditorScene::CreateGameObjectContextMenu, this);
+
+    auto tempObj = CreateGameObjectImmediate("temp");
+    SpriteRenderer* tempSpriteRenderer = tempObj->AddComponent<SpriteRenderer>();
+    tempSpriteRenderer->SetSprite("Square");
+    tempSpriteRenderer->SetColor(sf::Color::Red);
+    tempObj->SetPosition(100, 100);
+    
+    contextMenu = CreateGameObjectImmediate<ContextMenu>("ContextMenu");
+    contextMenu->Init("ContextMenu");
+    contextMenu->AddToContextMenu("Create Game Object", &EditorScene::CreateGameObjectContextMenu, this);
+    contextMenu->AddToContextMenu("Exit", &EditorScene::CreateGameObjectContextMenu, this);
+    contextMenu->AddToContextMenu("TEST LONG TEXT TEST LONG TEXT TEST LONG TEXT", &EditorScene::CreateGameObjectContextMenu, this);
+    contextMenu->SetIsActive(false);
+
+
 }
 
 void EditorScene::Update(float deltaTime)
@@ -48,7 +61,7 @@ void EditorScene::OnMouseKeyDown(sf::Mouse::Button pressedKey)
         CreateContextMenu();
     } else if (pressedKey == sf::Mouse::Left)
     {
-        if (!contextMenu.IsInBounds(mousePositionWorld))
+        if (!contextMenu->IsInsideContextMenu(mousePositionWorld))
         {
             DisableContextMenu();
         }
@@ -57,16 +70,37 @@ void EditorScene::OnMouseKeyDown(sf::Mouse::Button pressedKey)
 
 void EditorScene::CreateGameObjectContextMenu(Button* btn)
 {
-    std::cout << "Create Game Object" << std::endl;
+    std::cout << btn->GetTextComponent()->GetString() << " clicked" << std::endl;
+    auto createdObject = CreateGameObject("CreatedObject");
+    SpriteRenderer* createdObjectSpriteRenderer = createdObject->AddComponent<SpriteRenderer>();
+    createdObjectSpriteRenderer->SetSprite("Square");
+    createdObjectSpriteRenderer->SetColor(sf::Color::Blue);
+    createdObject->SetPosition(mousePositionWorld);
+    DisableContextMenu();
 }
 
 void EditorScene::CreateContextMenu()
 {
+    // context menu origin is at center of first button
+    float halfWidth = contextMenu->GetWidth()/2;
+    float halfOneHeight = contextMenu->GetHeight()/2;
+    float fullHeight = contextMenu->GetFullHeight();
+    sf::Vector2f newPostion = {mousePosition.x + halfWidth, mousePosition.y + halfOneHeight};
 
-    contextMenu.SetPosition(mousePosition);
-    contextMenu.SetIsActive(true);
+    if (newPostion.x + halfWidth > window->getViewport(window->getView()).left + window->getViewport(window->getView()).width)
+    {
+        newPostion.x = mousePosition.x - halfWidth;
+    }
+    if (newPostion.y + (fullHeight - halfOneHeight)> window->getViewport(window->getView()).top + window->getViewport(window->getView()).height)
+    {
+        newPostion.y = mousePosition.y - fullHeight + halfOneHeight;
+    }
+
+    contextMenu->SetPosition(newPostion);
+
+    contextMenu->SetIsActive(true);
     
-    // contextMenuBackground = CreateGameObject("ContextMenuBackground");
+    // contextMenuBackground = CreateGameObjectImmediate("ContextMenuBackground");
     // contextMenuBackgroundSpriteRenderer = contextMenuBackground->AddComponent<SpriteRenderer>();
     // contextMenuBackgroundSpriteRenderer->SetSprite("Square");
     // contextMenuBackgroundSpriteRenderer->SetColor(sf::Color(200,200,200));
@@ -78,7 +112,7 @@ void EditorScene::CreateContextMenu()
 
 void EditorScene::DisableContextMenu()
 {
-    contextMenu.SetIsActive(false);
+    contextMenu->SetIsActive(false);
 }
 
 
@@ -123,7 +157,7 @@ void EditorScene::CheckMouseSelection()
             continue;
         }
 
-        if (_gameObject == &contextMenu)
+        if (_gameObject == contextMenu)
         {
             continue;
         }
@@ -132,7 +166,7 @@ void EditorScene::CheckMouseSelection()
         {
             for (auto& _spriterenderer : drawableLayer.drawableComponents)
             {
-                if (Utilities::IsInBounds(mousePositionWorld, _spriterenderer->GetAttachedObject()->GetPosition(), _spriterenderer->GetSize()))
+                if (Utilities::IsInBounds(mousePositionWorld, _spriterenderer->GetAttachedObject()->GetPosition(), _spriterenderer->GetOriginalSize()))
                 {
                     selectedObject = _spriterenderer->GetAttachedObject();
                     selectedObjectOffset = selectedObject->GetPosition() - mousePositionWorld;

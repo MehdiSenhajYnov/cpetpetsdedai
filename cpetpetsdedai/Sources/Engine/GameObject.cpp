@@ -4,17 +4,52 @@
 #include "../../Headers/Components/DrawableComponent.h"
 #include "../../Headers/Utilities/Utilities.h"
 
+std::ostream& operator<<(std::ostream& _os, const sf::Vector2f& _obj) {
+	return _os
+				<< "x: " << _obj.x
+				<< " y: " << _obj.y;
+}
+
 GameObject::GameObject(): GameObject("GameObject", Object::GetStaticType())
 {
 	
 }
 
-GameObject::GameObject(std::string _name, Type* parentType) : Object(_name, parentType), positionType(World)
+GameObject::GameObject(const std::string& _name, Type* parentType) : Object(_name, parentType),
+	positionType(World)
 {
 	scale = sf::Vector2f(1, 1);
 	position = sf::Vector2f(0, 0);
 	isActive = true;
 	parent = nullptr;
+
+	
+	// auto _changeNameInvoke = [this](std::string _newValue)
+	// {
+	// 	this->name = _newValue;
+	// };
+	// GetType()->CreateField<std::string>("name", _changeNameInvoke);
+
+
+	SerializeField(std::string, name);
+	
+	SerializeField(sf::Vector2f, position);
+	SerializeField(sf::Vector2f, scale);
+	SerializeField(PositionType, positionType);
+	SerializeField(bool, isActive);
+	SerializeField(GameObject*, parent);
+	// SerializeField(TList<std::string>, _tags);
+	// SerializeField(TList<Component*>, components);
+
+	
+	// GetType()->CreateField<sf::Vector2f>("position");
+	// GetType()->CreateField<sf::Vector2f>("scale");
+	// GetType()->CreateField<PositionType>("positionType");
+	// GetType()->CreateField<bool>("isActive");
+	// GetType()->CreateField<GameObject*>("parent");
+	// GetType()->CreateField<TList<std::string>>("tags");
+	// GetType()->CreateField<TList<Component*>>("components");
+	
 }
 
 GameObject::~GameObject()
@@ -30,12 +65,12 @@ GameObject::~GameObject()
 	_tags.clear();
 }
 
-void GameObject::Init(std::string _name)
+void GameObject::Init(const std::string& _name)
 {
-	Name = _name;
+	name = _name;
 }
 
-void GameObject::SetPosition(sf::Vector2f _newposition)
+void GameObject::SetPosition(const sf::Vector2f& _newposition)
 {
 	position = _newposition;
 }
@@ -45,17 +80,27 @@ void GameObject::SetPosition(float _x, float _y)
 	position = sf::Vector2f(_x, _y);
 }
 
-void GameObject::SetScale(sf::Vector2f _newScale)
+void GameObject::SetScale(const sf::Vector2f& _newScale)
 {
 	scale = _newScale;
 }
 
-void GameObject::SetScale(float _x, float _y)
+void GameObject::SetScale(const float& _x, const float& _y)
 {
 	scale = sf::Vector2f(_x, _y);
 }
 
-sf::Vector2f GameObject::GetPosition()
+std::string GameObject::GetName()
+{
+	return name;
+}
+
+void GameObject::SetName(const std::string& _name)
+{
+	name = _name;
+}
+
+sf::Vector2f GameObject::GetPosition() const
 {
 	return position;
 }
@@ -65,7 +110,7 @@ sf::Vector2f* GameObject::GetPositionPointer()
 	return &position;
 }
 
-void GameObject::Move(float _x, float _y)
+void GameObject::Move(const float& _x, const float& _y)
 {
 	if (position.x + _x >= std::numeric_limits<float>::max() || position.y + _y >= std::numeric_limits<float>::max())
 	{
@@ -97,7 +142,7 @@ void GameObject::Move(sf::Vector2f _moveBy)
 	SetPosition(GetPosition() + _moveBy);
 }
 
-sf::Vector2f GameObject::GetScale()
+sf::Vector2f GameObject::GetScale() const
 {
 	return scale;
 }

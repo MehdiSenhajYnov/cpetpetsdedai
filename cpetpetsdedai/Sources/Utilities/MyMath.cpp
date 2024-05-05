@@ -90,6 +90,10 @@ float MyMath::VectorNorm(const sf::Vector2f& vec)
 	return std::sqrt(vec.x * vec.x + vec.y * vec.y);
 }
 
+sf::Vector2f MyMath::VectorAbs(const sf::Vector2f& vec)
+{
+	return {std::abs(vec.x), std::abs(vec.y)};
+}
 
 
 float MyMath::AngleBetweenVectors(sf::Vector2f& a, sf::Vector2f& b)

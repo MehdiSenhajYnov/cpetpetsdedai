@@ -113,7 +113,7 @@ void GameScene::OnKeyDown(sf::Keyboard::Key pressedKey)
 
 void GameScene::OnPlayerCollisionEnter(Collider* _collideWith, sf::Vector2f _collisionPoint)
 {
-	if (_collideWith->GetAttachedObject()->Name == "Target")
+	if (_collideWith->GetAttachedObject()->GetName() == "Target")
 	{
 		SceneManager::SetLevel(currentLevel + 1);
 	}
@@ -130,14 +130,14 @@ void GameScene::OnSceneChanged()
 
 GameObject* GameScene::CreateBackground()
 {
-	auto tempBackground = CreateGameObject("Background");
+	auto tempBackground = CreateGameObjectImmediate("Background");
 	//tempBackground->SetSprite("./Assets/Background.png");
 	return tempBackground;
 }
 
 std::tuple<GameObject*, Collider*> GameScene::CreatePlayer()
 {
-	auto _tempPlayer = CreateGameObject("Player");
+	auto _tempPlayer = CreateGameObjectImmediate("Player");
 	SpriteRenderer* playerSpriteRenderer = _tempPlayer->AddComponent<SpriteRenderer>();
 	playerSpriteRenderer->SetSprite("PLAYERIDLE001");
 	playerSpriteRenderer->SetZIndex(20);
@@ -167,7 +167,7 @@ std::tuple<GameObject*, Collider*> GameScene::CreatePlayer()
 std::tuple<GameObject*, CustomCollider*> GameScene::CreateTarget()
 {
 
-	GameObject* target = CreateGameObject("Target");
+	GameObject* target = CreateGameObjectImmediate("Target");
 	
 	CustomCollider* targetCollider = physicsEngine.CreateCustomCollider(target, {
 		sf::Vector2f(15,70),

@@ -16,7 +16,7 @@ EditorMove::~EditorMove()
     GameObject::~GameObject();
 }
 
-void EditorMove::Init(std::string _name)
+void EditorMove::Init(const std::string& _name)
 {
     GameObject::Init(_name);
     auto spriteRenderer = AddComponent<SpriteRenderer>();

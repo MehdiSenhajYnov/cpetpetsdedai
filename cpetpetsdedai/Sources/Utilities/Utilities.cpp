@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include "../../Headers/Utilities/Utilities.h"
 
+#include <random>
+
 sf::Vector2f Utilities::ScreenToWorld(sf::Vector2f screenPosition, sf::Vector2f cameraPosition, sf::Vector2f windowSize)
 {
     return {
@@ -37,6 +39,16 @@ std::vector<std::string> Utilities::SplitString(std::string _stringToSplit, std:
     return res;
 }
 
+int Utilities::IndexOf(std::string _fullString, std::string _subString)
+{
+    size_t found = _fullString.find(_subString);
+    if (found != std::string::npos)
+    {
+        return found;
+    }
+    return -1;
+}
+
 bool Utilities::IsInBounds(const sf::Vector2f& _positionToCheck, const sf::Vector2f& _position, const sf::Vector2f& _size)
 {
     if (_positionToCheck.x < _position.x || _positionToCheck.x > _position.x + _size.x)
@@ -70,4 +82,24 @@ bool Utilities::IsInBounds(const sf::Vector2f& _positionToCheck, const sf::Vecto
     }
 
     return true;
+}
+
+unsigned int Utilities::GenerateUniqueId()
+{
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<unsigned int> dis(1, 99999999);
+    return dis(gen);
+}
+
+uint64_t Utilities::Hash(std::string str)
+{
+    std::uint64_t hash_value = 0xcbf29ce484222325ULL;
+    constexpr std::uint64_t prime = 0x100000001b3ULL;
+    for (char c : str)
+    {
+        hash_value ^= static_cast<std::uint64_t>(c);
+        hash_value *= prime;
+    }
+    return hash_value;
 }

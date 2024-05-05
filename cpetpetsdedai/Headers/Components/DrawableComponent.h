@@ -14,7 +14,9 @@ public:
     virtual const sf::Drawable* GetDrawable() = 0;
     virtual void setPosition(sf::Vector2f pos) = 0;
 
-    virtual sf::Vector2f GetSize() = 0;
+    virtual sf::Vector2f GetOriginalSize() = 0;
+    virtual sf::Vector2f GetCurrentSize();
+    
 
     virtual int GetZIndex()
     {
@@ -29,7 +31,7 @@ public:
     
     virtual sf::FloatRect GetBounds() = 0;
 
-    virtual void InitBaseComponent(GameObject* _gameObject);
+    virtual void InitBaseComponent(GameObject* _gameObject) override;
     virtual void Init() override;
     void PreDestroy() override;
     virtual void Start() override = 0;

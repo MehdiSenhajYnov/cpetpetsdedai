@@ -23,11 +23,6 @@ private:
 	//Button loadingButtonComponent;
 
 
-	void OnBtnMouseEnter(Button* btn);
-	void OnBtnMouseExit(Button* btn);
-	void OnBtnMouseClickDown(Button* btn);
-	void OnBtnMouseClickUp(Button* btn);
-	
 	void OnPlayButtonClicked(Button* btn);
 	void OnExitButtonClicked(Button* btn);
 
@@ -42,6 +37,7 @@ private:
 	const sf::Color normalButtonColor = sf::Color(0, 0, 0);
 	const sf::Color hoverButtonColor = sf::Color(110, 110, 110);
 	const sf::Color pressedButtonColor = sf::Color(80, 80, 80);
-	
+	const sf::Color textColor = sf::Color(0, 0, 0);
+
 };
 

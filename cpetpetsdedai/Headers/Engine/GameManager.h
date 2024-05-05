@@ -1,6 +1,8 @@
 #pragma once
 #include <iostream>
 #include <SFML/Graphics.hpp>
+
+#include "../../TList.h"
 #include "../Scenes/SceneManager.h"
 
 
@@ -33,8 +35,11 @@ private:
 	bool haveToChangeScene;
 	bool iswindowFocus;
 	void WindowsEvents();
+	void InputEvents();
 
 	Scene* currentScene;
 	sf::RenderWindow window;
+
+	TList<sf::Event> eventsOfTick;
 };
 

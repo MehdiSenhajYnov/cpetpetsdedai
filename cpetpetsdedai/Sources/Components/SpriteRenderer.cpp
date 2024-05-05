@@ -30,6 +30,8 @@ void SpriteRenderer::SetSprite(const std::string& texturepath)
         return;
     }
     sprite.setTexture(*spriteTexture);
+    
+    ResetOrigin();
 }
 
 void SpriteRenderer::SetSprite(const std::string& _spriteName, sf::IntRect textureRect)
@@ -43,6 +45,7 @@ void SpriteRenderer::SetSprite(const std::string& _spriteName, sf::IntRect textu
         return;
     }
     sprite.setTexture(*spriteTexture);
+    ResetOrigin();
 }
 
 void SpriteRenderer::SetTexture(sf::Texture* _texture)
@@ -54,11 +57,13 @@ void SpriteRenderer::SetTexture(sf::Texture* _texture)
         return;
     }
     sprite.setTexture(*spriteTexture);
+    ResetOrigin();
 }
 
 void SpriteRenderer::SetTexture(const sf::Texture* _texture)
 {
     SetTexture(const_cast<sf::Texture*>(_texture));
+    ResetOrigin();
 }
 
 void SpriteRenderer::SetColor(sf::Color _color)
@@ -87,8 +92,12 @@ sf::FloatRect SpriteRenderer::GetBounds()
     return sprite.getLocalBounds();
 }
 
-sf::Vector2f SpriteRenderer::GetSize()
+sf::Vector2f SpriteRenderer::GetOriginalSize()
 {
+    if (sprite.getTexture() == nullptr)
+    {
+        return sf::Vector2f(0, 0);
+    }
 	return sf::Vector2f(
         GetSprite()->getTexture()->getSize().x,
         GetSprite()->getTexture()->getSize().y
@@ -100,9 +109,20 @@ void SpriteRenderer::SetOrigin(sf::Vector2f origin)
     sprite.setOrigin(origin);
 }
 
+void SpriteRenderer::ResetOrigin()
+{
+    SetOrigin({GetCurrentSize().x/2, GetCurrentSize().y/2});
+}
+
 void SpriteRenderer::SetDrawScale(sf::Vector2f _drawScale)
 {
     sprite.setScale(_drawScale);
+}
+
+sf::Vector2f SpriteRenderer::GetCenter() const
+{
+    return sf::Vector2f(sprite.getLocalBounds().left + sprite.getLocalBounds().width / 2.0f,
+        sprite.getLocalBounds().top + sprite.getLocalBounds().height / 2.0f);
 }
 
 

@@ -17,6 +17,11 @@ DrawableComponent::~DrawableComponent()
     std::cout << "DrawableComponent destroyed" << std::endl;
 }
 
+sf::Vector2f DrawableComponent::GetCurrentSize()
+{
+    return {GetOriginalSize().x * Scale.x, GetOriginalSize().y * Scale.y};
+}
+
 void DrawableComponent::InitBaseComponent(GameObject* _gameObject)
 {
     Component::InitBaseComponent(_gameObject);

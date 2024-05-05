@@ -79,7 +79,7 @@ std::map<Collider*, sf::Vector2f> Collider::GetCurrentCollisions()
 void Collider::AddInCollisionWith(Collider* ColliderToAdd, sf::Vector2f ContactPoint)
 {
 	currentCollisions[ColliderToAdd] = ContactPoint;
-	//std::cout << "Collision enter between " << this->gameObject->Name << " and " << ColliderToAdd->gameObject->Name << std::endl;
+	//std::cout << "Collision enter between " << this->gameObject->name << " and " << ColliderToAdd->gameObject->name << std::endl;
 	//std::cout << "Current velocity " << Utilities::VectorToString(this->GetVelocity()) << std::endl;
 	//std::cout << "Current acceleration " << Utilities::VectorToString(this->GetAcceleration()) << std::endl;
 	FireCollisionEnter(ColliderToAdd, ContactPoint);

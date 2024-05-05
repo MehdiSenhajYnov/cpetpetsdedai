@@ -11,7 +11,7 @@
 
 GameManager::GameManager() :
 //window(sf::VideoMode(1000, 500), "Simple 2D Game", sf::Style::Resize)
-window(sf::VideoMode(800, 400), "Simple 2D Game", sf::Style::Fullscreen)
+window(sf::VideoMode(1500, 900), "Simple 2D Game", sf::Style::Default)
 {
 	iswindowFocus = true;
 }
@@ -37,16 +37,16 @@ void GameManager::Run()
 
 	while (window.isOpen())
 	{
+		eventsOfTick.clear();
+		WindowsEvents();
+		if (!iswindowFocus) continue;
 		if (haveToChangeScene)
 		{
 			ChangeScene(newScene);
 		}
-		WindowsEvents();
-		if (!iswindowFocus) continue;
-
 		deltaTime = dtClock.restart().asSeconds();
-
 		RendererManager::GetInstance()->Clear();
+		InputEvents();
 		currentScene->Update(deltaTime);
 		RendererManager::GetInstance()->Draw();
 	}
@@ -70,15 +70,17 @@ void GameManager::ChangeScene(SceneManager::SceneEnum sceneToUse)
 		currentScene = new EditorScene();
 	}
 
+	bool CreateScene = currentScene->sceneFileEditor.CreateNewScene();
+	// if (!CreateScene)
+	// {
+	// 	 currentScene->sceneFileEditor.LoadScene();
+	// } else
+	// {
+	// }
 	currentScene->InitializeScene(&window);
 	haveToChangeScene = false;
 
 }
-
-
-
-
-
 
 void GameManager::WindowsEvents()
 {
@@ -89,19 +91,29 @@ void GameManager::WindowsEvents()
 		{
 			iswindowFocus = true;
 			std::cout << "window gained focus : " << std::endl;
-		}
-
-		if (event.type == sf::Event::LostFocus)
+		} else if (event.type == sf::Event::LostFocus)
 		{
 			iswindowFocus = false;
 			std::cout << "window lost focus : " << std::endl;
-		}
-
-
-		if (event.type == sf::Event::Closed)
+		} else if (event.type == sf::Event::Closed)
 		{
 			window.close();
+		} else if(event.type == sf::Event::Resized)
+		{
+			window.setView(sf::View(sf::FloatRect(0, 0, event.size.width, event.size.height)));
 		}
+		else
+		{
+			eventsOfTick.push_back(event);
+		}
+
+	}
+}
+
+void GameManager::InputEvents()
+{
+	for (auto& event : eventsOfTick)
+	{
 		if (event.type == sf::Event::KeyPressed)
 		{
 			if (event.key.code == sf::Keyboard::Escape)
@@ -121,6 +133,6 @@ void GameManager::WindowsEvents()
 				currentScene->OnMouseKeyDown(event.mouseButton.button);
 			}
 		}
-		
 	}
 }
+

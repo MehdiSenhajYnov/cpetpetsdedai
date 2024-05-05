@@ -22,14 +22,40 @@ public:
 	Button();
 
 	void Init(SpriteRenderer* _spriteRenderer);
-	void InitDefaultButton(std::string _buttonString);
+	void InitDefaultButton(const std::string& _buttonString);
 	void InitDefaultSpriteRenderer();
-	void InitDefaultTextComponent(std::string _buttonString);
+	void InitDefaultTextComponent(const std::string& _buttonString);
 
+	void Start() override;
+	void Update(float _deltaTime) override;
+	
+	void DisableButton();
 
-	void SetString(std::string _buttonString);
-	sf::Text* GetText();
+	[[nodiscard]] bool IsInButton(const sf::Vector2i& positionToCheck) const;
 
+	[[nodiscard]] ButtonState GetButtonState() const;
+	[[nodiscard]] SpriteRenderer* GetSpriteRenderer() const;
+	[[nodiscard]] TextComponent* GetTextComponent() const;
+	
+	void SetString(const std::string& _buttonString);
+	void SetBaseColor(const sf::Color& _color);
+	void SetHoverColor(const sf::Color& _color);
+	void SetPressedColor(const sf::Color& _color);
+	void SetTextColor(const sf::Color& _color);
+
+private:
+	void OnMouseKeyDown();
+	void OnMouseKeyUp();
+
+	
+	void UpdatePosition();
+	void UpdateTextComponentPosition(sf::Vector2f _newPos) const;
+	void UpdateColor() const;
+	
+	void SetSpriteRendererColor(const sf::Color& _color) const;
+	[[nodiscard]] sf::Vector2f GetNewPos() const;
+	
+public:
 	Event<Button*> OnButtonClicked;
 	Event<Button*> OnButtonHover;
 	Event<Button*> OnButtonUnHover;
@@ -38,29 +64,15 @@ public:
 	Event<Button*> OnMouseExit;
 	Event<Button*> OnMouseClickDown;
 	Event<Button*> OnMouseClickUp;
-	
-	bool IsInButton(const sf::Vector2i& positionToCheck);
-
-	void SetColor(const sf::Color& _color);
-	sf::Color GetColor();
-	
-	ButtonState GetButtonState();
-	void DisableButton();
-	// Hérité via Component
-	void Start() override;
-	void Update(float _deltaTime) override;
-
-	sf::Vector2f GetSize();
-
-	SpriteRenderer* GetSpriteRenderer();
-	
 private:
 	bool buttonInitialized;
-	void UpdatePosition();
 
 	sf::Vector2f oldObjPosition;
 	sf::Vector2i mousePosition;
 
+	bool isMouseInside;
+	bool isMousePressingTheButton;
+	
 	bool isMousePressed;
 	bool ClickOnTheButton;
 	bool isMouseHover;
@@ -70,5 +82,13 @@ private:
 
 	SpriteRenderer* spriteRenderer;
 	TextComponent* textComponent;
+
+	sf::Color baseColor = sf::Color(0, 0, 0);
+	sf::Color hoverColor = sf::Color(110, 110, 110);
+	sf::Color pressedColor = sf::Color(80, 80, 80);
+	sf::Color textColor = sf::Color::White;
+
+	bool wantHoverColor ;
+	bool wantPressedColor ;
 };
 

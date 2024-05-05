@@ -24,7 +24,6 @@ protected:
     void EditorUpdate(float deltaTime);
     void CheckMouseSelection();
 
-protected:
     bool isMousePressed = false;
 
 private:
@@ -36,7 +35,7 @@ private:
     //GameObject* contextMenuBackground;
     //SpriteRenderer* contextMenuBackgroundSpriteRenderer;
 
-    ContextMenu contextMenu;
+    ContextMenu* contextMenu;
 };
 
 

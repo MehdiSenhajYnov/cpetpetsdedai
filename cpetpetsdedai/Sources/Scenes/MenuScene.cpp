@@ -4,35 +4,8 @@
 #include "../../Headers/Scenes/SceneManager.h"
 #include "../../Headers/Components/Button.h"
 #include "../../Headers/Utilities/Event.h"
-
-
-
-void MenuScene::OnBtnMouseEnter(Button* btn)
-{
-	btn->SetColor(hoverButtonColor);
-}
-void MenuScene::OnBtnMouseExit(Button* btn)
-{
-	btn->SetColor(normalButtonColor);
-}
-
-void MenuScene::OnBtnMouseClickDown(Button* btn)
-{
-	btn->SetColor(pressedButtonColor);
-}
-
-void MenuScene::OnBtnMouseClickUp(Button* btn)
-{
-	if (btn->GetButtonState() != ButtonState::Hover)
-	{
-		btn->SetColor(normalButtonColor);
-	}
-	else
-	{
-		btn->SetColor(hoverButtonColor);
-	}
-}
-
+#include "../../Headers/Components/SpriteRenderer.h"
+#include "../../TextComponent.h"
 
 void MenuScene::OnPlayButtonClicked(Button* btn)
 {
@@ -70,8 +43,8 @@ void MenuScene::InitializeScene(sf::RenderWindow* _window)
 {
 	Scene::InitializeScene(_window);
 
-	playButtonObj = CreateGameObject("playButton");
-	exitButtonObj = CreateGameObject("exitButton");
+	playButtonObj = CreateGameObjectImmediate("playButton");
+	exitButtonObj = CreateGameObjectImmediate("exitButton");
 	
 	playButtonObj->SetPosition(window->getSize().x / 2, window->getSize().y / 2 - 50);
 
@@ -86,17 +59,16 @@ void MenuScene::InitializeScene(sf::RenderWindow* _window)
 	exitButtonComponent->InitDefaultButton("EXIT");
 	exitButtonComponent->OnButtonClicked.Subscribe(&MenuScene::OnExitButtonClicked, this);
 
-	playButtonComponent->SetColor(normalButtonColor);
-	exitButtonComponent->SetColor(normalButtonColor);
+	playButtonComponent->SetBaseColor(normalButtonColor);
+	exitButtonComponent->SetBaseColor(normalButtonColor);
 
-	playButtonComponent->OnButtonHover.Subscribe(&MenuScene::OnBtnMouseEnter, this);
-	playButtonComponent->OnButtonUnHover.Subscribe(&MenuScene::OnBtnMouseExit, this);
-	playButtonComponent->OnMouseClickDown.Subscribe(&MenuScene::OnBtnMouseClickDown, this);
-	playButtonComponent->OnMouseClickUp.Subscribe(&MenuScene::OnBtnMouseClickUp, this);
-	exitButtonComponent->OnButtonHover.Subscribe(&MenuScene::OnBtnMouseEnter, this);
-	exitButtonComponent->OnButtonUnHover.Subscribe(&MenuScene::OnBtnMouseExit, this);
-	exitButtonComponent->OnMouseClickDown.Subscribe(&MenuScene::OnBtnMouseClickDown, this);
-	exitButtonComponent->OnMouseClickUp.Subscribe(&MenuScene::OnBtnMouseClickUp, this);
+	playButtonComponent->SetHoverColor(hoverButtonColor);
+	exitButtonComponent->SetHoverColor(hoverButtonColor);
+
+	playButtonComponent->SetPressedColor(pressedButtonColor);
+	exitButtonComponent->SetPressedColor(pressedButtonColor);
+
+	playButtonComponent->SetTextColor(textColor);
 }
 
 void MenuScene::OnSceneChanged()
@@ -111,5 +83,13 @@ void MenuScene::DestroyScene()
 
 void MenuScene::OnKeyDown(sf::Keyboard::Key pressedKey)
 {
+	if (pressedKey == sf::Keyboard::Key::Space)
+	{
+		std::cout << "Space pressed, nb of fields : " << playButtonObj->GetType()->GetAllFields().size() << std::endl;
+		for (auto& _field : playButtonObj->GetType()->GetAllFields())
+		{
+			std::cout << "field name : " << _field->name << std::endl;
+		}
 
+	}
 }

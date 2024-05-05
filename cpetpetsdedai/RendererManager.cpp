@@ -1,6 +1,7 @@
 ﻿#include "RendererManager.h"
 
 #include "CameraManager.h"
+#include "TextComponent.h"
 #include "Headers/Components/DrawableComponent.h"
 #include "Headers/Engine/GameObject.h"
 
@@ -20,6 +21,7 @@ void RendererManager::Clear()
 
 void RendererManager::Draw()
 {
+	fordebug.clear();
 	for(auto& drawableLayer : drawableLayers)
 	{
 		for(auto& drawableComponent : drawableLayer.drawableComponents)
@@ -52,7 +54,7 @@ void RendererManager::Draw()
 					drawableComponent->GetAttachedObject()->GetPosition() - CameraManager::GetInstance()->GetMainCamera()->GetAttachedObject()->GetPosition());
 			} else
 			{
-				drawableComponent->setPosition(drawableComponent->GetAttachedObject()->GetPosition());
+				drawableComponent->setPosition(drawableComponent->GetOffsetPosition() + drawableComponent->GetAttachedObject()->GetPosition());
 			}
 
 			sf::Vector2f scaleToSet = {
@@ -61,11 +63,15 @@ void RendererManager::Draw()
 			};
 			
 			drawableComponent->SetDrawScale(scaleToSet);
-			
+
 			window->draw(*drawableComponent->GetDrawable());
 		}
 	}
 
+	for (auto& element : fordebug)
+	{
+		window->draw(element);
+	}
 	window->display();
 }
 

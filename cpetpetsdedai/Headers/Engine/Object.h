@@ -2,7 +2,7 @@
 #include <string>
 #include <map>
 #include <iostream>
-#include <vector>
+#include "../../Type.h"
 
 #define AddType(Object, Value) \
 static Type* GetStaticType() \
@@ -11,26 +11,12 @@ static Type _objtype(#Object, Value); \
 return &_objtype; \
 }
 
-class Type {
-public:
-	Type(const std::string& name, Type* parent);
-	static std::string TestValue();
-
-	std::string GetName();
-	Type* GetParent();
-	bool Equals(const Type& Other) const;
-	bool Equals(const Type* _other) const;
-	
-	static int typeCount;
-	static std::map<std::string, Type*> allTypes;
-	static Type* GetType(const std::string& name);
-	static std::vector<Type*> GetAllChildren(const Type& parent);
-	static bool IsOrIsDescendantOf(const Type* child, const Type* parent);
-	
-private:
-	std::string name;
-	Type *parent = nullptr;
-};
+#define SerializeField(type, name) \
+auto _change##name##Invoke = [this](type _newValue) \
+{ \
+this->name = _newValue; \
+}; \
+GetType()->CreateField<type>(#name, _change##name##Invoke)
 
 
 class Object {
@@ -38,13 +24,29 @@ public:
 	AddType(Object, nullptr)
 
 	//Object(std::string typeName, Type* parentType);
-	virtual ~Object() = default ;
 	Type* GetType();
+	
+	virtual ~Object() = default ;
+
+	int GetId() const { return id; }
+	
 private:
+	uint64_t id;
 	Type type;
 	//static const Type objectType;
 protected:
-	void InitObject(std::string typeName, Type* parentType);
-	Object(std::string typeName, Type* parentType);
+	void InitObject(const std::string& typeName, Type* parentType);
+
+	Object(const std::string& typeName, Type* parentType, TList<BaseField*> fields);
+	
+	Object(const std::string& typeName, Type* parentType);
+	Object(const int& _id,const std::string& typeName, Type* parentType);
+
 	Object() = default;
 };
+
+
+template<typename T>
+concept isObject =
+	std::is_base_of_v<Object, T> &&
+	std::is_convertible_v<const volatile T*, const volatile Object*>;

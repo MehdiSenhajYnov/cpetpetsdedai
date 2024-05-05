@@ -72,7 +72,7 @@ void RoundedRectangle::setPosition(sf::Vector2f pos)
     roundedRectangleShape.setPosition(pos);
 }
 
-sf::Vector2f RoundedRectangle::GetSize()
+sf::Vector2f RoundedRectangle::GetOriginalSize()
 {
     return sf::Vector2f(width,height);}
 

@@ -6,19 +6,33 @@
 #include "../../Headers/Components/SpriteRenderer.h"
 #include "../../Headers/Engine/GameObject.h"
 
-Scene::Scene() : Object("Scene", Object::GetStaticType())
+Scene::Scene() : Scene("Scene", Object::GetStaticType())
 {
 }
 
-Scene::Scene(std::string _typeName, Type* parentType) : Object(_typeName, parentType)
+Scene::Scene(std::string _typeName, Type* parentType) : Object(_typeName, parentType), mainCameraObject(nullptr),
+                                                        mainCamera(nullptr),
+                                                        sceneChanged(false),
+                                                        window(nullptr)
 {
+	sceneFileEditor.SetCurrentScene(this);
 }
 
 GameObject* Scene::CreateGameObject(std::string _gameObjectName)
 {
 	GameObject* newGameObject = new GameObject();
 	newGameObject->Init(_gameObjectName);
+	gameObjectsToAdd.push_back(newGameObject);
+	sceneFileEditor.CreateObject(newGameObject);
+	return newGameObject;
+}
+
+GameObject* Scene::CreateGameObjectImmediate(std::string _gameObjectName)
+{
+	GameObject* newGameObject = new GameObject();
+	newGameObject->Init(_gameObjectName);
 	gameObjects.push_back(newGameObject);
+	sceneFileEditor.CreateObject(newGameObject);
 	//gamesObjectsComponents[newGameObject] = std::vector<Component*>();
 	return newGameObject;
 }
@@ -28,9 +42,32 @@ Scene::~Scene()
 	std::cout << "Cleaning scene" << std::endl;
 	for(auto& element : gameObjects)
 	{
+		if (element == nullptr)
+		{
+			continue;
+		}
 		delete element;
 		element = nullptr;
 	}
+	for (auto& element : gameObjectsToAdd)
+	{
+		if (element == nullptr)
+		{
+			continue;
+		}
+		delete element;
+		element = nullptr;
+	}
+	for (auto& element : gameObjectsToRemove)
+	{
+		if (element == nullptr)
+		{
+			continue;
+		}
+		delete element;
+		element = nullptr;
+	}
+	
 	gameObjects.clear();
 }
 
@@ -38,18 +75,24 @@ void Scene::InitializeScene(sf::RenderWindow* _window)
 {
 	window = _window;
 
-	mainCameraObject = CreateGameObject("mainCameraObject");
+	mainCameraObject = CreateGameObjectImmediate("mainCameraObject");
 	mainCamera = mainCameraObject->AddComponent<Camera>();
 	mainCamera->Init(sf::Vector2f(1920, 1080), window, this);
 	CameraManager::GetInstance()->SetMainCamera(mainCamera);
 }
 
-void Scene::RemoveGameObject(GameObject* _gameObjectToRemove)
+void Scene::RemoveGameObjectImmediate(GameObject* _gameObjectToRemove)
 {
 	gameObjects.RemoveElement(_gameObjectToRemove);
 	delete _gameObjectToRemove;
 	_gameObjectToRemove = nullptr;
 }
+
+void Scene::RemoveGameObject(GameObject* _gameObjectToAdd)
+{
+	gameObjectsToRemove.push_back(_gameObjectToAdd);
+}
+
 
 TList<GameObject*>* Scene::GetGameObjects()
 {
@@ -72,6 +115,15 @@ TList<DrawableLayer*> Scene::GetDrawableLayers()
 
 void Scene::CalUpdateOnAll(float deltaTime)
 {
+	gameObjects.AppendVector(gameObjectsToAdd);
+	gameObjectsToAdd.clear();
+
+	for (auto& _gameObject : gameObjectsToRemove)
+	{
+		RemoveGameObjectImmediate(_gameObject);
+	}
+	gameObjectsToRemove.clear();
+	
 	for (auto& _gameObject : gameObjects)
 	{
 		if (!_gameObject->GetIsActive())
