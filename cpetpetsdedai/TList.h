@@ -8,30 +8,10 @@
 
 
 template<typename T>
-class TList : public std::vector<T>
+class TList : public std::vector<T>, public ISerialisable
 {
 
 public:
-    friend std::ostream& operator<<(std::ostream& _os, const TList& _obj)
-    {
-
-        if constexpr (std::is_pointer<T>())
-        {
-            TList<uint64_t> _ids;
-            
-            
-        }
-        _os << "[ ";
-        for (auto& element : _obj)
-        {
-            _os << element << "!&!";
-        }
-        _os << " ]";
-    
-        return _os;
-    }
-
-    
     TList(std::initializer_list<T> List) : std::vector<T>(List){}
     TList() : std::vector<T>(){}
     
@@ -101,6 +81,81 @@ public:
         this->insert(this->end(), _list.begin(), _list.end());
 
     }
+
+public:
+    uint64_t Serialize(SerializeBuffer& buffer) override
+    {
+        if constexpr (isSerialisable<T>)
+        {
+            _objectSerialize(buffer);
+            return 0;
+        }
+        if constexpr (std::is_pointer<T>())
+        {
+            if constexpr (isSerialisable<decltype(*std::declval<T>())>)
+            {
+                _objectPointerSerialize(buffer);
+                return 0;
+            }
+        }
+        if constexpr (CanString<T>)
+        {
+            _standardSerialize(buffer);
+        }
+
+        return 0;
+    }
     
+    void Deserialize(const std::string& _serialised) override
+    {
+        
+    }
+
+private:
+    void _standardSerialize(SerializeBuffer& buffer)
+    {
+        buffer.startBuffer << "[ ";
+        for (const T& element : *this) {
+            buffer.mainBuffer << element << " !&! ";
+        }
+        buffer.endBuffer << " ]";
+    }
+
+    void _objectSerialize(SerializeBuffer& buffer)
+    {
+        buffer.startBuffer << "[ ";
+        for (const T& element : *this) {
+            element.Serialize(buffer);
+            buffer.mainBuffer << " !&! ";
+        }
+        buffer.endBuffer << " ]";
+    }
+
+    void _objectPointerSerialize(SerializeBuffer& buffer)
+    {
+        buffer.startBuffer << "[ ";
+
+        TList<uint64_t> ids;
+        
+        SerializeBuffer tempBuffer;
+        for (const T& element : *this) {
+            uint64_t elementID = element->Serialize(tempBuffer);
+            ids.push_back(elementID);
+            buffer.endBuffer << tempBuffer.startBuffer.str();
+        }
+
+        ids.Serialize(buffer);
+        
+        buffer.endBuffer << " ]";
+    }
+
+    void _pointerSerialize(SerializeBuffer& buffer, T& _value)
+    {
+        buffer.startBuffer << "[ ";
+        for (const T& element : *this) {
+            buffer.mainBuffer << *element << " !&! ";
+        }
+        buffer.endBuffer << " ]";
+    }
 };
 

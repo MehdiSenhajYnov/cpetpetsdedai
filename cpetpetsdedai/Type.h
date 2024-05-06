@@ -21,10 +21,10 @@ public:
 
     TList<BaseField*>& GetAllFields();
 
-    template <CanString T>
+    template <typename  T>
     void CreateField(std::string fieldName);
     
-    template <CanString T>
+    template <typename  T>
     void CreateField(std::string fieldName, std::function<void(T)> setter, std::function<T()> getter);
     
     static int typeCount;
@@ -45,14 +45,14 @@ private:
 };
 
 
-template <CanString T>
+template <typename  T>
 void Type::CreateField(std::string fieldName)
 {
     Field<T>* field = new Field<T>(fieldName);
     GetAllFields().push_back(field);
 }
 
-template <CanString T>
+template <typename  T>
 void Type::CreateField(std::string fieldName, std::function<void(T)> setter, std::function<T()> getter)
 {
     Field<T>* field = new Field<T>(fieldName, getter, setter);

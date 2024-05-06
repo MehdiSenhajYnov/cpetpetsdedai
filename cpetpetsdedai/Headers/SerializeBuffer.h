@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include <ostream>
+#include <sstream>
 
 struct SerializeBuffer {
 	SerializeBuffer() = default;

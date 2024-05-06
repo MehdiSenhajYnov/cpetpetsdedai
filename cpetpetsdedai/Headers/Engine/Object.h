@@ -51,20 +51,19 @@ public:
 	virtual void PreDestroy() {};
 	virtual ~Object() = default ;
 
-	int GetId() const { return id; }
+	uint64_t GetId() const { return id; }
 public:
 
-	virtual void Serialise(SerializeBuffer& buffer) override
+	virtual uint64_t Serialize(SerializeBuffer& buffer) override
 	{
-		buffer.mainBuffer << "id: " << id;
-		
 		for (auto& _field : GetType()->GetAllFields())
 		{
-			buffer.mainBuffer << (_field->name + ": " + _field->GetValueAsString() + "\n");
+			_field->Serialize(buffer);
 		}
+		return id;
 	}
 	
-	virtual void Deserialise(const std::string& _serialised) override
+	virtual void Deserialize(const std::string& _serialised) override
 	{
 		
 	}

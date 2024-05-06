@@ -95,21 +95,6 @@ std::string SceneFileEditor::GetScenePath() const
     return scenePath + GetSceneName() + sceneFileExtension;
 }
 
-// void SceneFileEditor::CreateGameObject(GameObject* _gameObject) const
-// {
-//     if (level == nullptr)
-//     {
-//         return;
-//     }
-//
-//     std::string newContent =
-//         NEWLINE_PREFIX + TYPE_PREFIX + std::to_string(GameObject::GetStaticType()->GetId()) + ID_PREFIX +
-//         std::to_string(_gameObject->GetId()) + "\n" + "  name: " + _gameObject->GetName() + "\n";
-//     
-//     FileUtilities::AppendInFile(GetScenePath(), newContent);
-//     
-// }
-
 void SceneFileEditor::SetCurrentScene(Scene* _scene)
 {
     level = _scene;

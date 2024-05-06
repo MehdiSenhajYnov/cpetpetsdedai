@@ -166,7 +166,7 @@ void EditorScene::CheckMouseSelection()
         {
             for (auto& drawableComponent : drawableLayer.drawableComponents)
             {
-                if (Utilities::IsInBounds(mousePositionWorld, drawableComponent->GetAttachedObject()->GetPosition(), drawableComponent->GetOriginalSize()))
+                if (Utilities::IsInBounds(mousePositionWorld, drawableComponent->GetAttachedObject()->GetPosition(), drawableComponent->GetOriginalSize(), Center))
                 {
                     selectedObject = drawableComponent->GetAttachedObject();
                     selectedSpriteRenderer = dynamic_cast<SpriteRenderer*>(drawableComponent);

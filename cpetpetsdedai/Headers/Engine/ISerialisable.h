@@ -5,6 +5,7 @@
 
 class ISerialisable {
 public:
-	virtual void Serialise(SerializeBuffer& buffer) = 0;
-	virtual void Deserialise(const std::string& _serialised) = 0;
+	virtual uint64_t Serialize(SerializeBuffer& buffer) = 0;
+	virtual void Deserialize(const std::string& _serialised) = 0;
+	
 };

@@ -7,13 +7,6 @@
 
 
 class Scene;
-template <typename T>
-concept IsSceneClass = requires (T t) {
-	t.InitializeScene();
-	t.Update();
-	t.OnKeyDown();
-	t.DestroyScene();
-};
 
 class GameManager : public Object
 {

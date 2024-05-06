@@ -46,14 +46,11 @@ public:
 	GameObject();
 	GameObject(const std::string& _name, Type* parentType);
 	~GameObject() override;
+	AddType(GameObject, Object::GetStaticType())
 	
-	static Type* GetStaticType()
-	{
-		static Type _objtype("GameObject", Object::GetStaticType());
-		return &_objtype;
-	}
 	virtual void Init(const std::string& _name);
 
+	
 	#pragma region GettersSetters
 	
 	std::string GetName();
@@ -116,30 +113,6 @@ public:
 	TList<Component*> GetAllComponents();
 	#pragma endregion ComponentsManagement
 
-	
-	static void SerializeClass()
-	{
-
-		std::vector<BaseField*> fields;
-		
-		Field<int*> test = Field<int*>();
-		fields.push_back(&test);
-
-	}
-	
-	// template <typename T>
-	// static void SerializeField(std::string _fieldName)
-	// {
-	// 	Field field = Field<T>() ;
-	// 	field.name = _fieldName;
-	// }
-
-	static void AddField(BaseField* _field)
-	{
-		static std::map<std::string, BaseField*> fields;
-		fields[_field->name] = _field;
-	}
-	
 public:
 	PositionType positionType;
 private:

@@ -31,7 +31,10 @@ GameObject::GameObject(const std::string& _name, Type* parentType) : Object(_nam
 	SerializeField(PositionType, positionType);
 	SerializeField(bool, isActive);
 	SerializeField(GameObject*, parent);
+	
 	SerializeField(TList<std::string>, _tags);
+
+	
 	SerializeField(TList<Component*>, components);
 
 }

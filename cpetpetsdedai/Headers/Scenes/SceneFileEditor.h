@@ -25,9 +25,11 @@ public:
 
 	//void CreateGameObject(GameObject* _gameObject) const;
 
-	template<isObject T>
+	template <isSerialisable T = ISerialisable>
 	void CreateObject(T* _object) const;
-
+	template <isSerialisable T>
+	static std::string GetObjectSerializePrefix(T* _object) ;
+	
 
 	void SetCurrentScene(Scene* _scene);
 	Scene* GetCurrentScene() const;
@@ -38,41 +40,51 @@ private:
 	static std::string sceneFileExtension;
 	Scene* level;
 	
-	const std::string NEWLINE_PREFIX = "--- ";
-	const std::string TYPE_PREFIX = "!t!";
-	const std::string ID_PREFIX = "!i!";
+	static inline const std::string NEWLINE_PREFIX = "--- ";
+	static inline const std::string TYPE_PREFIX = "!t!";
+	static inline const std::string ID_PREFIX = "!i!";
 	
 };
 
-template <isObject T = Object>
+template <isSerialisable T = ISerialisable>
 void SceneFileEditor::CreateObject(T* _object) const
 {
 	if (level == nullptr)
 	{
 		return;
 	}
-	Object* obj = dynamic_cast<Object*>(_object);
-	std::string newContent =
-		NEWLINE_PREFIX + TYPE_PREFIX + std::to_string(GameObject::GetStaticType()->GetId()) + ID_PREFIX +
-		std::to_string(_object->GetId()) + "\n";
-	
-	std::fstream file;
-	file.open(GetScenePath(), std::ios::app);
 
 	SerializeBuffer buffer;
-	
-	
-	if (file.is_open())
+	_object->Serialize(buffer);
+	if (!buffer.startBuffer.str().empty())
 	{
-		file << newContent << *obj << "\n";
-
-		if (GameObject* _go = dynamic_cast<GameObject*>(obj))
-		{
-			std::cout << "GameObject: " << _go->GetName() << " created" << std::endl;
-			std::cout << *_go << std::endl;
-		}
-		
-		file.close();
+		FileUtilities::AppenInFileAtLine(GetScenePath(), buffer.startBuffer.str(), 0);
+	}
+	if (!buffer.mainBuffer.str().empty())
+	{
+		FileUtilities::AppendInFile(GetScenePath(), buffer.mainBuffer.str());
+	}
+	if (!buffer.endBuffer.str().empty())
+	{
+		FileUtilities::AppendInFile(GetScenePath(), buffer.endBuffer.str());
 	}
 	
+	// std::fstream file;
+	// file.open(GetScenePath(), std::ios::app);
+	// if (file.is_open())
+	// {
+	//
+	// 	file << SceneFileEditor::GetObjectSerializePrefix(_object) << *obj << "\n";
+	// 	file.close();
+	// }
+	
+}
+
+template <isSerialisable T>
+std::string SceneFileEditor::GetObjectSerializePrefix(T* _object)
+{
+	std::string newContent =
+	NEWLINE_PREFIX + TYPE_PREFIX + std::to_string(T::GetStaticType()->GetId()) + ID_PREFIX +
+	std::to_string(_object->GetId()) + "\n";
+	return newContent;
 }
