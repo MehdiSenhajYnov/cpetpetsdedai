@@ -23,7 +23,6 @@ GameObject* Scene::CreateGameObject(std::string _gameObjectName)
 	GameObject* newGameObject = new GameObject();
 	newGameObject->Init(_gameObjectName);
 	gameObjectsToAdd.push_back(newGameObject);
-	sceneFileEditor.CreateObject(newGameObject);
 	return newGameObject;
 }
 
@@ -32,13 +31,13 @@ GameObject* Scene::CreateGameObjectImmediate(std::string _gameObjectName)
 	GameObject* newGameObject = new GameObject();
 	newGameObject->Init(_gameObjectName);
 	gameObjects.push_back(newGameObject);
-	sceneFileEditor.CreateObject(newGameObject);
 	//gamesObjectsComponents[newGameObject] = std::vector<Component*>();
 	return newGameObject;
 }
 
 Scene::~Scene()
 {
+	
 	std::cout << "Cleaning scene" << std::endl;
 	for(auto& element : gameObjects)
 	{
@@ -69,6 +68,11 @@ Scene::~Scene()
 	}
 	
 	gameObjects.clear();
+}
+
+void Scene::PreDestroy()
+{
+	sceneFileEditor.SaveScene();
 }
 
 void Scene::InitializeScene(sf::RenderWindow* _window)

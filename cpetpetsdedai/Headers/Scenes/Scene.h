@@ -2,11 +2,9 @@
 #include <map>
 #include <memory>
 #include <SFML/Graphics.hpp>
-
 #include "SceneFileEditor.h"
-#include "../../TList.h"
-#include "../Engine/GameObject.h"
 #include "../Engine/Object.h"
+
 
 struct DrawableLayer;
 class GameObject;
@@ -14,10 +12,6 @@ class Component;
 class SpriteRenderer;
 class Camera;
 
-template<typename T>
-concept isGameObject =
-	std::is_base_of_v<GameObject, T> &&
-	std::is_convertible_v<const volatile T*, const volatile GameObject*>;
 
 enum SceneMode
 {
@@ -33,6 +27,8 @@ public:
 	AddType(Scene, Object::GetStaticType());
 	virtual ~Scene();
 
+	virtual void PreDestroy() override;
+	
 	virtual void InitializeScene(sf::RenderWindow* _window);
 	
 	std::string sceneName;

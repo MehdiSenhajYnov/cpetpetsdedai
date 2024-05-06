@@ -1,5 +1,4 @@
 #include "../../Headers/Components/Button.h"
-
 #include "../../CameraManager.h"
 #include "../../RendererManager.h"
 #include "../../Headers/Components/Camera.h"
@@ -8,17 +7,23 @@
 #include "../../Headers/Utilities/Utilities.h"
 #include "../../TextComponent.h"
 
-sf::Vector2f operator/(const sf::Vector2f& _vectorToDivide, float _divideValue)
-{
-	return {_vectorToDivide.x / _divideValue, _vectorToDivide.y / _divideValue};
-}
-
-Button::Button() : buttonInitialized(false), isMousePressed(false), ClickOnTheButton(false), isMouseHover(false),
+Button::Button() : buttonInitialized(false), isMouseInside(false), isMousePressingTheButton(false), isMousePressed(false), ClickOnTheButton(false),
+                   isMouseHover(false),
                    tempState(),
                    buttonState(ButtonState::Normal),
                    spriteRenderer(nullptr),
                    textComponent(nullptr), wantHoverColor(false), wantPressedColor(false)
 {
+	SerializeField(sf::Color, baseColor)
+	SerializeField(sf::Color, hoverColor)
+	SerializeField(sf::Color, pressedColor)
+	SerializeField(sf::Color, textColor)
+	SerializeField(bool, wantHoverColor)
+	SerializeField(bool, wantPressedColor)
+	
+	SerializeField(SpriteRenderer*, spriteRenderer)
+	SerializeField(TextComponent*, textComponent)
+	
 }
 
 void Button::Init(SpriteRenderer* _spriteRenderer)

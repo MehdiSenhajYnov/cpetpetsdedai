@@ -14,6 +14,13 @@ class TList : public std::vector<T>
 public:
     friend std::ostream& operator<<(std::ostream& _os, const TList& _obj)
     {
+
+        if constexpr (std::is_pointer<T>())
+        {
+            TList<uint64_t> _ids;
+            
+            
+        }
         _os << "[ ";
         for (auto& element : _obj)
         {

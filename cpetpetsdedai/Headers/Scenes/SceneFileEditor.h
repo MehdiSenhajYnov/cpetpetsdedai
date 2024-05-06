@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include <string>
+#include <fstream>
 
+#include "../SerializeBuffer.h"
 #include "../Engine/GameObject.h"
 #include "../GameSystem/GameSystem.h"
 #include "../Utilities/FileUtilities.h"
@@ -15,7 +17,9 @@ public:
 	AddType(SceneEditor, GameSystem::GetStaticType())
 	
 	bool CreateNewScene() const;
-	void LoadScene();
+	void LoadScene() const;
+	void SaveScene() const;
+	
 	std::string sceneName;
 	std::string GetScenePath() const;
 
@@ -40,7 +44,7 @@ private:
 	
 };
 
-template <isObject T>
+template <isObject T = Object>
 void SceneFileEditor::CreateObject(T* _object) const
 {
 	if (level == nullptr)
@@ -52,18 +56,20 @@ void SceneFileEditor::CreateObject(T* _object) const
 		NEWLINE_PREFIX + TYPE_PREFIX + std::to_string(GameObject::GetStaticType()->GetId()) + ID_PREFIX +
 		std::to_string(_object->GetId()) + "\n";
 	
-		
-	
 	std::fstream file;
 	file.open(GetScenePath(), std::ios::app);
+
+	SerializeBuffer buffer;
+	
+	
 	if (file.is_open())
 	{
-		file << newContent << obj << "\n";
+		file << newContent << *obj << "\n";
 
 		if (GameObject* _go = dynamic_cast<GameObject*>(obj))
 		{
 			std::cout << "GameObject: " << _go->GetName() << " created" << std::endl;
-			std::cout << _go << std::endl;
+			std::cout << *_go << std::endl;
 		}
 		
 		file.close();

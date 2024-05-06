@@ -30,7 +30,7 @@ bool SceneFileEditor::CreateNewScene() const
     return true;
 }
 
-void SceneFileEditor::LoadScene()
+void SceneFileEditor::LoadScene() const
 {
     if (level == nullptr)
     {
@@ -80,6 +80,14 @@ void SceneFileEditor::LoadScene()
     }
     
     
+}
+
+void SceneFileEditor::SaveScene() const
+{
+    for(auto&  _obj : *level->GetGameObjects())
+    {
+        CreateObject(_obj);
+    }
 }
 
 std::string SceneFileEditor::GetScenePath() const

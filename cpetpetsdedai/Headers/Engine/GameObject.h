@@ -4,7 +4,6 @@
 #include <ostream>
 
 #include "Object.h"
-#include "../../TList.h"
 #include "../Components/Component.h"
 #include "../Engine/Field.h"
 
@@ -153,7 +152,7 @@ private:
 	GameObject* parent;
 
 	TList<DrawableLayer> drawableComponents;
-	bool isActive;
+	bool isActive = false;
 	
 };
 

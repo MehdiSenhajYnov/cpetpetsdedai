@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include <sstream>
 #include <string>
-#include <iostream>
 
 class BaseField {
 public:
@@ -21,17 +20,42 @@ class Field : public BaseField
 public:
     Field() {}
     Field(const std::string& _name) : BaseField(_name) {}
-    Field(const std::string& _name, T _value) : BaseField(_name), Tvalue(_value) {}
+    Field(const std::string& _name, std::function<T()> _getValue, std::function<void(T)> _setValue) : BaseField(_name), GetValue(_getValue), SetValue(_setValue) {}
     ~Field() override {}
+
+    //constexpr 
+    
     std::string GetValueAsString() override
     {
+        return getAsString(GetValue());
+    }
+
+    template <CanString U>
+    static std::string PrintString(U value)
+    {
+        return getAsString<U>(value);
+    }
+    
+    std::function<T()> GetValue;
+    std::function<void(T)> SetValue;
+private:
+    template <CanString U>
+    static std::string getAsString(U _value)
+    {
+        
+        if constexpr (std::is_pointer<U>())
+        {
+            if(_value != nullptr)
+            {
+                PrintString(*_value);
+            }
+        }
         std::ostringstream oss;
-        oss << Tvalue;
+        oss << _value;
         return oss.str();
     }
-    T GetValue() { return Tvalue; }
-private:
-    T Tvalue;
+    
+    
 };
 
 

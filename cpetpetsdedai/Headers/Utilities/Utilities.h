@@ -2,6 +2,8 @@
 #include <functional>
 #include <string>
 #include <vector>
+#include <SFML/Graphics/Drawable.hpp>
+#include <SFML/Graphics/Transformable.hpp>
 #include <SFML/System/Vector2.hpp>
 
 enum InBoundsInputType
@@ -24,6 +26,7 @@ public:
     static bool IsInBounds(const sf::Vector2f& _positionToCheck, const sf::Vector2f& _position, const sf::Vector2f& _size);
     static bool IsInBounds(const sf::Vector2f& _positionToCheck, const sf::Vector2f& _position, const sf::Vector2f& _size, InBoundsInputType _inputType);
 
+    
     static unsigned int GenerateUniqueId();
 
     static uint64_t Hash(std::string str);

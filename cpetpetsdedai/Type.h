@@ -4,10 +4,7 @@
 #include <vector>
 #include "TList.h"
 #include "Headers/Engine/Field.h"
-template<typename T>
-concept isField =
-    std::is_base_of_v<BaseField*, T> &&
-    std::is_convertible_v<const volatile T*, const volatile BaseField*>;
+
 
 class Type {
 public:
@@ -26,14 +23,9 @@ public:
 
     template <CanString T>
     void CreateField(std::string fieldName);
-
     
     template <CanString T>
-    void CreateField(std::string fieldName, std::function<void(T)>);
-
-    template <CanString T>
-    void CreateField(std::string fieldName, T value);
-    
+    void CreateField(std::string fieldName, std::function<void(T)> setter, std::function<T()> getter);
     
     static int typeCount;
     
@@ -61,15 +53,8 @@ void Type::CreateField(std::string fieldName)
 }
 
 template <CanString T>
-void Type::CreateField(std::string fieldName, std::function<void(T)>)
+void Type::CreateField(std::string fieldName, std::function<void(T)> setter, std::function<T()> getter)
 {
-    this->CreateField<T>(fieldName);
-}
-
-template <CanString T>
-void Type::CreateField(std::string fieldName, T value)
-{
-    Field<T>* field = new Field<T>(fieldName, value);
+    Field<T>* field = new Field<T>(fieldName, getter, setter);
     GetAllFields().push_back(field);
 }
-

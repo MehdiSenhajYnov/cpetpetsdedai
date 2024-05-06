@@ -1,12 +1,13 @@
 ﻿#pragma once
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
-#include "TList.h"
+
+#include "Headers/Engine/Object.h"
 
 class DrawableComponent;
 struct DrawableLayer;
 
-class RendererManager {
+class RendererManager : public Object{
 public:
 	void Init(sf::RenderWindow* _window);
 	void Clear();

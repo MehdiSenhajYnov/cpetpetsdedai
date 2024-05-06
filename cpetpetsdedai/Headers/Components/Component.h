@@ -20,12 +20,12 @@ public:
 	Component();
 	Component(const std::string& _typeName, Type* parentType);
 	
-	virtual ~Component() = default;
+	virtual ~Component() override = default;
 	AddType(Component, Object::GetStaticType())
 	
 	virtual void Start() = 0;
 	virtual void Update(float deltaTime) = 0;
-	virtual void PreDestroy(){};
+	virtual void PreDestroy() override {}
 
 	GameObject* GetAttachedObject();
 	ComponentWorkType componentWorkType;
@@ -36,5 +36,6 @@ public:
 protected:
 
 	GameObject* gameObject;
+	int gameObjectId;
 };
 

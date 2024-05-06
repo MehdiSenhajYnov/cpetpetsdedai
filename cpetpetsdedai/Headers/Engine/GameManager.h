@@ -2,7 +2,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
-#include "../../TList.h"
+#include "Object.h"
 #include "../Scenes/SceneManager.h"
 
 
@@ -15,7 +15,7 @@ concept IsSceneClass = requires (T t) {
 	t.DestroyScene();
 };
 
-class GameManager
+class GameManager : public Object
 {
 public:
 	GameManager();
@@ -23,7 +23,7 @@ public:
 	void Run();
 	void OnChangeSceneAsked(SceneManager::SceneEnum sceneToUse);
 	void ChangeScene(SceneManager::SceneEnum sceneToUse);
-
+	void DeleteScene();
 	
 	template<typename T>
 	void afficher_args(const T& arg) {

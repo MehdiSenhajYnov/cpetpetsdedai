@@ -84,6 +84,8 @@ bool Utilities::IsInBounds(const sf::Vector2f& _positionToCheck, const sf::Vecto
     return true;
 }
 
+
+
 unsigned int Utilities::GenerateUniqueId()
 {
     std::random_device rd;

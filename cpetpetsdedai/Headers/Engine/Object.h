@@ -4,8 +4,10 @@
 #include <iostream>
 #include <ostream>
 
+#include "ISerialisable.h"
 #include "../../Type.h"
 #include "../Utilities/AllMacros.h"
+#include "../Utilities/ExternClassOperator.h"
 
 #define AddType(Object, Value) \
 static Type* GetStaticType() \
@@ -19,14 +21,17 @@ auto _change##name##Invoke = [this](type _newValue) \
 { \
 this->name = _newValue; \
 }; \
-GetType()->CreateField<type>(#name, _change##name##Invoke)
+std::function<type()> _##name##GetInvoke = [this]() { return this->##name##; };\
+GetType()->CreateField<type>(#name, _change##name##Invoke, _##name##GetInvoke);
 
 
-class Object {
+class Object : public ISerialisable {
 	friend std::ostream& operator<<(std::ostream& _os, const Object& _obj)
 	{
 		Object& _objRef = const_cast<Object&>(_obj);
+		std::cout << "id: " << _obj.id << std::endl;
 		_os << "id: " << _obj.id;
+		
 		for (auto& _field : _objRef.GetType()->GetAllFields())
 		{
 			_os << (_field->name + ": " + _field->GetValueAsString() + "\n");
@@ -39,13 +44,31 @@ public:
 
 	AddType(Object, nullptr)
 
+
 	//Object(std::string typeName, Type* parentType);
 	Type* GetType();
-	
+
+	virtual void PreDestroy() {};
 	virtual ~Object() = default ;
 
 	int GetId() const { return id; }
+public:
 
+	virtual void Serialise(SerializeBuffer& buffer) override
+	{
+		buffer.mainBuffer << "id: " << id;
+		
+		for (auto& _field : GetType()->GetAllFields())
+		{
+			buffer.mainBuffer << (_field->name + ": " + _field->GetValueAsString() + "\n");
+		}
+	}
+	
+	virtual void Deserialise(const std::string& _serialised) override
+	{
+		
+	}
+	
 private:
 	uint64_t id;
 	Type type;
@@ -57,12 +80,10 @@ protected:
 	
 	Object(const std::string& typeName, Type* parentType);
 	Object(const int& _id,const std::string& typeName, Type* parentType);
-
+	
 	Object() = default;
+	
 };
 
 
-template<typename T>
-concept isObject =
-	std::is_base_of_v<Object, T> &&
-	std::is_convertible_v<const volatile T*, const volatile Object*>;
+

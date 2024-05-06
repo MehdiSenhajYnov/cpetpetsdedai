@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "../../Headers/Utilities/FileUtilities.h"
+#include <fstream>
 
 bool FileUtilities::FileExists(std::string _filePath)
 {

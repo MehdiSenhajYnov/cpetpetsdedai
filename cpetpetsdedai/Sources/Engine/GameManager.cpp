@@ -9,9 +9,9 @@
 
 
 
-GameManager::GameManager() :
-//window(sf::VideoMode(1000, 500), "Simple 2D Game", sf::Style::Resize)
-window(sf::VideoMode(1500, 900), "Simple 2D Game", sf::Style::Default)
+GameManager::GameManager() : newScene(), haveToChangeScene(false), currentScene(nullptr),
+                             //window(sf::VideoMode(1000, 500), "Simple 2D Game", sf::Style::Resize)
+                             window(sf::VideoMode(1500, 900), "Simple 2D Game", sf::Style::Default)
 {
 	iswindowFocus = true;
 }
@@ -19,7 +19,7 @@ window(sf::VideoMode(1500, 900), "Simple 2D Game", sf::Style::Default)
 GameManager::~GameManager()
 {
 	std::cout << "GameManager destroyed" << '\n';
-	delete currentScene;
+	DeleteScene();
 }
 
 void GameManager::Run()
@@ -50,8 +50,13 @@ void GameManager::Run()
 		currentScene->Update(deltaTime);
 		RendererManager::GetInstance()->Draw();
 	}
-	
+	if (currentScene != nullptr)
+	{
+	    DeleteScene();
+	}
 }
+
+
 
 void GameManager::OnChangeSceneAsked(SceneManager::SceneEnum sceneToUse)
 {
@@ -61,6 +66,8 @@ void GameManager::OnChangeSceneAsked(SceneManager::SceneEnum sceneToUse)
 
 void GameManager::ChangeScene(SceneManager::SceneEnum sceneToUse)
 {
+	DeleteScene();
+	
 	if (sceneToUse == SceneManager::SceneEnum::Menu)
 	{
 		currentScene = new MenuScene();
@@ -80,6 +87,18 @@ void GameManager::ChangeScene(SceneManager::SceneEnum sceneToUse)
 	currentScene->InitializeScene(&window);
 	haveToChangeScene = false;
 
+}
+
+void GameManager::DeleteScene()
+{
+	if (currentScene == nullptr)
+	{
+		return;
+	}
+	currentScene->PreDestroy();
+	currentScene->DestroyScene();
+	delete currentScene;
+	currentScene = nullptr;
 }
 
 void GameManager::WindowsEvents()

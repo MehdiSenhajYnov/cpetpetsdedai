@@ -4,33 +4,27 @@
 #include "../../Headers/Components/DrawableComponent.h"
 #include "../../Headers/Utilities/Utilities.h"
 
-std::ostream& operator<<(std::ostream& _os, const sf::Vector2f& _obj) {
-	return _os
-				<< "x: " << _obj.x
-				<< " y: " << _obj.y;
-}
+#define LOG(Var)\
+	std::cout << Var;
+
+
 
 GameObject::GameObject(): GameObject("GameObject", Object::GetStaticType())
 {
-	
+	std::string test = "intializing";
+	LOG(test);
 }
 
 GameObject::GameObject(const std::string& _name, Type* parentType) : Object(_name, parentType),
-	positionType(World)
+	positionType(World), scale(1,1), position(0,0), isActive(true), parent(nullptr)
 {
-	scale = sf::Vector2f(1, 1);
-	position = sf::Vector2f(0, 0);
-	isActive = true;
-	parent = nullptr;
-
 	
 	// auto _changeNameInvoke = [this](std::string _newValue)
 	// {
 	// 	this->name = _newValue;
 	// };
 	// GetType()->CreateField<std::string>("name", _changeNameInvoke);
-
-
+	
 	SerializeField(std::string, name);
 	SerializeField(sf::Vector2f, position);
 	SerializeField(sf::Vector2f, scale);

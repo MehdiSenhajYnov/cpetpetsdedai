@@ -87,7 +87,7 @@ private:
 	sf::Color hoverColor = sf::Color(110, 110, 110);
 	sf::Color pressedColor = sf::Color(80, 80, 80);
 	sf::Color textColor = sf::Color::White;
-
+	
 	bool wantHoverColor ;
 	bool wantPressedColor ;
 };
