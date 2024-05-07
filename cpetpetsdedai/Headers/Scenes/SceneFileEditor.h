@@ -26,7 +26,7 @@ public:
 	//void CreateGameObject(GameObject* _gameObject) const;
 
 	template <isSerialisable T = ISerialisable>
-	void CreateObject(T* _object) const;
+	void WriteObjectInFile(T* _object) const;
 	template <isSerialisable T>
 	static std::string GetObjectSerializePrefix(T* _object) ;
 	
@@ -47,7 +47,7 @@ private:
 };
 
 template <isSerialisable T = ISerialisable>
-void SceneFileEditor::CreateObject(T* _object) const
+void SceneFileEditor::WriteObjectInFile(T* _object) const
 {
 	if (level == nullptr)
 	{

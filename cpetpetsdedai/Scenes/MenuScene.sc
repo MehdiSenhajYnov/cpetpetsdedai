@@ -1,3 +1,27 @@
+name: exitButton
+position: x: 750 y: 500
+scale: x: 1 y: 1
+positionType: 0
+isActive: 1
+_tags: 
+components: 
+
+name: playButton
+position: x: 750 y: 400
+scale: x: 1 y: 1
+positionType: 0
+isActive: 1
+_tags: 
+components: 
+
+name: mainCameraObject
+position: x: 0 y: 0
+scale: x: 1 y: 1
+positionType: 0
+isActive: 1
+_tags: 
+components: 
+
 --- !t!header
   sceneName: MenuScene
 --- !t!-1829605404!i!-842150451

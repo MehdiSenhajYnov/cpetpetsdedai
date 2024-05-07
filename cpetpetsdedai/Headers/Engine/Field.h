@@ -24,8 +24,6 @@ public:
     Field(const std::string& _name, std::function<T()> _getValue, std::function<void(T)> _setValue) : BaseField(_name), GetValue(_getValue), SetValue(_setValue) {}
     ~Field() override {}
 
-    //constexpr 
-    
     std::string GetValueAsString() override
     {
         return getAsString(GetValue());
@@ -50,36 +48,22 @@ public:
         }
         if constexpr (std::is_pointer<T>())
         {
-            Field::_serialize(*GetValue());
+            //TODO Serialize
             return 0;
         }
         buffer.startBuffer << name << ": " << GetValueAsString() << "\n";
         return 0;
-        
     }
+    
     void Deserialize(const std::string& _serialised) override
     {
         
     }
 
-    template <typename U>
-    static void _serialize(SerializeBuffer& buffer, U _value)
-    {
-        if constexpr (isSerialisable<U>)
-        {
-            _value.Serialize(buffer);
-        }
-        if constexpr (std::is_pointer<U>())
-        {
-            
-        }
-    }
-    
 private:
     template <typename U>
     static std::string getAsString(U _value)
     {
-        
         if constexpr (std::is_pointer<U>())
         {
             if(_value != nullptr)
@@ -87,13 +71,14 @@ private:
                 PrintString(*_value);
             }
         }
-        std::ostringstream oss;
-        oss << _value;
-        return oss.str();
+        if constexpr (CanString<U>)
+        {
+            std::ostringstream oss;
+            oss << _value;
+            return oss.str();
+        }
+        return "";
     }
-
-
-
 };
 
 

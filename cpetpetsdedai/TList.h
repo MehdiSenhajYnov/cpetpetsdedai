@@ -5,6 +5,8 @@
 #include <ostream>
 
 #include "Headers/Utilities/AllConcepts.h"
+#include "Headers/SerializeBuffer.h"
+#include "Headers/Engine/ISerialisable.h"
 
 
 template<typename T>
@@ -116,7 +118,7 @@ private:
     {
         buffer.startBuffer << "[ ";
         for (const T& element : *this) {
-            buffer.mainBuffer << element << " !&! ";
+            //buffer.mainBuffer << element << " !&! ";
         }
         buffer.endBuffer << " ]";
     }
@@ -126,7 +128,7 @@ private:
         buffer.startBuffer << "[ ";
         for (const T& element : *this) {
             element.Serialize(buffer);
-            buffer.mainBuffer << " !&! ";
+            //buffer.mainBuffer << " !&! ";
         }
         buffer.endBuffer << " ]";
     }
@@ -153,7 +155,7 @@ private:
     {
         buffer.startBuffer << "[ ";
         for (const T& element : *this) {
-            buffer.mainBuffer << *element << " !&! ";
+            //buffer.mainBuffer << *element << " !&! ";
         }
         buffer.endBuffer << " ]";
     }

@@ -4,15 +4,9 @@
 #include "../../Headers/Components/DrawableComponent.h"
 #include "../../Headers/Utilities/Utilities.h"
 
-#define LOG(Var)\
-	std::cout << Var;
-
-
 
 GameObject::GameObject(): GameObject("GameObject", Object::GetStaticType())
 {
-	std::string test = "intializing";
-	LOG(test);
 }
 
 GameObject::GameObject(const std::string& _name, Type* parentType) : Object(_name, parentType),
@@ -31,7 +25,6 @@ GameObject::GameObject(const std::string& _name, Type* parentType) : Object(_nam
 	SerializeField(PositionType, positionType);
 	SerializeField(bool, isActive);
 	SerializeField(GameObject*, parent);
-	
 	SerializeField(TList<std::string>, _tags);
 
 	

@@ -86,7 +86,7 @@ void SceneFileEditor::SaveScene() const
 {
     for(auto&  _obj : *level->GetGameObjects())
     {
-        CreateObject(_obj);
+        WriteObjectInFile(_obj);
     }
 }
 

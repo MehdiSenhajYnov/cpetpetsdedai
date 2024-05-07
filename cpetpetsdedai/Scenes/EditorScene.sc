@@ -1,3 +1,43 @@
+name: CreatedObject
+position: x: 856 y: 215
+scale: x: 1 y: 1
+positionType: 0
+isActive: 1
+_tags: 
+components: 
+
+name: ContextMenu
+position: x: 1047.5 y: 293
+scale: x: 1 y: 1
+positionType: 2
+isActive: 0
+_tags: 
+components: 
+
+name: temp
+position: x: 691 y: 357
+scale: x: 1 y: 1
+positionType: 0
+isActive: 1
+_tags: 
+components: 
+
+name: EditorMove
+position: x: 691 y: 357
+scale: x: 1 y: 1
+positionType: 0
+isActive: 1
+_tags: 
+components: 
+
+name: mainCameraObject
+position: x: 0 y: 0
+scale: x: 1 y: 1
+positionType: 0
+isActive: 1
+_tags: 
+components: 
+
 --- !t!header
   sceneName: EditorScene
 --- !t!-1829605404!i!-842150451
