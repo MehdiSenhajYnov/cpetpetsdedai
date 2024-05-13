@@ -7,8 +7,6 @@
 
 #include "Component.h"
 
-class Scene;
-
 class Camera : public Component
 {
 public:
@@ -22,7 +20,7 @@ public:
 	sf::RenderWindow* GetCurrentWindow();
 	void UpdateCameraRect();
 
-	void Init(sf::Vector2f _cameraView, sf::RenderWindow* _window, Scene* _scene);
+	void Init(sf::Vector2f _cameraView, sf::RenderWindow* _window);
 	sf::FloatRect GetCameraRect();
 
 private:
@@ -30,7 +28,6 @@ private:
 	std::map <sf::Shape*, GameObject*> PermanentDrawablesObjects;
 	sf::Vector2f CameraView;
 	sf::RenderWindow* window;
-	Scene* scene;
 
 	sf::FloatRect CameraRect;
 	

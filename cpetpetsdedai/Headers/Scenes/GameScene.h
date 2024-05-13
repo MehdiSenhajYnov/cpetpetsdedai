@@ -12,13 +12,12 @@ class GameScene : public Scene
 {
 public:
 	GameScene();
-	AddType(GameScene, Scene::GetStaticType())
+	AddType(GameScene, Scene)
 
 	void InitializeScene(sf::RenderWindow* _window) override;
-	void Update(float deltaTime) override;
-
-	void GameLoop(float deltaTime);
-
+	void UpdatePreComponent(float deltaTime) override;
+	void UpdatePostComponent(float deltaTime) override;
+	
 	void DestroyScene() override;
 	void OnKeyDown(sf::Keyboard::Key pressedKey) override;
 	void OnPlayerCollisionEnter(Collider* _collideWith, sf::Vector2f _collisionPoint);

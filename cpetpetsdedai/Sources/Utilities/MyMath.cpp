@@ -2,9 +2,11 @@
 #include "../../Headers/Utilities/MyMath.h"
 #include <iostream>
 
-std::vector<sf::Vector2f> MyMath::GetPointsOfPolygonInCircle(sf::Vector2f topLeftPoint, float radius, float nbOfPoints)
+#include "../../TList.h"
+
+TList<sf::Vector2f> MyMath::GetPointsOfPolygonInCircle(sf::Vector2f topLeftPoint, float radius, float nbOfPoints)
 {
-	std::vector<sf::Vector2f> toReturn;
+	TList<sf::Vector2f> toReturn;
 	if (nbOfPoints <= 2) return toReturn;
 
 	sf::Vector2f centerOfCircle(topLeftPoint.x + radius, topLeftPoint.y + radius);

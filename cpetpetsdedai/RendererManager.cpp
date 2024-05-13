@@ -1,13 +1,12 @@
 ﻿#include "RendererManager.h"
-
 #include "CameraManager.h"
 #include "EngineUI.h"
 #include "TextComponent.h"
 #include "Headers/Components/DrawableComponent.h"
 #include "Headers/Engine/GameObject.h"
+#include "DrawableLayer.h"
 
 RendererManager* RendererManager::instance;
-
 
 void RendererManager::Init(sf::RenderWindow* _window)
 {
@@ -20,7 +19,7 @@ void RendererManager::Clear()
 	drawableLayers.clear();
 }
 
-void RendererManager::Draw()
+void RendererManager::DrawProcess()
 {
 	fordebug.clear();
 	for(auto& drawableLayer : drawableLayers)
@@ -28,7 +27,10 @@ void RendererManager::Draw()
 		for(auto& drawableComponent : drawableLayer.drawableComponents)
 		{
 			if (drawableComponent == nullptr) continue;
-			if (drawableComponent->GetAttachedObject() == nullptr) continue;
+			if (drawableComponent->GetAttachedObject() == nullptr)
+			{
+				continue;
+			}
 			if (!drawableComponent->GetAttachedObject()->GetIsActive()) continue;
 
 			GameObject* parent = drawableComponent->GetAttachedObject()->GetParent();
@@ -65,6 +67,7 @@ void RendererManager::Draw()
 			
 			drawableComponent->SetDrawScale(scaleToSet);
 
+			
 			window->draw(*drawableComponent->GetDrawable());
 		}
 	}
@@ -79,6 +82,8 @@ void RendererManager::Draw()
 	window->display();
 }
 
+
+
 void RendererManager::DrawEngineUI()
 {
 	for (auto& _uiElement : EngineUI::GetInstance()->GetUIElements())
@@ -87,6 +92,11 @@ void RendererManager::DrawEngineUI()
 		_uiElement->Draw(window);
 	}
 	
+}
+
+void RendererManager::CustomDraw(const sf::Drawable* _drawable) const
+{
+	window->draw(*_drawable);
 }
 
 

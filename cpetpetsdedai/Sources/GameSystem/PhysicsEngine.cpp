@@ -56,7 +56,7 @@ CircleCollider* PhysicsEngine::CreateCircleCollider(GameObject* _gameObject, sf:
 }
 
 
-CustomCollider* PhysicsEngine::CreateCustomCollider(GameObject* _gameObject, std::vector<sf::Vector2f> allPoints)
+CustomCollider* PhysicsEngine::CreateCustomCollider(GameObject* _gameObject, TList<sf::Vector2f> allPoints)
 {
 	CustomCollider* newCollider = _gameObject->AddComponent<CustomCollider>(allPoints);
 	AllColliders.push_back(newCollider);
@@ -77,7 +77,7 @@ CircleCollider* PhysicsEngine::CreateCircleCollider(GameObject* _gameObject,
 }
 
 CustomCollider* PhysicsEngine::CreateCustomCollider(GameObject* _gameObject,
-	std::vector<sf::Vector2f> allPoints, std::string _colliderID)
+	TList<sf::Vector2f> allPoints, std::string _colliderID)
 {
 	return CreateCustomCollider(_gameObject, allPoints);
 }

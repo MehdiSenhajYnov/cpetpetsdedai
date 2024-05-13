@@ -8,7 +8,7 @@ CustomCollider::CustomCollider()
 {
 }
 
-void CustomCollider::Init(std::vector<sf::Vector2f> allPoints)
+void CustomCollider::Init(TList<sf::Vector2f> allPoints)
 {
 	Collider::Init(allPoints);
 }

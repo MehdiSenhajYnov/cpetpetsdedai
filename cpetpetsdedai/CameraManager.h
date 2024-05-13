@@ -1,9 +1,10 @@
 ﻿#pragma once
 #include "Headers/Components/Camera.h"
 
+// SINGLETON
 class CameraManager : public Object{
 public:
-	AddType(CameraManager, Object::GetStaticType());
+	AddType(CameraManager, Object);
 	static CameraManager* GetInstance();
 
 	static void ResetInstance();

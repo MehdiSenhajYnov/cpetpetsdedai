@@ -4,6 +4,8 @@
 #include <ostream>
 
 #include "Object.h"
+#include "../../DrawableLayer.h"
+#include "../../Factory.h"
 #include "../Components/Component.h"
 #include "../Engine/Field.h"
 
@@ -11,27 +13,6 @@
 [](Component* component) { return component->GetType()->Equals(T::GetStaticType()); }
 
 class DrawableComponent;
-
-struct DrawableLayer
-{
-public:
-	// friend std::ostream& operator<<(std::ostream& _os, const DrawableLayer& _obj)
-	// {
-	// 	return _os
-	// 		<< "ZIndex: " << _obj.ZIndex
-	// 		<< " drawableComponents: " << _obj.drawableComponents;
-	// }
-
-	int ZIndex;	
-	TList<DrawableComponent*> drawableComponents;
-
-	DrawableComponent* operator[](const int& index) {
-		return drawableComponents[index];
-	}
-	const DrawableComponent* operator[](const int& index) const {
-		return drawableComponents[index];
-	}
-};
 
 enum PositionType
 {
@@ -45,8 +26,12 @@ class GameObject : public Object
 public:
 	GameObject();
 	GameObject(const std::string& _name, Type* parentType);
+
+	GameObject(uint64_t _id);
+	GameObject(const uint64_t& _id, const std::string& _name, Type* parentType);
+	
 	~GameObject() override;
-	AddType(GameObject, Object::GetStaticType())
+	AddType(GameObject, Object)
 	
 	virtual void Init(const std::string& _name);
 
@@ -95,34 +80,34 @@ public:
 	TList<DrawableLayer>* GetDrawableComponents();
 	
 	template <typename T, typename... Args>
-	T* AddComponent(Args... args);
+	T* AddComponent(Args... args) requires IsBaseOf<Component, T>;
 
 	template <typename T>
-	T* AddComponent();
+	T* AddComponent() requires IsBaseOf<Component, T>; 
 	
 	template <typename T>
-	bool RemoveComponent();
+	bool RemoveComponent() requires IsBaseOf<Component, T>;
 
 	template <typename T>
-	int RemoveAllComponents();
+	int RemoveAllComponents() requires IsBaseOf<Component, T>;
 
 	template <typename T>
-	Component* GetComponent();
+	Component* GetComponent() requires IsBaseOf<Component, T>;
 
 	template <typename T>
-	TList<Component*> GetAllComponents();
+	TList<Component*> GetAllComponents() requires IsBaseOf<Component, T>;
 	#pragma endregion ComponentsManagement
 
 public:
 	PositionType positionType;
 private:
-	std::string name;
-	sf::Vector2f position;
-	sf::Vector2f scale;
+	std::string name = "";
+	sf::Vector2f position = {0, 0};
+	sf::Vector2f scale = {1, 1};
 	TList<std::string> _tags;
 	
 	TList<Component*> components;
-	GameObject* parent;
+	GameObject* parent = nullptr;
 
 	TList<DrawableLayer> drawableComponents;
 	bool isActive = false;
@@ -130,9 +115,9 @@ private:
 };
 
 template <typename T, typename... Args>
-T* GameObject::AddComponent(Args... args)
+T* GameObject::AddComponent(Args... args) requires IsBaseOf<Component, T>
 {
-	T* newComponent = new T();
+	T* newComponent = Factory::GetInstance()->CreateObject<T>();
 	newComponent->InitBaseComponent(this);
 	newComponent->Init(std::forward<Args>(args)...);
 	components.push_back(newComponent);
@@ -140,29 +125,25 @@ T* GameObject::AddComponent(Args... args)
 }
 
 template <typename T>
-T* GameObject::AddComponent()
+T* GameObject::AddComponent() requires IsBaseOf<Component, T>
 {
-	T* newComponent = new T();
+	T* newComponent = Factory::GetInstance()->CreateObject<T>();
 	newComponent->InitBaseComponent(this);
 	components.push_back(newComponent);
 	return newComponent;
 }
 
 template <typename T>
-bool GameObject::RemoveComponent()
+bool GameObject::RemoveComponent() requires IsBaseOf<Component, T>
 {
-	Component* deletedComponent = nullptr;
-	components.RemoveFirstWith(SameTypeOfT(), deletedComponent);
-	if (deletedComponent != nullptr) {
-		delete deletedComponent;
-		deletedComponent = nullptr;
-		return true;
-	}
+	Component* toDelete = GetComponent<T>();
+	components.RemoveElement(toDelete);
+	Factory::GetInstance()->DestroyObject(toDelete);
 	return false;
 }
 
 template <typename T>
-int GameObject::RemoveAllComponents()
+int GameObject::RemoveAllComponents() requires IsBaseOf<Component, T>
 {
 	int count = 0;
 	bool result = RemoveComponent<T>();
@@ -174,13 +155,13 @@ int GameObject::RemoveAllComponents()
 }
 
 template <typename T>
-Component* GameObject::GetComponent()
+Component* GameObject::GetComponent() requires IsBaseOf<Component, T>
 {
 	return components.GetFirstWith(SameTypeOfT());
 }
 
 template <typename T>
-TList<Component*> GameObject::GetAllComponents()
+TList<Component*> GameObject::GetAllComponents() requires IsBaseOf<Component, T>
 {
 	return components.GetAllWith(SameTypeOfT());
 }

@@ -14,10 +14,12 @@ class SceneFileEditor : public GameSystem{
 public:
 	SceneFileEditor();
 	~SceneFileEditor() override;
-	AddType(SceneEditor, GameSystem::GetStaticType())
+	AddType(SceneEditor, GameSystem)
 	
 	bool CreateNewScene() const;
 	void LoadScene() const;
+	void TestLoadScene(const TList<std::string>& _serialised) const;
+	
 	void SaveScene() const;
 	
 	std::string sceneName;
@@ -25,9 +27,9 @@ public:
 
 	//void CreateGameObject(GameObject* _gameObject) const;
 
-	template <isSerialisable T = ISerialisable>
+	template <IsSerialisable T>
 	void WriteObjectInFile(T* _object) const;
-	template <isSerialisable T>
+	template <IsSerialisable T>
 	static std::string GetObjectSerializePrefix(T* _object) ;
 	
 
@@ -46,7 +48,7 @@ private:
 	
 };
 
-template <isSerialisable T = ISerialisable>
+template <IsSerialisable T>
 void SceneFileEditor::WriteObjectInFile(T* _object) const
 {
 	if (level == nullptr)
@@ -55,18 +57,20 @@ void SceneFileEditor::WriteObjectInFile(T* _object) const
 	}
 
 	SerializeBuffer buffer;
-	_object->Serialize(buffer);
-	if (!buffer.startBuffer.str().empty())
+	std::string_view temp;
+
+	_object->Serialize(buffer, temp);
+	if (!buffer.startBuffer.empty())
 	{
-		FileUtilities::AppenInFileAtLine(GetScenePath(), buffer.startBuffer.str(), 0);
+		FileUtilities::AppenInFileAtLine(GetScenePath(), buffer.startBuffer, 0);
 	}
-	if (!buffer.mainBuffer.str().empty())
+	if (!buffer.mainBuffer.empty())
 	{
-		FileUtilities::AppendInFile(GetScenePath(), buffer.mainBuffer.str());
+		FileUtilities::AppendInFile(GetScenePath(), buffer.mainBuffer);
 	}
-	if (!buffer.endBuffer.str().empty())
+	if (!buffer.endBuffer.empty())
 	{
-		FileUtilities::AppendInFile(GetScenePath(), buffer.endBuffer.str());
+		FileUtilities::AppendInFile(GetScenePath(), buffer.endBuffer);
 	}
 	
 	// std::fstream file;
@@ -80,11 +84,10 @@ void SceneFileEditor::WriteObjectInFile(T* _object) const
 	
 }
 
-template <isSerialisable T>
+template <IsSerialisable T>
 std::string SceneFileEditor::GetObjectSerializePrefix(T* _object)
 {
 	std::string newContent =
-	NEWLINE_PREFIX + TYPE_PREFIX + std::to_string(T::GetStaticType()->GetId()) + ID_PREFIX +
-	std::to_string(_object->GetId()) + "\n";
+	NEWLINE_PREFIX + TYPE_PREFIX + std::to_string(T::GetStaticType()->GetId()) + ID_PREFIX + std::to_string(_object->GetId()) + "\n";
 	return newContent;
 }

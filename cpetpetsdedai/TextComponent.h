@@ -8,12 +8,14 @@ public:
 	TextComponent();
 
 	TextComponent(const std::string& _typeName, Type* parentType);
+	TextComponent(const uint64_t& _id, const std::string& _name, Type* parentType);
+	TextComponent(uint64_t _id);
 
 	void                Init() override;
 	void                Init(std::string _text);
-	AddType(TextComponent, DrawableComponent::GetStaticType());
+	AddType(TextComponent, DrawableComponent);
 	
-	void                SetString(std::string _buttonString);
+	void                SetString(std::string _newTextString);
 	std::string         GetString() const;
 	void                Start() override;
 	const sf::Drawable* GetDrawable() override;
@@ -32,5 +34,5 @@ public:
 private:
 	static sf::Font font;
 	static bool fontLoaded;
-	
+	std::string currentText;
 };

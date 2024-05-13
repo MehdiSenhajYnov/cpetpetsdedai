@@ -5,6 +5,8 @@
 #include <future>
 #include <memory>
 
+#include "../../TList.h"
+
 class Collider;
 class GraphicDebugger;
 class Scene;
@@ -25,11 +27,11 @@ public:
 	bool SomeObjecsAreColliding();
 	BoxCollider* CreateBoxCollider(GameObject* _gameObject, sf::Vector2f _topLeftPoint, sf::Vector2f _size);
 	CircleCollider* CreateCircleCollider(GameObject* _gameObject, sf::Vector2f _topLeftPoint, float radius, int accuracy);
-	CustomCollider* CreateCustomCollider(GameObject* _gameObject, std::vector<sf::Vector2f> allPoints);
+	CustomCollider* CreateCustomCollider(GameObject* _gameObject, TList<sf::Vector2f> allPoints);
 	
 	BoxCollider* CreateBoxCollider(GameObject* _gameObject, sf::Vector2f _topLeftPoint, sf::Vector2f _size, std::string _colliderID);
 	CircleCollider* CreateCircleCollider(GameObject* _gameObject, sf::Vector2f _topLeftPoint, float radius, int accuracy, std::string _colliderID);
-	CustomCollider* CreateCustomCollider(GameObject* _gameObject, std::vector<sf::Vector2f> allPoints, std::string _colliderID);
+	CustomCollider* CreateCustomCollider(GameObject* _gameObject, TList<sf::Vector2f> allPoints, std::string _colliderID);
 
 	
 	void DestroyCollider(Collider* _colliderToRemove);

@@ -16,12 +16,17 @@ struct ComponentInitParams {
 
 class Component : public Object
 {
+protected:
+	Component(const std::string& _name, Type* parentType);
+	Component(const uint64_t& _id, const std::string& _name, Type* parentType);
 public:
 	Component();
-	Component(const std::string& _typeName, Type* parentType);
+	Component(uint64_t _id);
+
+
 	
 	virtual ~Component() override = default;
-	AddType(Component, Object::GetStaticType())
+	AddType(Component, Object)
 	
 	virtual void Start() = 0;
 	virtual void Update(float deltaTime) = 0;
@@ -37,5 +42,7 @@ protected:
 
 	GameObject* gameObject;
 	int gameObjectId;
+
+private:
 };
 

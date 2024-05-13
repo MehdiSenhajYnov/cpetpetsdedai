@@ -20,6 +20,14 @@ void GravitySystem::Init(BoxCollider* _boxCollider, PhysicsEngine* _physicsEngin
 	multiplier = 100;
 
 	minY = gameObject->GetPosition().y;
+
+	SerializeField(float, minY)
+	SerializeField(float, maxY)
+	SerializeField(float, gravityForce)
+	SerializeField(bool, isGravityEnable)
+	SerializeField(bool, canBounce)
+	SerializeField(float, multiplier)
+	//SerializeField(BoxCollider*, boxCollider)
 }
 
 void GravitySystem::Start()

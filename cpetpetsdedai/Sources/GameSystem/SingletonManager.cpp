@@ -1,6 +1,8 @@
 ﻿#include "../../Headers/GameSystem/SingletonManager.h"
 
 #include "../../CameraManager.h"
+#include "../../EngineUI.h"
+#include "../../Factory.h"
 #include "../../RendererManager.h"
 #include "../../Headers/GameSystem/TextureManager.h"
 
@@ -16,6 +18,8 @@ void SingletonManager::DeleteAll()
     TextureManager::ResetInstance();
     CameraManager::ResetInstance();
     RendererManager::ResetInstance();
+    EngineUI::ResetInstance();
+    Factory::ResetInstance();
 }
 
 void SingletonManager::InitAll()

@@ -6,7 +6,7 @@ class EditorMove : public GameObject
 public:
     EditorMove();
     EditorMove(const std::string& _typeName, Type* parentType);
-    AddType(EditorMovable, GameObject::GetStaticType())
+    AddType(EditorMovable, GameObject)
 
     ~EditorMove() override;
     void Init(const std::string& _name) override;

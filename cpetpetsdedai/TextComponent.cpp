@@ -9,6 +9,15 @@ TextComponent::TextComponent() : TextComponent("TextComponent", DrawableComponen
 
 TextComponent::TextComponent(const std::string& _typeName, Type* parentType): DrawableComponent(_typeName, parentType)
 {
+	SerializeField(std::string, currentText)
+}
+
+
+TextComponent::TextComponent(uint64_t _id): TextComponent(_id, "TextComponent", DrawableComponent::GetStaticType()) {}
+
+TextComponent::TextComponent(const uint64_t& _id, const std::string& _name, Type* parentType): DrawableComponent(_id, _name, parentType)
+{
+	SerializeField(std::string, currentText)
 }
 
 void TextComponent::Init()
@@ -41,9 +50,10 @@ void TextComponent::Init(std::string _text)
 	SetString(_text);
 }
 
-void TextComponent::SetString(std::string _buttonString)
+void TextComponent::SetString(std::string _newTextString)
 {
-	Text.setString(_buttonString);
+	currentText = _newTextString;
+	Text.setString(_newTextString);
 	// sf::FloatRect textRect = Text.getLocalBounds();
 	// Text.setOrigin(textRect.left + textRect.width / 2.0f,
 	// 	textRect.top + textRect.height / 2.0f);

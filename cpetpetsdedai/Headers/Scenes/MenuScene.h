@@ -7,16 +7,14 @@ class MenuScene : public Scene
 {
 public:
 	MenuScene();
-	AddType(MenuScene, Scene::GetStaticType())
+	AddType(MenuScene, Scene)
 	
-	void GameLoop(float deltaTime);
-
 private:
-	GameObject* playButtonObj;
-	GameObject* exitButtonObj;
+	GameObject* playButtonObj = nullptr;
+	GameObject* exitButtonObj = nullptr;
 
-	Button* playButtonComponent;
-	Button* exitButtonComponent;
+	Button* playButtonComponent = nullptr;
+	Button* exitButtonComponent = nullptr;
 
 
 	//GameObject* LoadingObj;
@@ -27,17 +25,16 @@ private:
 	void OnExitButtonClicked(Button* btn);
 
 	// Hérité via Scene
-	void Update(float deltaTime) override;
 	void InitializeScene(sf::RenderWindow* _window) override;
 	void OnSceneChanged();
 
 	void DestroyScene() override;
 	void OnKeyDown(sf::Keyboard::Key pressedKey) override;
 
-	const sf::Color normalButtonColor = sf::Color(0, 0, 0);
-	const sf::Color hoverButtonColor = sf::Color(110, 110, 110);
-	const sf::Color pressedButtonColor = sf::Color(80, 80, 80);
-	const sf::Color textColor = sf::Color(0, 0, 0);
+	sf::Color normalButtonColor = sf::Color(0, 0, 0);
+	sf::Color hoverButtonColor = sf::Color(110, 110, 110);
+	sf::Color pressedButtonColor = sf::Color(80, 80, 80);
+	sf::Color textColor = sf::Color(0, 0, 0);
 
 };
 

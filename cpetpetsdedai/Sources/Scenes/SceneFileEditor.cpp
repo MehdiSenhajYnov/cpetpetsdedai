@@ -43,6 +43,7 @@ void SceneFileEditor::LoadScene() const
     }
 
     std::vector<std::string> sceneFileLines = FileUtilities::ReadLinesFromFile(sceneFilePath);
+    
 
     GameObject* currentGameObject; 
     for (auto& line : sceneFileLines)
@@ -70,6 +71,7 @@ void SceneFileEditor::LoadScene() const
             {
                 currentGameObject = level->CreateGameObject("temp");
                 currentObject = currentGameObject;
+                
             }
             else
             {
@@ -78,16 +80,52 @@ void SceneFileEditor::LoadScene() const
         }
         
     }
-    
-    
 }
+
+void SceneFileEditor::TestLoadScene(const TList<std::string>& _serialised) const
+{
+    std::string toFindGameObjectID = "!t!-1829605404";
+    for (auto& line : _serialised)
+    {
+        if (line.find(toFindGameObjectID) != std::string::npos)
+        {
+            GameObject* currentGameObject = level->CreateGameObject("temp");
+            
+        }
+    }
+}
+
 
 void SceneFileEditor::SaveScene() const
 {
-    for(auto&  _obj : *level->GetGameObjects())
+
+    TList<SerializeBuffer> buffers;
+    buffers.reserve(level->GetGameObjects().size());
+
+    std::string tempContent;
+    std::string finalContent;
+    
+    for (int i = 0; i < level->GetGameObjects().size(); ++i)
     {
-        WriteObjectInFile(_obj);
+        buffers.push_back(SerializeBuffer());
+     
+        uint64_t objID = level->GetGameObjects()[i]->Serialize(buffers[i], tempContent);
+        tempContent += (buffers[i].startBuffer + buffers[i].mainBuffer + buffers[i].endBuffer);
+        
+        finalContent += buffers[i].startBuffer;
     }
+    
+
+    for (auto& buffer : buffers)
+    {
+        finalContent += buffer.mainBuffer;
+    }
+    for (auto& buffer : buffers)
+    {
+        finalContent += buffer.endBuffer;
+    }
+
+    FileUtilities::WriteInFile(GetScenePath(), finalContent);
 }
 
 std::string SceneFileEditor::GetScenePath() const

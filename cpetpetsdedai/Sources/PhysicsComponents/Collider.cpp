@@ -7,7 +7,7 @@
 Collider::Collider(){}
 
 
-void Collider::Init(std::vector<sf::Vector2f> _allPoints)
+void Collider::Init(TList<sf::Vector2f> _allPoints)
 {
 	IsStatic = false;
 
@@ -22,6 +22,12 @@ void Collider::Init(std::vector<sf::Vector2f> _allPoints)
 		ySum += allPoints[i].y;
 	}
 	Center = sf::Vector2f(xSum / allPoints.size(), ySum / allPoints.size());
+
+	SerializeField(bool, Gravity)
+	SerializeField(bool, IsStatic)
+	SerializeField(bool, Visible)
+	SerializeField(TList<sf::Vector2f>, allPoints)
+	SerializeField(sf::Vector2f, Center)
 }
 
 

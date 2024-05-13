@@ -5,10 +5,12 @@
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/ConvexShape.hpp>
 
-static class MyMath
+#include "../../TList.h"
+
+class MyMath
 {
 public:
-	static std::vector<sf::Vector2f> GetPointsOfPolygonInCircle(sf::Vector2f topLeftPoint, float radius, float nbOfPoints);
+	static TList<sf::Vector2f> GetPointsOfPolygonInCircle(sf::Vector2f topLeftPoint, float radius, float nbOfPoints);
 	static sf::ConvexShape GetShapeByCircle(sf::CircleShape circleParent, float nbOfPoints);
 	static float SegmentLength(float _circleRadius, int numberOfSide);
 	static float RadiantOf(float _inDegree);

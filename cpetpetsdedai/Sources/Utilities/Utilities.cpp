@@ -24,7 +24,7 @@ std::string Utilities::VectorToString(sf::Vector2f toconvert)
     return "x : " + std::to_string(toconvert.x) + " y : " + std::to_string(toconvert.y); 
 }
 
-std::vector<std::string> Utilities::SplitString(std::string _stringToSplit, std::string _delimiter) {
+std::vector<std::string> Utilities::SplitString(const std::string& _stringToSplit, const std::string& _delimiter) {
     size_t pos_start = 0, pos_end, delim_len = _delimiter.length();
     std::string token;
     std::vector<std::string> res;
@@ -86,7 +86,7 @@ bool Utilities::IsInBounds(const sf::Vector2f& _positionToCheck, const sf::Vecto
 
 
 
-unsigned int Utilities::GenerateUniqueId()
+uint64_t Utilities::GenerateUniqueId()
 {
     std::random_device rd;
     std::mt19937 gen(rd());

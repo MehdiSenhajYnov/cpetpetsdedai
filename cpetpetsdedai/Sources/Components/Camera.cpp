@@ -5,6 +5,8 @@
 #include "../../Headers/Engine/GameObject.h"
 Camera::Camera()
 {
+	SerializeField(sf::Vector2f, CameraView)
+	SerializeField(sf::FloatRect, CameraRect)
 }
 
 // void Camera::Render()
@@ -116,11 +118,10 @@ void Camera::Update(float deltaTime)
 	//Render();
 }
 
-void Camera::Init(sf::Vector2f _cameraView, sf::RenderWindow* _window, Scene* _scene)
+void Camera::Init(sf::Vector2f _cameraView, sf::RenderWindow* _window)
 {
 	CameraView = _cameraView;
 	window = _window; 
-	scene = _scene;
 	componentWorkType = ComponentWorkType::PlayAndEditor;
 }
 

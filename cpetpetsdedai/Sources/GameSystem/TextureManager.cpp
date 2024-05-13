@@ -56,9 +56,9 @@ void TextureManager::DeleteTexture(std::string _texturePath)
 {
     if (textures.contains(_texturePath))
     {
-        auto test = textures[_texturePath];
-        delete test;
-        test = nullptr;
+        auto textureToDelete = textures[_texturePath];
+        delete textureToDelete;
+        textureToDelete = nullptr;
         textures.erase(_texturePath);
 
         

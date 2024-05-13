@@ -3,18 +3,10 @@
 #include "../../RendererManager.h"
 #include "../../Headers/Engine/GameObject.h"
 
-DrawableComponent::DrawableComponent() : DrawableComponent("DrawableComponent", Component::GetStaticType())
-{
-}
-
-DrawableComponent::DrawableComponent(const std::string& _typeName, Type* parentType) : Component(_typeName, parentType)
-{
-    Scale = sf::Vector2f(1, 1);
-}
+DefaultConstructor(DrawableComponent, Component)
 
 DrawableComponent::~DrawableComponent()
 {
-    std::cout << "DrawableComponent destroyed" << std::endl;
 }
 
 sf::Vector2f DrawableComponent::GetCurrentSize()

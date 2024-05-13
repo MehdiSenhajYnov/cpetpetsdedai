@@ -64,20 +64,14 @@ void GameScene::InitializeScene(sf::RenderWindow* _window)
 
 }
 
-void GameScene::Update(float deltaTime)
+void GameScene::UpdatePreComponent(float deltaTime)
 {
-	GameLoop(deltaTime);
 }
 
-
-void GameScene::GameLoop(float deltaTime)
+void GameScene::UpdatePostComponent(float deltaTime)
 {
-	mainCameraObject->SetPosition(sf::Vector2(Player->GetPosition().x - window->getSize().x/2, mainCameraObject->GetPosition().y));
-
-	CalUpdateOnAll(deltaTime);
 	physicsEngine.UpdatePhysics(deltaTime);
 }
-
 
 void GameScene::DestroyScene()
 {

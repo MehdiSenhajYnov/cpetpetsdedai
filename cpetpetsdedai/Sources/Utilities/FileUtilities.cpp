@@ -20,6 +20,25 @@ bool FileUtilities::DirectoryExists(std::string _directoryPath)
     }
 }
 
+TList<std::string> FileUtilities::GetDirectoriesInDirectoryRecursive(std::string _directoryPath)
+{
+    TList<std::string> result;
+    for(auto& p : std::filesystem::recursive_directory_iterator(_directoryPath))
+        if (p.is_directory())
+            result.push_back(p.path().string());
+    return result;
+}
+
+TList<std::string> FileUtilities::GetAllInDirectory(std::string _directoryPath)
+{
+    TList<std::string> result;
+    for (const auto& entry : std::filesystem::directory_iterator(_directoryPath))
+    {
+        result.push_back(entry.path().string());
+    }
+    return result;
+}
+
 bool FileUtilities::CreateDirectory(std::string _directoryPath)
 {
     if (!DirectoryExists(_directoryPath))

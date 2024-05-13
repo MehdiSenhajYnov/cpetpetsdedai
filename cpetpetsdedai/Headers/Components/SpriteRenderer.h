@@ -5,9 +5,14 @@
 
 class SpriteRenderer : public DrawableComponent
 {
+protected:
+    SpriteRenderer(const std::string& _name, Type* parentType);
+    SpriteRenderer(const uint64_t& _id, const std::string& _name, Type* parentType);
 public:
     SpriteRenderer();
-    AddType(SpriteRenderer, DrawableComponent::GetStaticType())
+    SpriteRenderer(uint64_t _id);
+
+    AddType(SpriteRenderer, DrawableComponent)
     ~SpriteRenderer() override;
 
     void Start() override;
@@ -36,7 +41,7 @@ public:
     sf::Vector2f GetCenter() const;
 
 private:
-
+    std::string spriteName;
     sf::Texture* spriteTexture;
     sf::Sprite sprite;
     sf::Color color;

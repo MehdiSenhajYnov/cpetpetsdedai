@@ -13,12 +13,6 @@ GameObject::GameObject(const std::string& _name, Type* parentType) : Object(_nam
 	positionType(World), scale(1,1), position(0,0), isActive(true), parent(nullptr)
 {
 	
-	// auto _changeNameInvoke = [this](std::string _newValue)
-	// {
-	// 	this->name = _newValue;
-	// };
-	// GetType()->CreateField<std::string>("name", _changeNameInvoke);
-	
 	SerializeField(std::string, name);
 	SerializeField(sf::Vector2f, position);
 	SerializeField(sf::Vector2f, scale);
@@ -26,19 +20,25 @@ GameObject::GameObject(const std::string& _name, Type* parentType) : Object(_nam
 	SerializeField(bool, isActive);
 	SerializeField(GameObject*, parent);
 	SerializeField(TList<std::string>, _tags);
-
-	
 	SerializeField(TList<Component*>, components);
 
+	// auto _changenameInvoke = [this](std::string _newValue) { this->name = _newValue; };
+	// std::function<std::string()> _nameGetInvoke = [this]() { return this->name; };
+	// GetType()->CreateField<std::string>("name", _changenameInvoke, _nameGetInvoke);;
+	//
+
 }
+
+DefaultConstructorId(GameObject, Object)
+DefaultConstructorIdTypeParams(GameObject, Object)
+
+
 
 GameObject::~GameObject()
 {
 	for (auto& _componentToDelete : components)
 	{
-		_componentToDelete->PreDestroy();
-		delete _componentToDelete;
-		_componentToDelete = nullptr;
+		Factory::GetInstance()->DestroyObject(_componentToDelete);
 	}
 	components.clear();
 	drawableComponents.clear();
@@ -94,12 +94,12 @@ void GameObject::Move(const float& _x, const float& _y)
 {
 	if (position.x + _x >= std::numeric_limits<float>::max() || position.y + _y >= std::numeric_limits<float>::max())
 	{
-		std::cout << "out of limit MAX position" << '\n';
+		std::cout << "out of limit MAX position" << std::endl;
 		return;
 	}
 	if (position.x + _x <= std::numeric_limits<float>::min() || position.y + _y <= std::numeric_limits<float>::min())
 	{
-		std::cout << "out of limit MIN position" << '\n';
+		std::cout << "out of limit MIN position" << std::endl;
 		return;
 	}
 
@@ -110,12 +110,12 @@ void GameObject::Move(sf::Vector2f _moveBy)
 {
 	if ((position + _moveBy).x >= std::numeric_limits<float>::max() || (position + _moveBy).y >= std::numeric_limits<float>::max())
 	{
-		std::cout << "out of limit MAX position" << '\n';
+		std::cout << "out of limit MAX position" << std::endl;
 		return;
 	}
 	if ((position + _moveBy).x <= -std::numeric_limits<float>::max() || (position + _moveBy).y <= -std::numeric_limits<float>::max())
 	{
-		std::cout << "out of limit MIN position" << '\n';
+		std::cout << "out of limit MIN position" << std::endl;
 		return;
 	}
 

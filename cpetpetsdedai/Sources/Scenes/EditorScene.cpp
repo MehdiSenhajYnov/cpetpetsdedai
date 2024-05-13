@@ -7,10 +7,10 @@
 #include "../../Headers/Utilities/Utilities.h"
 #include "../../Headers/Components/SpriteRenderer.h"
 #include "../../Headers/Components/Camera.h"
+#include "../../Headers/EngineUI/SelectionSystem.h"
 
 
-EditorScene::EditorScene() : Scene("EditorScene", Scene::GetStaticType()),
-editorMove(nullptr), contextMenu(nullptr)
+EditorScene::EditorScene() : Scene("EditorScene", Scene::GetStaticType())
 {
 }
 
@@ -44,9 +44,8 @@ void EditorScene::InitializeScene(sf::RenderWindow* _window)
 
 }
 
-void EditorScene::Update(float deltaTime)
+void EditorScene::UpdatePreComponent(float deltaTime)
 {
-    CalUpdateOnAll(deltaTime);
     EditorUpdate(deltaTime);
 }
 
@@ -68,9 +67,9 @@ void EditorScene::OnMouseKeyDown(sf::Mouse::Button pressedKey)
     }
 }
 
-void EditorScene::CreateGameObjectContextMenu(Button* btn)
+void EditorScene::CreateGameObjectContextMenu(Button* _btn)
 {
-    std::cout << btn->GetTextComponent()->GetString() << " clicked" << std::endl;
+    std::cout << _btn->GetTextComponent()->GetString() << " clicked" << std::endl;
     auto createdObject = CreateGameObject("CreatedObject");
     SpriteRenderer* createdObjectSpriteRenderer = createdObject->AddComponent<SpriteRenderer>();
     createdObjectSpriteRenderer->SetSprite("Square");
@@ -79,7 +78,7 @@ void EditorScene::CreateGameObjectContextMenu(Button* btn)
     DisableContextMenu();
 }
 
-void EditorScene::CreateContextMenu()
+void EditorScene::CreateContextMenu() const
 {
     // context menu origin is at center of first button
     float halfWidth = contextMenu->GetWidth()/2;
@@ -87,11 +86,11 @@ void EditorScene::CreateContextMenu()
     float fullHeight = contextMenu->GetFullHeight();
     sf::Vector2f newPostion = {mousePosition.x + halfWidth, mousePosition.y + halfOneHeight};
 
-    if (newPostion.x + halfWidth > window->getViewport(window->getView()).left + window->getViewport(window->getView()).width)
+    if (newPostion.x + halfWidth > (float)window->getViewport(window->getView()).left + (float)window->getViewport(window->getView()).width)
     {
         newPostion.x = mousePosition.x - halfWidth;
     }
-    if (newPostion.y + (fullHeight - halfOneHeight)> window->getViewport(window->getView()).top + window->getViewport(window->getView()).height)
+    if (newPostion.y + (fullHeight - halfOneHeight)> (float)window->getViewport(window->getView()).top + (float)window->getViewport(window->getView()).height)
     {
         newPostion.y = mousePosition.y - fullHeight + halfOneHeight;
     }
@@ -110,7 +109,7 @@ void EditorScene::CreateContextMenu()
     // contextMenuBackground->SetScale(1, 0.3f);
 }
 
-void EditorScene::DisableContextMenu()
+void EditorScene::DisableContextMenu() const
 {
     contextMenu->SetIsActive(false);
 }
@@ -120,7 +119,7 @@ void EditorScene::EditorUpdate(float deltaTime)
 {
     if (mainCamera == nullptr)
     {
-        std::cout << "mainCamera is nullptr" << '\n';
+        std::cout << "mainCamera is nullptr" << std::endl;
         return;
     }
     mousePosition = sf::Vector2f(sf::Mouse::getPosition(*(mainCamera->GetCurrentWindow())));
@@ -169,6 +168,8 @@ void EditorScene::CheckMouseSelection()
                 if (Utilities::IsInBounds(mousePositionWorld, drawableComponent->GetAttachedObject()->GetPosition(), drawableComponent->GetOriginalSize(), Center))
                 {
                     selectedObject = drawableComponent->GetAttachedObject();
+                    SelectionSystem::SetSelectedObject(selectedObject);
+                    
                     selectedSpriteRenderer = dynamic_cast<SpriteRenderer*>(drawableComponent);
 
                     selectedObjectOffset = selectedObject->GetPosition() - mousePositionWorld;

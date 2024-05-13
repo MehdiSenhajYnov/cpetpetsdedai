@@ -75,14 +75,6 @@ TList<BaseField*>& Type::GetAllFields()
 {
     return allFields;
 }
-//
-// TList<BaseField*>& Type::StaticGetAllFields()
-// {
-//     static TList<BaseField*> staticAllFields;
-//     return staticAllFields;
-// }
-
-
 
 Type* Type::GetType(const std::string& name)
 {

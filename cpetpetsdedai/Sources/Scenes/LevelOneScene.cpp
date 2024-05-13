@@ -8,11 +8,6 @@ LevelOneScene::LevelOneScene()
 {
 }
 
-void LevelOneScene::Update(float deltaTime)
-{
-	GameLoop(deltaTime);
-}
-
 void LevelOneScene::InitLevel()
 {
 	currentLevel = 1;

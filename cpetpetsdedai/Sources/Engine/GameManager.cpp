@@ -1,7 +1,9 @@
 #include "../../Headers/Engine/GameManager.h"
 
+#include "../../EngineUI.h"
 #include "../../RendererManager.h"
 #include "../../Headers/GameSystem/SingletonManager.h"
+#include "../../Headers/Input/Input.h"
 #include "../../Headers/Scenes/EditorScene.h"
 #include "../../Headers/Scenes/MenuScene.h"
 #include "../../Headers/Utilities/Event.h"
@@ -18,15 +20,23 @@ GameManager::GameManager() : newScene(), haveToChangeScene(false), currentScene(
 
 GameManager::~GameManager()
 {
-	std::cout << "GameManager destroyed" << '\n';
+	std::cout << "GameManager destroyed" << std::endl;
 	DeleteScene();
 }
 
 void GameManager::Run()
 {
+	if (cursor.loadFromSystem(sf::Cursor::Arrow))
+	{
+		window.setMouseCursor(cursor);
+	}
+
+	Input::Init(&window);
+	
+	RendererManager::GetInstance()->Init(&window);
 	SingletonManager singletonManager;
 	singletonManager.InitAll();
-	RendererManager::GetInstance()->Init(&window);
+	EngineUI::GetInstance()->Init(&window, &cursor);
 	
 	SceneManager::OnSceneChanged.Subscribe(&GameManager::OnChangeSceneAsked, this);
 	haveToChangeScene = false;
@@ -35,6 +45,7 @@ void GameManager::Run()
 	sf::Clock dtClock;
 	float deltaTime = 0;
 
+	window.setKeyRepeatEnabled(false);
 	while (window.isOpen())
 	{
 		eventsOfTick.clear();
@@ -46,14 +57,14 @@ void GameManager::Run()
 		}
 		deltaTime = dtClock.restart().asSeconds();
 		RendererManager::GetInstance()->Clear();
+		Input::Clear();
 		InputEvents();
-		currentScene->Update(deltaTime);
-		RendererManager::GetInstance()->Draw();
+		currentScene->BaseSceneUpdate(deltaTime);
+		RendererManager::GetInstance()->DrawProcess();
 	}
-	if (currentScene != nullptr)
-	{
-	    DeleteScene();
-	}
+
+	DeleteScene();
+
 }
 
 
@@ -71,10 +82,13 @@ void GameManager::ChangeScene(SceneManager::SceneEnum sceneToUse)
 	if (sceneToUse == SceneManager::SceneEnum::Menu)
 	{
 		currentScene = new MenuScene();
+		//currentScene = Factory::GetInstance()->CreateObject<MenuScene>();
 	}
 	else if (sceneToUse == SceneManager::SceneEnum::Level1)
 	{
+		//currentScene = Factory::GetInstance()->CreateObject<EditorScene>();
 		currentScene = new EditorScene();
+
 	}
 
 	bool CreateScene = currentScene->sceneFileEditor.CreateNewScene();
@@ -95,8 +109,8 @@ void GameManager::DeleteScene()
 	{
 		return;
 	}
+	//Factory::GetInstance()->DestroyObject(currentScene);
 	currentScene->PreDestroy();
-	currentScene->DestroyScene();
 	delete currentScene;
 	currentScene = nullptr;
 }
@@ -144,14 +158,37 @@ void GameManager::InputEvents()
 			{
 				currentScene->OnKeyDown(event.key.code);
 			}
+			Input::AddKeyDown(Input::FromSFKeyboard(event.key.code));
 		}
+		if (event.type == sf::Event::KeyReleased)
+		{
+			Input::AddKeyUp(Input::FromSFKeyboard(event.key.code));
+		}
+		
 		if (event.type == sf::Event::MouseButtonPressed)
 		{
 			if (currentScene != nullptr && iswindowFocus)
 			{
 				currentScene->OnMouseKeyDown(event.mouseButton.button);
+				Input::AddKeyDown(Input::FromSFMouse(event.mouseButton.button));
 			}
 		}
+		if (event.type == sf::Event::MouseButtonReleased)
+		{
+			if (currentScene != nullptr && iswindowFocus)
+			{
+				currentScene->OnMouseKeyUp(event.mouseButton.button);
+				Input::AddKeyUp(Input::FromSFMouse(event.mouseButton.button));
+			}
+		}
+		if (event.type == sf::Event::TextEntered)
+		{
+			if (std::isprint(static_cast<unsigned char>(event.text.unicode)))
+			{
+				Input::AddTextEntered(static_cast<char>(event.text.unicode));
+			}
+		}
+				
 	}
 }
 

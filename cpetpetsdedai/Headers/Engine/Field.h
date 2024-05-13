@@ -2,6 +2,10 @@
 #include <sstream>
 #include <string>
 #include "ISerialisable.h"
+#include <cstdint>
+
+#include "../../GlobalDeserializer.h"
+#include "../../GlobalSerializer.h"
 
 class BaseField: public ISerialisable {
 public:
@@ -11,7 +15,8 @@ public:
     virtual ~BaseField() {}
 
     virtual std::string GetValueAsString() = 0;
-
+    virtual uint64_t Serialize(SerializeBuffer& buffer, const std::string_view _previousContent) override = 0;
+    virtual void Deserialize(const std::string& _serialised, const std::string& _serializeContext) override = 0;
 };
 
 
@@ -39,25 +44,21 @@ public:
     std::function<void(T)> SetValue;
     
 public:
-    uint64_t Serialize(SerializeBuffer& buffer) override
+    uint64_t Serialize(SerializeBuffer& buffer, const std::string_view _previousContent) override
     {
-        if constexpr (isSerialisable<T>)
-        {
-            GetValue().Serialize(buffer);
-            return 0;
-        }
-        if constexpr (std::is_pointer<T>())
-        {
-            //TODO Serialize
-            return 0;
-        }
-        buffer.startBuffer << name << ": " << GetValueAsString() << "\n";
+        auto value = GetValue();
+        GlobalSerializer::Serializer(buffer, value, _previousContent);
         return 0;
     }
     
-    void Deserialize(const std::string& _serialised) override
+    void Deserialize(const std::string& _serialised, const std::string& _serializeContext) override
     {
-        
+        T temp;
+        bool result = GlobalDeserializer::Deserialize(temp, _serialised, _serializeContext, name);
+        if(result)
+        {
+            SetValue(temp);
+        }
     }
 
 private:

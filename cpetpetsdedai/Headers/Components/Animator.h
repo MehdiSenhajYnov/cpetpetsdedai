@@ -16,6 +16,8 @@ enum class AnimationState
 class Animator : public Component
 {
 public:
+    Animator();
+    Animator(const std::string& _name, Type* parentType);
     void Init(SpriteRenderer* _spriteRenderer);
     void Init(std::vector<Animation> _animations);
 
@@ -41,8 +43,6 @@ private:
 
     float currentTime = 0.0f;
     int currentFrame = 0;
-
-    
 
     float nextFrameTime = 0.0f;
     std::string frameNameToChange = "";

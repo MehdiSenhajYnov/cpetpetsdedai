@@ -12,7 +12,7 @@ public:
 	{
 		positionType = PositionType::UI;
 	}
-	AddType(ContextMenu, GameObject::GetStaticType())
+	AddType(ContextMenu, GameObject)
 
 	
 	template<typename Class>

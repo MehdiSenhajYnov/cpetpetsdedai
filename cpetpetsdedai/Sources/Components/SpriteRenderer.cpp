@@ -2,9 +2,19 @@
 
 #include "../../Headers/GameSystem/TextureManager.h"
 
-SpriteRenderer::SpriteRenderer() : DrawableComponent("SpriteRenderer", DrawableComponent::GetStaticType())
+
+SpriteRenderer::SpriteRenderer() : SpriteRenderer("SpriteRenderer", DrawableComponent::GetStaticType()) { }
+SpriteRenderer::SpriteRenderer(const std::string& _typeName, Type* parentType) : DrawableComponent(_typeName, parentType)
 {
-    
+    SerializeField(std::string, spriteName)
+    SerializeField(sf::Color, color)
+}
+
+SpriteRenderer::SpriteRenderer(uint64_t _id): SpriteRenderer(_id, "SpriteRenderer", Object::GetStaticType()) {}
+SpriteRenderer::SpriteRenderer(const uint64_t& _id, const std::string& _name, Type* parentType): DrawableComponent(_id, _name, parentType)
+{
+    SerializeField(std::string, spriteName)
+    SerializeField(sf::Color, color)
 }
 
 void SpriteRenderer::Start()
@@ -26,7 +36,7 @@ void SpriteRenderer::SetSprite(const std::string& texturepath)
     spriteTexture = TextureManager::Instance()->GetTexture(texturepath);
     if (spriteTexture == nullptr)
     {
-        std::cout << "Texture not found" << '\n';
+        std::cout << "Texture not found" << std::endl;
         return;
     }
     sprite.setTexture(*spriteTexture);
@@ -41,7 +51,7 @@ void SpriteRenderer::SetSprite(const std::string& _spriteName, sf::IntRect textu
 
     if (spriteTexture == nullptr)
     {
-        std::cout << "Texture not found" << '\n';
+        std::cout << "Texture not found" << std::endl;
         return;
     }
     sprite.setTexture(*spriteTexture);
@@ -53,7 +63,7 @@ void SpriteRenderer::SetTexture(sf::Texture* _texture)
     spriteTexture = _texture;
     if (spriteTexture == nullptr)
     {
-        std::cout << "Texture not found" << '\n';
+        std::cout << "Texture not found" << std::endl;
         return;
     }
     sprite.setTexture(*spriteTexture);

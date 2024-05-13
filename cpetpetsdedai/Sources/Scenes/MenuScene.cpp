@@ -4,8 +4,10 @@
 #include "../../Headers/Scenes/SceneManager.h"
 #include "../../Headers/Components/Button.h"
 #include "../../Headers/Utilities/Event.h"
-#include "../../Headers/Components/SpriteRenderer.h"
-#include "../../TextComponent.h"
+
+MenuScene::MenuScene() : Scene("MenuScene", Scene::GetStaticType())
+{
+}
 
 void MenuScene::OnPlayButtonClicked(Button* btn)
 {
@@ -21,23 +23,6 @@ void MenuScene::OnExitButtonClicked(Button* btn)
 	window->close();
 }
 
-void MenuScene::Update(float deltaTime)
-{
-	GameLoop(deltaTime);
-
-	//std::cout << "drawing" << std::endl;
-}
-
-MenuScene::MenuScene() : Scene("MenuScene", Scene::GetStaticType())
-{
-}
-
-void MenuScene::GameLoop(float deltaTime)
-{
-	CalUpdateOnAll(deltaTime);
-}
-
-
 
 void MenuScene::InitializeScene(sf::RenderWindow* _window)
 {
@@ -46,14 +31,14 @@ void MenuScene::InitializeScene(sf::RenderWindow* _window)
 	playButtonObj = CreateGameObjectImmediate("playButton");
 	exitButtonObj = CreateGameObjectImmediate("exitButton");
 	
-	playButtonObj->SetPosition(window->getSize().x / 2, window->getSize().y / 2 - 50);
+	playButtonObj->SetPosition((float)window->getSize().x / 2, (float)window->getSize().y / 2 - 50);
 
 	playButtonComponent = playButtonObj->AddComponent<Button>();
 	playButtonComponent->InitDefaultButton("PLAY");
 	playButtonComponent->OnButtonClicked.Subscribe(&MenuScene::OnPlayButtonClicked, this);
 	
 	
-	exitButtonObj->SetPosition(window->getSize().x / 2, window->getSize().y / 2 + 50);
+	exitButtonObj->SetPosition((float)window->getSize().x / 2, (float)window->getSize().y / 2 + 50);
 
 	exitButtonComponent = exitButtonObj->AddComponent<Button>();
 	exitButtonComponent->InitDefaultButton("EXIT");
@@ -83,13 +68,5 @@ void MenuScene::DestroyScene()
 
 void MenuScene::OnKeyDown(sf::Keyboard::Key pressedKey)
 {
-	if (pressedKey == sf::Keyboard::Key::Space)
-	{
-		std::cout << "Space pressed, nb of fields : " << playButtonObj->GetType()->GetAllFields().size() << std::endl;
-		for (auto& _field : playButtonObj->GetType()->GetAllFields())
-		{
-			std::cout << "field name : " << _field->name << std::endl;
-		}
 
-	}
 }

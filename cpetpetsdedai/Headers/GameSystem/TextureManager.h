@@ -5,13 +5,13 @@
 #include <ostream>
 #include "GameSystem.h"
 
-
+// SINGLETON
 class TextureManager : public GameSystem
 {
 
 public:
     void Init();
-    AddType(TextureManager, GameSystem::GetStaticType())
+    AddType(TextureManager, GameSystem)
     void AutoInclude(const std::string& mapNamePattern, const std::string& path, const std::string& pattern, int _counterAmount, const std::string& fileExtension,int amount);
     sf::Texture* GetTexture(std::string _textureName);
     void AddTexture(std::string mapName, std::string _texturePath);

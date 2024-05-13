@@ -7,9 +7,9 @@
 class DrawableComponent : public Component
 {
 public:
-    DrawableComponent();
-    DrawableComponent(const std::string& _typeName, Type* parentType);
-    AddType(DrawableComponent, Component::GetStaticType())
+    HeaderDefaultConstructor(DrawableComponent)
+
+    AddType(DrawableComponent, Component)
     ~DrawableComponent() override;
 
     virtual const sf::Drawable* GetDrawable() = 0;
@@ -49,11 +49,10 @@ public:
     virtual sf::Color GetColor() const = 0;
     virtual void SetColor(const sf::Color& _color) = 0;
     
-    
 private:
     bool alreadyInit = false;
-    sf::Vector2f Scale;
-    sf::Vector2f OffsetPosition;
+    sf::Vector2f Scale = {1, 1};
+    sf::Vector2f OffsetPosition = {0, 0};
 
 
 };

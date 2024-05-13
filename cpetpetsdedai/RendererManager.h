@@ -4,16 +4,18 @@
 
 #include "Headers/Engine/Object.h"
 
+class DrawableLayer;
 class DrawableComponent;
-struct DrawableLayer;
 
+// SINGLETON
 class RendererManager : public Object{
 public:
 	void Init(sf::RenderWindow* _window);
 	void Clear();
-	void Draw();
+	void DrawProcess();
 
 	void DrawEngineUI();
+	void CustomDraw(const sf::Drawable* _drawable) const;
 	
 	void AddDrawableLayer(DrawableComponent* _drawableComponent);
 	static RendererManager* GetInstance();

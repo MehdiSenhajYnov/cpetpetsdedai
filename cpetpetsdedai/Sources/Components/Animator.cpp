@@ -4,6 +4,16 @@
 #include "../../Headers/Engine/GameObject.h"
 #include "../../Headers/GameSystem/TextureManager.h"
 
+Animator::Animator(): Animator("Animator", Component::GetStaticType())
+{ }
+
+Animator::Animator(const std::string& _name, Type* parentType): Component(_name, parentType), spriteRenderer(nullptr)
+{
+    SerializeField(std::vector<Animation>, animations);
+    SerializeField(sf::Sprite, baseSprite);
+    SerializeField(SpriteRenderer*, spriteRenderer);
+}
+
 void Animator::Init(SpriteRenderer* _spriteRenderer)
 {
     spriteRenderer = _spriteRenderer;

@@ -42,9 +42,9 @@ public:
 	bool GetIsStatic();
 	void SetIsStatic(bool _isStatic);
 protected:
-	virtual void Init(std::vector<sf::Vector2f> _allPoints);
+	virtual void Init(TList<sf::Vector2f> _allPoints);
 	void CreateShape();
-	std::vector<sf::Vector2f> allPoints;
+	TList<sf::Vector2f> allPoints;
 	sf::Vector2f Center;
 
 	std::map < Collider*, sf::Vector2f>  currentCollisions;

@@ -12,7 +12,7 @@ class BaseComponent : public Object
 public:
     BaseComponent();
     BaseComponent(const std::string& _typeName, Type* parentType);
-    AddType(BaseComponent, Object::GetStaticType())
+    AddType(BaseComponent, Object)
 
     virtual void Init();
     virtual void InitBaseComponent(GameObject* _gameObject);

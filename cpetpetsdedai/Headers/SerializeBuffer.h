@@ -4,7 +4,12 @@
 struct SerializeBuffer {
 	SerializeBuffer() = default;
 
-	std::stringstream startBuffer;
-	std::stringstream mainBuffer;
-	std::stringstream endBuffer;
+	std::string startBuffer;
+	std::string mainBuffer;
+	std::string endBuffer;
+
+	std::string GetAll()
+	{
+		return startBuffer + mainBuffer + endBuffer;
+	}
 };

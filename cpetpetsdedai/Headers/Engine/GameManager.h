@@ -18,11 +18,6 @@ public:
 	void ChangeScene(SceneManager::SceneEnum sceneToUse);
 	void DeleteScene();
 	
-	template<typename T>
-	void afficher_args(const T& arg) {
-		std::cout << arg << std::endl;
-	}
-	
 private:
 	SceneManager::SceneEnum newScene;
 	bool haveToChangeScene;
@@ -32,6 +27,7 @@ private:
 
 	Scene* currentScene;
 	sf::RenderWindow window;
+	sf::Cursor cursor;
 
 	TList<sf::Event> eventsOfTick;
 };

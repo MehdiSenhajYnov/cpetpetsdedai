@@ -2,15 +2,9 @@
 #include <vector>
 #include <algorithm>
 #include <functional>
-#include <ostream>
-
-#include "Headers/Utilities/AllConcepts.h"
-#include "Headers/SerializeBuffer.h"
-#include "Headers/Engine/ISerialisable.h"
-
 
 template<typename T>
-class TList : public std::vector<T>, public ISerialisable
+class TList : public std::vector<T>
 {
 
 public:
@@ -47,6 +41,13 @@ public:
         this->erase(std::remove_if(this->begin(), this->end(), _predicate), this->end());
     }
 
+    bool Contains(const T& element)
+    {
+        if (std::count(this->begin(), this->end(), element)) {
+            return true;
+        }
+        return false;
+    }
     
     bool Contains(const std::function<bool(const T&)>& _predicate)
     {
@@ -84,80 +85,36 @@ public:
 
     }
 
-public:
-    uint64_t Serialize(SerializeBuffer& buffer) override
-    {
-        if constexpr (isSerialisable<T>)
-        {
-            _objectSerialize(buffer);
-            return 0;
-        }
-        if constexpr (std::is_pointer<T>())
-        {
-            if constexpr (isSerialisable<decltype(*std::declval<T>())>)
-            {
-                _objectPointerSerialize(buffer);
-                return 0;
-            }
-        }
-        if constexpr (CanString<T>)
-        {
-            _standardSerialize(buffer);
-        }
-
-        return 0;
-    }
-    
-    void Deserialize(const std::string& _serialised) override
-    {
-        
-    }
+    // uint64_t Serialize(SerializeBuffer& buffer, const std::string_view _previousContent)
+    // {
+    //     buffer.mainBuffer += "[ ";
+    //     
+    //     for (int i = 0; i < this->size(); ++i)
+    //     {
+    //         GlobalSerializer::Serializer(buffer, this->at(i), _previousContent);
+    //         if (i != this->size() - 1)
+    //         {
+    //             buffer.mainBuffer += " !&! ";
+    //         }
+    //     }
+    //     
+    //     buffer.mainBuffer += " ]";
+    //     return 0;
+    // }
+    //
+    // void Deserialize(const std::string& _serialised, const std::string& _serializeContext)
+    // {
+    //     std::string _serialisedNoBrackets = _serialised.substr(2, _serialised.size() - 4);
+    //     std::vector<std::string> _split = Utilities::SplitString(_serialisedNoBrackets, " !&! ");
+    //     for (const auto& element : _split)
+    //     {
+    //         T temp;
+    //         GlobalDeserializer::Deserialize(temp, element, _serializeContext);
+    //         this->push_back(temp);
+    //     }
+    // }
 
 private:
-    void _standardSerialize(SerializeBuffer& buffer)
-    {
-        buffer.startBuffer << "[ ";
-        for (const T& element : *this) {
-            //buffer.mainBuffer << element << " !&! ";
-        }
-        buffer.endBuffer << " ]";
-    }
 
-    void _objectSerialize(SerializeBuffer& buffer)
-    {
-        buffer.startBuffer << "[ ";
-        for (const T& element : *this) {
-            element.Serialize(buffer);
-            //buffer.mainBuffer << " !&! ";
-        }
-        buffer.endBuffer << " ]";
-    }
-
-    void _objectPointerSerialize(SerializeBuffer& buffer)
-    {
-        buffer.startBuffer << "[ ";
-
-        TList<uint64_t> ids;
-        
-        SerializeBuffer tempBuffer;
-        for (const T& element : *this) {
-            uint64_t elementID = element->Serialize(tempBuffer);
-            ids.push_back(elementID);
-            buffer.endBuffer << tempBuffer.startBuffer.str();
-        }
-
-        ids.Serialize(buffer);
-        
-        buffer.endBuffer << " ]";
-    }
-
-    void _pointerSerialize(SerializeBuffer& buffer, T& _value)
-    {
-        buffer.startBuffer << "[ ";
-        for (const T& element : *this) {
-            //buffer.mainBuffer << *element << " !&! ";
-        }
-        buffer.endBuffer << " ]";
-    }
 };
 
