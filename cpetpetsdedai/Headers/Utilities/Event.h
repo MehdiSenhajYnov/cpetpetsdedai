@@ -11,6 +11,8 @@ public:
 	int currentCount = 0;
 	template<typename Class>
 	int Subscribe(void(Class::* funcToSubscribe)(Args...), Class* instance);
+	int Subscribe(const std::function<void(Args...)>& funcToSubscribe);
+
 	void Desubscribe(int id);
 	void InvokeEvent(Args... args);
 
@@ -35,6 +37,14 @@ int Event<Args...>::Subscribe(void(Class::*funcToSubscribe)(Args...), Class* ins
         (instance->*funcToSubscribe)(args...);
     };
     functionSubscribbed[currentCount] = lambda;
+	return currentCount;
+}
+
+template <typename ... Args>
+int Event<Args...>::Subscribe(const std::function<void(Args...)>& funcToSubscribe)
+{
+	currentCount++;
+	functionSubscribbed[currentCount] = funcToSubscribe;
 	return currentCount;
 }
 

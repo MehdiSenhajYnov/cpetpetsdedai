@@ -20,14 +20,16 @@ enum InputType
 class TextInput : public EngineUIElement, public ISelectable
 {
 public:
+    
     AddType(TextInput, EngineUIElement)
     HeaderDefaultConstructor(TextInput)
 
     void Draw(sf::RenderWindow* window) override;
     void Update(float _deltaTime) override;
     
-    void Init(sf::RenderWindow* _window, sf::Cursor* _cursor) override;
-    void SetPosition(const sf::Vector2f& _position) override;
+    void      Init(sf::RenderWindow* _window) override;
+    sf::Color colorWithAlpha(sf::Color _tempColor, int _alpha = 255);
+    void      SetPosition(const sf::Vector2f& _position) override;
 
     void OnUserText(char _char);
 
@@ -49,7 +51,7 @@ public:
     Event<std::string> TextSubmit;
     
 protected:
-    void ChangeColor(sf::Color _newColor) override;
+    void ChangeColor(sf::Color _newColor, SelectableState _newState) override;
     sf::Vector2f GetSelectablePosition() override;
     sf::Vector2f GetSelectableSize() override;
 
@@ -71,11 +73,13 @@ private:
     TextUIElement text;
     TextUIElement placeholder;
     sf::RectangleShape background;
-    sf::RectangleShape carret;
+    sf::RectangleShape carret ;
 
     bool isCarretVisible = true;
     float carretBlinkTimer = 0.0f;
 
+    bool isBackgroundVisible = true;
+    
     InputType inputType = InputType::Normal;
     
 };

@@ -9,6 +9,7 @@ class GameObject;
 class GravitySystem : public Component
 {
 public:
+	AddType(GravitySystem, Component)
 	GravitySystem();
 	void Init(BoxCollider* _boxCollider, PhysicsEngine* _physicsEngine);
 	// Hérité via Component

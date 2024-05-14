@@ -13,6 +13,7 @@ class GameObject;
 class Collider : public Component
 {
 public:
+	AddType(Collider, Component)
 	Collider();
 
 	virtual ~Collider();

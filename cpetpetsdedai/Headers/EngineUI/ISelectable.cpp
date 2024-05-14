@@ -7,7 +7,7 @@ void ISelectable::DisableISelectable()
 	isMousePressed = false;
 	ClickOnTheSelectable = false;
 	isMousePressingTheSelectable = false;
-	ChangeColor(disabledColor);
+	ChangeColor(disabledColor, tempState);
 }
 
 void ISelectable::Update(float _deltaTime)
@@ -62,20 +62,45 @@ void ISelectable::Update(float _deltaTime)
 	}
 	
 	selectableState = tempState;
+	InternalChangeColor(baseColor);
 }
 
 void ISelectable::Select()
 {
 	tempState = SelectableState::Selected;
 	OnSelect.InvokeEvent(this);
-	ChangeColor(selectedColor);
+	InternalChangeColor(selectedColor);
 }
 
 void ISelectable::Deselect()
 {
 	tempState = SelectableState::Normal;
 	OnDeselect.InvokeEvent(this);
-	ChangeColor(baseColor);
+	InternalChangeColor(baseColor);
+}
+
+void ISelectable::InternalChangeColor(sf::Color _newColor)
+{
+	
+	if (selectableState == SelectableState::Normal)
+	{
+		ChangeColor(baseColor, tempState);
+	}
+	else if (selectableState == SelectableState::Hover && wantHoverColor)
+	{
+		ChangeColor(hoverColor, tempState);
+	}
+	else if (selectableState == SelectableState::Pressed && wantPressedColor)
+	{
+		ChangeColor(pressedColor, tempState);
+	} else if (selectableState == SelectableState::Selected && wantSelectedColor)
+	{
+		ChangeColor(selectedColor, tempState);
+	} else if (selectableState == SelectableState::Disabled && wantDisabledColor)
+	{
+		ChangeColor(disabledColor, tempState);
+	}
+	
 }
 
 SelectableState ISelectable::GetSelectableState() const
@@ -114,7 +139,7 @@ void ISelectable::SetBaseColor(const sf::Color& _color)
 	baseColor = _color;
 	if (selectableState == SelectableState::Normal)
 	{
-		ChangeColor(_color);
+		ChangeColor(_color, tempState);
 	}
 }
 
@@ -123,7 +148,7 @@ void ISelectable::SetHoverColor(const sf::Color& _color)
 	hoverColor = _color;
 	if (selectableState == SelectableState::Hover)
 	{
-		ChangeColor(_color);
+		ChangeColor(_color, tempState);
 	}
 	wantHoverColor = true;
 }
@@ -133,7 +158,7 @@ void ISelectable::SetPressedColor(const sf::Color& _color)
 	pressedColor = _color;
 	if (selectableState == SelectableState::Pressed)
 	{
-		ChangeColor(_color);
+		ChangeColor(_color, tempState);
 	}
 	wantPressedColor = true;
 }
@@ -143,7 +168,7 @@ void ISelectable::SetSelectedColor(const sf::Color& _color)
 	selectedColor = _color;
 	if (selectableState == SelectableState::Selected)
 	{
-		ChangeColor(_color);
+		ChangeColor(_color, tempState);
 	}
 	wantSelectedColor = true;
 }
@@ -153,7 +178,7 @@ void ISelectable::SetDisabledColor(const sf::Color& _color)
 	selectedColor = _color;
 	if (selectableState == SelectableState::Disabled)
 	{
-		ChangeColor(_color);
+		ChangeColor(_color, tempState);
 	}
 	wantDisabledColor = true;
 }

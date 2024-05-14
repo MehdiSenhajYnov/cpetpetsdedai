@@ -10,6 +10,7 @@
 class Camera : public Component
 {
 public:
+	AddType(Camera, Component)
 	Camera();
 	void AddToPermanentDrawablesObjects(sf::Shape* drawableToAdd, GameObject* attachedObject);
 	void RemoveFromPermanentDrawablesObjects(sf::Shape* drawableToRemove);

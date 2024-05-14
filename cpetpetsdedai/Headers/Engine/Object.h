@@ -10,16 +10,20 @@
 #include "../Utilities/ExternClassOperator.h"
 
 #define AddType(Object, Value) \
+private:\
+inline static Type _objtype = Type(#Object, Value::GetStaticType()); \
+public:\
 static Type* GetStaticType() \
 { \
-static Type _objtype(#Object, Value::GetStaticType()); \
 return &_objtype; \
 }
 
 #define AddTypeNoParent(Object) \
+private:\
+inline static Type _objtype = Type(#Object, nullptr); \
+public:\
 static Type* GetStaticType() \
 { \
-static Type _objtype(#Object, nullptr); \
 return &_objtype; \
 }
 
@@ -49,9 +53,7 @@ class Object : public ISerialisable {
 	// }
 
 public:
-
-	AddTypeNoParent(Object)
-
+	private: inline static Type _objtype = Type("Object", nullptr); public: static Type* GetStaticType() { return &_objtype; }
 	//Object(std::string typeName, Type* parentType);
 	Type* GetType();
 
@@ -64,7 +66,7 @@ public:
 
 	virtual uint64_t Serialize(SerializeBuffer& buffer, const std::string_view _previousContent) override;
 
-	virtual void Deserialize(const std::string& _serialised, const std::string& _serializeContext) override;
+	virtual bool Deserialize(const std::string& _serialised, const std::string& _serializeContext) override;
 
 	virtual void Deserialize(const TList<std::string>& _serialised);
 

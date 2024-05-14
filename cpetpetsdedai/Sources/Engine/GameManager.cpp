@@ -26,17 +26,13 @@ GameManager::~GameManager()
 
 void GameManager::Run()
 {
-	if (cursor.loadFromSystem(sf::Cursor::Arrow))
-	{
-		window.setMouseCursor(cursor);
-	}
 
 	Input::Init(&window);
 	
 	RendererManager::GetInstance()->Init(&window);
 	SingletonManager singletonManager;
 	singletonManager.InitAll();
-	EngineUI::GetInstance()->Init(&window, &cursor);
+	EngineUI::GetInstance()->Init(&window);
 	
 	SceneManager::OnSceneChanged.Subscribe(&GameManager::OnChangeSceneAsked, this);
 	haveToChangeScene = false;

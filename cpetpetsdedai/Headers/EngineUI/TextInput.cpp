@@ -5,7 +5,10 @@ DefaultConstructor(TextInput, EngineUIElement)
 
 void TextInput::Draw(sf::RenderWindow* window)
 {
-    window->draw(background);
+    if (isBackgroundVisible)
+    {
+        window->draw(background);
+    }
     if (text.GetText()->getString().isEmpty())
     {
         placeholder.Draw(window);
@@ -56,11 +59,17 @@ void TextInput::Update(float _deltaTime)
     
 }
 
-void TextInput::Init(sf::RenderWindow* _window, sf::Cursor* _cursor)
+void TextInput::Init(sf::RenderWindow* _window)
 {
-    EngineUIElement::Init(_window, _cursor);
-    text.Init(_window, _cursor);
-    placeholder.Init(_window, _cursor);
+    EngineUIElement::Init(_window);
+
+    background = sf::RectangleShape();
+    carret = sf::RectangleShape();
+    text = TextUIElement();
+    placeholder = TextUIElement();
+    
+    text.Init(_window);
+    placeholder.Init(_window);
     text.SetVerticalOriginToCenter();
     placeholder.SetVerticalOriginToCenter();
     
@@ -82,9 +91,13 @@ void TextInput::Init(sf::RenderWindow* _window, sf::Cursor* _cursor)
     
     Input::textEnteredEvent.Subscribe(&TextInput::OnUserText, this);
 
+    
     SetBaseColor(sf::Color::Black);
     SetSelectedColor(sf::Color::Cyan);
-    SetDisabledColor(sf::Color::Transparent);
+
+    // SetBaseColor(colorWithAlpha(sf::Color::Black, 255));
+    // SetSelectedColor(colorWithAlpha(sf::Color::Cyan));
+    // SetDisabledColor(sf::Color::Transparent);
 
     OnMouseEnter.Subscribe(&TextInput::ChangeCursorToTextInput, this);
     OnMouseExit.Subscribe(&TextInput::ChangeCursorToDefault, this);
@@ -92,6 +105,12 @@ void TextInput::Init(sf::RenderWindow* _window, sf::Cursor* _cursor)
 
     OnSelect.Subscribe(&TextInput::CarretOnSelect, this);
 }
+
+sf::Color TextInput::colorWithAlpha(sf::Color _tempColor, int _alpha)
+{
+    return sf::Color(_tempColor.r, _tempColor.g, _tempColor.b, 255);
+}
+    
 
 void TextInput::SetPosition(const sf::Vector2f& _position)
 {
@@ -199,8 +218,16 @@ void TextInput::ChangeCursorToDefault(ISelectable* _selectable)
     ChangeCursor(sf::Cursor::Type::Arrow);
 }
 
-void TextInput::ChangeColor(sf::Color _newColor)
+void TextInput::ChangeColor(sf::Color _newColor, SelectableState _newState)
 {
+    if (_newState == SelectableState::Disabled)
+    {
+        isBackgroundVisible = false;
+    } else
+    {
+        isBackgroundVisible = true;
+    }
+    
     background.setOutlineColor(_newColor);
 }
 
@@ -216,6 +243,8 @@ sf::Vector2f TextInput::GetSelectableSize()
 
 void TextInput::CarretOnSelect(ISelectable* _selectable)
 {
+    if (!isInitialized) return;
     isCarretVisible = true;
+    
     UpdateCarretPosition();
 }

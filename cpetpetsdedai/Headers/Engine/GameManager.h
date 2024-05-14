@@ -27,7 +27,6 @@ private:
 
 	Scene* currentScene;
 	sf::RenderWindow window;
-	sf::Cursor cursor;
 
 	TList<sf::Event> eventsOfTick;
 };

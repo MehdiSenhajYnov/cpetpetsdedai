@@ -25,10 +25,9 @@ protected:
     EngineUIElement(uint64_t _id): EngineUIElement(_id, "EngineUIElement", Object::GetStaticType()) {}
 public:
     AddType(EngineUIElement, Object)
-    virtual void Init(sf::RenderWindow* _window, sf::Cursor* _cursor)
+    virtual void Init(sf::RenderWindow* _window)
     {
         window = _window;
-        cursor = _cursor;
         isInitialized = true;
     }
     
@@ -50,11 +49,10 @@ public:
     void ChangeCursor(sf::Cursor::Type cursorType);
 
 protected:
-    sf::Cursor::Type currentCursor = sf::Cursor::Type::Arrow;
+    //sf::Cursor::Type currentCursor = sf::Cursor::Type::Arrow;
     
     bool isInitialized = false;
     sf::RenderWindow* window = nullptr;
-    sf::Cursor* cursor = nullptr;
 
     sf::Vector2f position = { 0.0f, 0.0f };
 };

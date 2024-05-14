@@ -22,13 +22,13 @@ public:
         text.setString(_text);
         OnTextChange.InvokeEvent(_text);
     }
-    void Init(sf::RenderWindow* _window, sf::Cursor* _cursor) override;
+    void Init(sf::RenderWindow* _window) override;
 
     void SetCharacterSize(unsigned int size) { text.setCharacterSize(size); }
     void SetStyle(sf::Text::Style style) { text.setStyle(style); }
     void SetFillColor(const sf::Color& color) { text.setFillColor(color); }
     void SetString(const std::string& _text) { text.setString(_text); }
-    void SetPosition(const sf::Vector2f& position) { text.setPosition(position); }
+    void SetPosition(const sf::Vector2f& _position) override { text.setPosition(_position); }
 
     void SetOrigin(const sf::Vector2f& origin) { text.setOrigin(origin); }
 

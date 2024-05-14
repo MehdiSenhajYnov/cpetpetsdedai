@@ -21,7 +21,8 @@ public:
 	void Deselect();
 protected:
 	InBoundsInputType inBoundsInputType = TopLeft;
-	virtual void ChangeColor(sf::Color _newColor) = 0;
+	virtual void InternalChangeColor(sf::Color _newColor);
+	virtual void ChangeColor(sf::Color _newColor, SelectableState _newState) = 0;
 	virtual sf::Vector2f GetSelectablePosition() = 0;
 	virtual sf::Vector2f GetSelectableSize() = 0;
 public:
@@ -65,11 +66,11 @@ private:
 	SelectableState tempState = SelectableState::Normal;
 	SelectableState selectableState = SelectableState::Normal;
 
-	sf::Color baseColor = sf::Color(0, 0, 0);
-	sf::Color hoverColor = sf::Color(110, 110, 110);
-	sf::Color pressedColor = sf::Color(80, 80, 80);
-	sf::Color selectedColor = sf::Color(50, 50, 50);
-	sf::Color disabledColor = sf::Color(30, 30, 30);
+	sf::Color baseColor = sf::Color(0, 0, 0, 255);
+	sf::Color hoverColor = sf::Color(110, 110, 110, 255);
+	sf::Color pressedColor = sf::Color(80, 80, 80, 255);
+	sf::Color selectedColor = sf::Color(50, 50, 50, 255);
+	sf::Color disabledColor = sf::Color(30, 30, 30, 255);
 	
 	bool wantHoverColor = false;
 	bool wantPressedColor = false;

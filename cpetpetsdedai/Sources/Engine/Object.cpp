@@ -50,8 +50,9 @@ uint64_t Object::Serialize(SerializeBuffer& buffer, const std::string_view _prev
 	return id;
 }
 
-void Object::Deserialize(const std::string& _serialised, const std::string& _serializeContext)
+bool Object::Deserialize(const std::string& _serialised, const std::string& _serializeContext)
 {
+	bool result = true;
 	std::vector<std::string> _serialisedLines = Utilities::SplitString(_serialised, "\n");
 	for (const auto& line : _serialisedLines)
 	{
@@ -62,12 +63,16 @@ void Object::Deserialize(const std::string& _serialised, const std::string& _ser
 			{
 				if (splitLine[0] == _field->name)
 				{
-					_field->Deserialize(line, _serializeContext);
+					bool tempResult = _field->Deserialize(line, _serializeContext);
+					if (!tempResult)
+					{
+						result = false;
+					}
 				}
 			}
 		}
 	}
-		
+	return result;
 }
 
 void Object::Deserialize(const TList<std::string>& _serialised)

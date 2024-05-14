@@ -73,3 +73,13 @@ constexpr bool InternalIsVector()
 template <typename T>
 concept IsVector = InternalIsVector<T>();
 
+template <typename T>
+concept haveGetSize = requires (const T t) {
+    t.GetSize();
+};
+
+template <typename T>
+concept haveOrigin = requires (const T t) {
+    t.GetOrigin();
+};
+

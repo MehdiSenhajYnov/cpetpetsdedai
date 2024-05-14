@@ -20,7 +20,7 @@ public:
 
     TList<EngineUIElement*>& GetUIElements();
 
-    void Init(sf::RenderWindow* _window, sf::Cursor* _cursor);
+    void Init(sf::RenderWindow* _window);
 
     template<typename T>
     T* CreateUIElement() requires IsDerivedFrom<T, EngineUIElement>;
@@ -34,7 +34,6 @@ private:
     TList<EngineUIElement*> uiElements;
 
     sf::RenderWindow* window = nullptr;
-    sf::Cursor* cursor = nullptr;
 
     EngineUI();
     EngineUI(const std::string& _name, Type* parentType);
@@ -44,7 +43,7 @@ template <typename T>
 T* EngineUI::CreateUIElement() requires IsDerivedFrom<T, EngineUIElement>
 {
     T* newUIElement = Factory::GetInstance()->CreateObject<T>();
-    newUIElement->Init(window, cursor);
+    newUIElement->Init(window);
     uiElements.push_back(newUIElement);
     return newUIElement;
 }

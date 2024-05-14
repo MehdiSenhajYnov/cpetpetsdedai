@@ -16,7 +16,9 @@ public:
 
     virtual std::string GetValueAsString() = 0;
     virtual uint64_t Serialize(SerializeBuffer& buffer, const std::string_view _previousContent) override = 0;
-    virtual void Deserialize(const std::string& _serialised, const std::string& _serializeContext) override = 0;
+    virtual bool Deserialize(const std::string& _serialised, const std::string& _serializeContext) override = 0;
+    virtual bool DeserializeNoName(const std::string& _serialised, const std::string& _serializeContext) = 0;
+
 };
 
 
@@ -51,7 +53,7 @@ public:
         return 0;
     }
     
-    void Deserialize(const std::string& _serialised, const std::string& _serializeContext) override
+    bool Deserialize(const std::string& _serialised, const std::string& _serializeContext) override
     {
         T temp;
         bool result = GlobalDeserializer::Deserialize(temp, _serialised, _serializeContext, name);
@@ -59,6 +61,18 @@ public:
         {
             SetValue(temp);
         }
+        return result;
+    }
+
+    bool DeserializeNoName(const std::string& _serialised, const std::string& _serializeContext) override
+    {
+        T temp;
+        bool result = GlobalDeserializer::Deserialize(temp, _serialised, _serializeContext);
+        if(result)
+        {
+            SetValue(temp);
+        }
+        return result;
     }
 
 private:

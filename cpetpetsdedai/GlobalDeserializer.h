@@ -87,31 +87,4 @@ public:
         }
     }
     
-    template <typename T>
-    static bool IsOrIsPointerSerializable(T& object)
-    {
-        if constexpr (std::is_pointer<T>())
-        {
-            return IsOrIsPointerSerializable(*object);
-        }
-        if (IsSerialisable<T>)
-        {
-            return true;
-        }
-        return false;
-    }
-
-    static bool CheckAlreadySerialized(const uint64_t _idToCheck, const SerializeBuffer& _buffer, const std::string_view _previousContent)
-    {
-        std::string Tofind = "!i!" + std::to_string(_idToCheck);
-        if (_buffer.mainBuffer.find(Tofind) != std::string::npos)
-        {
-            return true;
-        }
-        if (_previousContent.find(Tofind) != std::string::npos)
-        {
-            return true;
-        }
-        return false;
-    }
 };

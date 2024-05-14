@@ -16,6 +16,7 @@ enum class AnimationState
 class Animator : public Component
 {
 public:
+    AddType(Animator, Component)
     Animator();
     Animator(const std::string& _name, Type* parentType);
     void Init(SpriteRenderer* _spriteRenderer);

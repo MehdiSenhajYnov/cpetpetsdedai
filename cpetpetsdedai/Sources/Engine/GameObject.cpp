@@ -19,8 +19,8 @@ GameObject::GameObject(const std::string& _name, Type* parentType) : Object(_nam
 	SerializeField(PositionType, positionType);
 	SerializeField(bool, isActive);
 	SerializeField(GameObject*, parent);
-	SerializeField(TList<std::string>, _tags);
-	SerializeField(TList<Component*>, components);
+	//SerializeField(TList<std::string>, _tags);
+	//SerializeField(TList<Component*>, components);
 
 	// auto _changenameInvoke = [this](std::string _newValue) { this->name = _newValue; };
 	// std::function<std::string()> _nameGetInvoke = [this]() { return this->name; };

@@ -29,10 +29,9 @@ TList<EngineUIElement*>& EngineUI::GetUIElements()
     return uiElements;
 }
 
-void EngineUI::Init(sf::RenderWindow* _window, sf::Cursor* _cursor)
+void EngineUI::Init(sf::RenderWindow* _window)
 {
     window = _window;
-    cursor = _cursor;
     
     auto pOne = CreateUIElement<FileExplorer>();
     pOne->SetAnchorSide(Bottom);

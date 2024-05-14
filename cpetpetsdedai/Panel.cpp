@@ -14,20 +14,26 @@ Panel::Panel(const std::string& _typeName, Type* parentType): EngineUIElement(_t
 Panel::Panel(uint64_t _id): Panel(_id, "Panel", EngineUIElement::GetStaticType())
 {}
 
+Panel::~Panel()
+{
+    Factory::GetInstance()->DestroyObject(text);
+}
+
 Panel::Panel(const uint64_t& _id, const std::string& _name, Type* parentType): EngineUIElement(_id, _name, parentType)
 {}
 
 
-void Panel::Init(sf::RenderWindow* _window, sf::Cursor* _cursor)
+void Panel::Init(sf::RenderWindow* _window)
 {
-    EngineUIElement::Init(_window, _cursor);
-    text.Init(_window, _cursor);
+    EngineUIElement::Init(_window);
+    text = Factory::GetInstance()->CreateObject<TextUIElement>();
+    text->Init(_window);
     
     line[0].color = sf::Color::Red;
     line[1].color = sf::Color::Red;
 
     SetName(GetType()->GetName());
-    HoldSpace(text.GetSize());
+    HoldSpace(text->GetSize());
 }
 
 void Panel::DragLine()
@@ -60,30 +66,34 @@ void Panel::MouseCursor()
     {
         if ((float)sf::Mouse::getPosition(*window).x > GetPosition().x - mouseHoverMarge && (float)sf::Mouse::getPosition(*window).x < GetPosition().x + mouseHoverMarge)
         {
-            if (currentCursor != sf::Cursor::Type::SizeHorizontal)
+            if (mouseHover != HorizontalSize)
             {
                 ChangeCursor(sf::Cursor::Type::SizeHorizontal);
+                mouseHover = HorizontalSize;
             }
         } else
         {
-            if (currentCursor != sf::Cursor::Type::Arrow)
+            if (mouseHover != None)
             {
                 ChangeCursor(sf::Cursor::Type::Arrow);
+                mouseHover = None;
             }
         }
     } else
     {
         if ((float)sf::Mouse::getPosition(*window).y > GetPosition().y - mouseHoverMarge && (float)sf::Mouse::getPosition(*window).y < GetPosition().y + mouseHoverMarge)
         {
-            if (currentCursor != sf::Cursor::Type::SizeVertical)
+            if (mouseHover != VerticalSize)
             {
                 ChangeCursor(sf::Cursor::Type::SizeVertical);
+                mouseHover = VerticalSize;
             }
         } else
         {
-            if (currentCursor != sf::Cursor::Type::Arrow)
+            if (mouseHover != None)
             {
                 ChangeCursor(sf::Cursor::Type::Arrow);
+                mouseHover = None;
             }
         }
     }
@@ -106,33 +116,33 @@ void Panel::Update(float _deltaTime)
     }
     
     UpdateLinePos();
-    text.SetPosition(GetPosition() + textPadding);
+    text->SetPosition(GetPosition() + textPadding);
     DragLine();
     MouseCursor();
 
-    text.Update(_deltaTime);
+    text->Update(_deltaTime);
 }
 
 void Panel::Draw(sf::RenderWindow* _window)
 {
-    text.Draw(_window);
+    text->Draw(_window);
 	_window->draw(line, 2, sf::Lines);
 }
 
 void Panel::SetName(const std::string& _name)
 {
     name = _name;
-    text.SetText(_name);
+    text->SetText(_name);
 }
 
 void Panel::OnMouseLeftKeyDown()
 {
 
-    if (currentCursor == sf::Cursor::Type::SizeHorizontal)
+    if (mouseHover == HorizontalSize)
     {
         isDragging = true;
         mouseOffset = (float)sf::Mouse::getPosition(*window).x - GetPosition().x;
-    } else if (currentCursor == sf::Cursor::Type::SizeVertical)
+    } else if (mouseHover == VerticalSize)
     {
         isDragging = true;
         mouseOffset = (float)sf::Mouse::getPosition(*window).y - GetPosition().y;
@@ -174,7 +184,7 @@ void Panel::HoldSpace(sf::Vector2f spaceHolded)
 void Panel::ResetSpaceHolded()
 {
     rawAvaiblePosition = { 0.0f, 0.0f };
-    HoldSpace(text.GetSize());
+    HoldSpace(text->GetSize());
 }
 
 void Panel::SetSize(float _size)

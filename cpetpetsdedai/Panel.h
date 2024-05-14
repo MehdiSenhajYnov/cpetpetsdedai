@@ -14,6 +14,13 @@ enum Direction
     Vertical
 };
 
+enum MouseHoverType
+{
+    None,
+    HorizontalSize,
+    VerticalSize,
+};
+
 class Panel : public EngineUIElement
 {
 public:
@@ -21,16 +28,17 @@ public:
     Panel(const std::string& _typeName, Type* parentType);
     Panel(const uint64_t& _id, const std::string& _name, Type* parentType);
     Panel(uint64_t _id);
+    virtual ~Panel() override;
 
     AddType(Panel, EngineUIElement)
 
-    void Init(sf::RenderWindow* _window, sf::Cursor* _cursor) override;
+    virtual void Init(sf::RenderWindow* _window) override;
     void DragLine();
     void MouseCursor();
     void Update(float _deltaTime) override;
     void Draw(sf::RenderWindow* _window) override;
 
-    TextUIElement text;
+    TextUIElement* text;
     std::string GetName() const { return name; }
     virtual void SetName(const std::string& _name);
 
@@ -64,6 +72,7 @@ private:
     
     float mouseHoverMarge = 10.0f;
 
+    MouseHoverType mouseHover = None;
     bool isDragging = false;
     float mouseOffset = 0.0f;
 

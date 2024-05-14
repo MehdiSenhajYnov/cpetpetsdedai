@@ -85,12 +85,12 @@ Type* Type::GetType(const std::string& name)
     return nullptr;
 }
 
-std::vector<Type*> Type::GetAllChildren(const Type& parent)
+std::vector<Type*> Type::GetAllChildren(const Type* parent)
 {
     std::vector<Type*> children;
     for (auto& [type_name, type] : GetAllTypes())
     {
-        if (type->parent == &parent)
+        if (type->parent == parent)
         {
             children.push_back(type);
         }

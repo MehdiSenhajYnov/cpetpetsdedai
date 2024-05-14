@@ -19,6 +19,7 @@ enum class ButtonState
 class Button : public Component
 {
 public:
+	AddType(Button, Component)
 	Button();
 
 	void Init(SpriteRenderer* _spriteRenderer);

@@ -78,8 +78,26 @@ void DeserialisationTest()
 
 int main()
 {
-	//DeserialisationTest();
+	
+	// std::cout << "all types : " << std::endl;
+	// for(auto& [_typename, _type] : Type::GetAllTypes())
+	// {
+	// 	std::cout  << _type->GetName();
+	// 	if (_type->GetParent() != nullptr)
+	// 	{
+	// 		std::cout << " parent : " << _type->GetParent()->GetName();
+	// 	}
+	// 	std::cout << std::endl;
+	// 	
+	// }
 
+
+	// auto result = Type::GetAllChildren(Component::GetStaticType());
+	// std::cout << "Component have " << result.size() << " childs" << std::endl;
+	// for(auto& _val : result)
+	// {
+	// 	std::cout << _val->GetName() << std::endl;
+	// }
 
 	GameManager gameManager;
 	gameManager.Run();

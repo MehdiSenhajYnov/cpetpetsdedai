@@ -30,7 +30,7 @@ public:
     static int typeCount;
     
     static Type* GetType(const std::string& name);
-    static std::vector<Type*> GetAllChildren(const Type& parent);
+    static std::vector<Type*> GetAllChildren(const Type* parent);
     static bool IsOrIsDescendantOf(const Type* toCheck, const Type* parent);
     
     static std::map<std::string, Type*>& GetAllTypes();

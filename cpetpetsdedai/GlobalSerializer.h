@@ -8,10 +8,6 @@
 class GlobalSerializer
 {
 public:
-
-
-	
-    
     template <typename T>
     static uint64_t Serializer(SerializeBuffer& buffer, T& object, const std::string_view& _previousContent)
     {
@@ -37,6 +33,12 @@ public:
         else if constexpr (IsSerialisable<T>)
         {
             return object.Serialize(buffer, _previousContent);
+        }
+        else if constexpr (IsVector<T>)
+        {
+            std::cout << "Serializing vector : " << typeid(T).name() << std::endl;
+            SerializeVector(object, buffer, _previousContent);
+            return true;
         }
         else if constexpr (CanString<T>)
         {
@@ -75,6 +77,26 @@ public:
         return 0;
     }
 
+    template <template <typename,typename> class VectorClass, typename ElementType, typename VectorAllocator>
+    static uint64_t SerializeVector(const VectorClass<ElementType, VectorAllocator>& outVar, SerializeBuffer& buffer, const std::string_view _previousContent)
+    requires (IsVector<VectorClass<ElementType, VectorAllocator>>)
+    {
+        buffer.mainBuffer += "[ ";
+        
+        for (int i = 0; i < outVar.size(); ++i)
+        {
+            GlobalSerializer::Serializer(buffer, outVar[i], _previousContent);
+            if (i != outVar.size() - 1)
+            {
+                buffer.mainBuffer += " !&! ";
+            }
+        }
+        
+        buffer.mainBuffer += " ]";
+        return 0;
+    }
+
+        
     template <typename T>
     static bool IsOrIsPointerSerializable(T& object)
     {
@@ -89,6 +111,7 @@ public:
         return false;
     }
 
+    
     static bool CheckAlreadySerialized(const uint64_t _idToCheck, const SerializeBuffer& _buffer, const std::string_view _previousContent)
     {
         std::string Tofind = "!i!" + std::to_string(_idToCheck);
@@ -102,4 +125,5 @@ public:
         }
         return false;
     }
+    
 };

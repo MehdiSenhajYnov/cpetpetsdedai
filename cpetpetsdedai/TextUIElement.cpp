@@ -16,9 +16,10 @@ void TextUIElement::Update(float _deltaTime)
 {
 }
 
-void TextUIElement::Init(sf::RenderWindow* _window, sf::Cursor* _cursor)
+void TextUIElement::Init(sf::RenderWindow* _window)
 {
-    EngineUIElement::Init(_window, _cursor);
+    EngineUIElement::Init(_window);
+    text = sf::Text();
     if (!fontLoaded)
     {
         if (!font.loadFromFile("./Fonts/Arial.ttf"))
