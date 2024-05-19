@@ -17,10 +17,7 @@
 
 2. **Exécuter le fichier de build**
 
-   - Naviguez dans le dossier du projet :
-     ```sh
-     cd cpetpetsdedai
-     ```
+   - Naviguez dans le dossier du projet
    - Exécutez le fichier `build.bat` :
      ```sh
      ./build.bat
@@ -33,7 +30,7 @@
 4. **Configuration du projet dans Rider**
 
    - En haut à gauche, à côté de "Solution", lorsque vous approchez la souris, une icône en forme d'œil devrait apparaître. Sélectionnez-la.
-   - Ajoutez les dossiers suivants :
+   - Vous devez inclure les dossiers suivants (click gauche -> : include)
      - `Assets`
      - `Fonts`
      - `Scenes`
