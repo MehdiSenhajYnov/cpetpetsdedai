@@ -30,7 +30,7 @@
 4. **Configuration du projet dans Rider**
 
    - En haut à gauche, à côté de "Solution", lorsque vous approchez la souris, une icône en forme d'œil devrait apparaître. Sélectionnez-la.
-   - Vous devez inclure les dossiers suivants (click gauche -> : include)
+   - Vous devez inclure les dossiers suivants qui se trouve dans le projet "cpetpetsdedai" dans le dossier "cpetpetsdedai" (click gauche -> : include)
      - `Assets`
      - `Fonts`
      - `Scenes`
@@ -47,4 +47,4 @@
 
 7. **Lancer le projet**
 
-   - Vous pouvez maintenant lancer le projet en cliquant sur le bouton "Run".
+   - Vous pouvez maintenant lancer le projet en cliquant sur le bouton "Run" ou "Debug".

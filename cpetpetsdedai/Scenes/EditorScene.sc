@@ -22,7 +22,7 @@ components: [ 14047131 ]
 --- !t!GameObject!i!14027068
 id: 14027068
 name: CreatedObject14027068
-position: x: 430.477 y: 488.545
+position: x: 329.477 y: 449.545
 scale: x: 1 y: 1
 positionType: 0
 isActive: 1
@@ -32,7 +32,7 @@ components: [ 60151349 !&! 42746711 !&! 70596474 !&! 70624439 ]
 --- !t!GameObject!i!90831574
 id: 90831574
 name: CreatedObject90831574
-position: x: 229 y: 214
+position: x: 336 y: 267
 scale: x: 2 y: 1
 positionType: 0
 isActive: 1
@@ -42,7 +42,7 @@ components: [ 83287472 ]
 --- !t!GameObject!i!51048533
 id: 51048533
 name: CreatedObject51048533
-position: x: 836 y: 530
+position: x: 808 y: 479
 scale: x: 1 y: 1
 positionType: 0
 isActive: 1
