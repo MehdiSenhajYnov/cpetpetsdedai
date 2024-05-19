@@ -13,15 +13,13 @@ inline std::ostream& operator<<(std::ostream& _os, const sf::Vector2f& _obj) {
 				<< " y: " << _obj.y;
 }
 
-inline std::istream& operator>>(std::istream& is, sf::Vector2f& vec) {
+inline std::istream& operator>>(std::istream& _is, sf::Vector2f& _vec) {
 	std::string temp;
-	is >> temp;
-	float _x = 0;
-	float _y = 0;
-	is >> vec.x;
-	is >> temp;
-	is >> vec.y;
-	return is;
+	_is >> temp;
+	_is >> _vec.x;
+	_is >> temp;
+	_is >> _vec.y;
+	return _is;
 }
 
 inline std::ostream& operator<<(std::ostream& _os, const sf::Color& _obj) {
@@ -32,27 +30,27 @@ inline std::ostream& operator<<(std::ostream& _os, const sf::Color& _obj) {
 				<< " b: " << std::to_string(_obj.b);
 }
 
-inline std::istream& operator>>(std::istream& is, sf::Color& color) {
-	std::string str;
-	is >> str;
-	if (str.size() < 15)
-		throw std::invalid_argument("Invalid input for sf::Color");
-    
-	if (str.substr(0, 2) != "a:" || str.substr(str.find("r:") - 1, 2) != "r:" ||
-		str.substr(str.find("g:") - 1, 2) != "g:" || str.substr(str.find("b:") - 1, 2) != "b:")
-		throw std::invalid_argument("Invalid input format for sf::Color");
+inline std::istream& operator>>(std::istream& _is, sf::Color& _color) {
+	std::string temp;
 
-	size_t aPos = str.find("a:") + 2;
-	size_t rPos = str.find("r:") + 2;
-	size_t gPos = str.find("g:") + 2;
-	size_t bPos = str.find("b:") + 2;
+	_is >> temp;
+	int colorInt = 0;
+	_is >> colorInt;
+	_color.a = colorInt;
 
-	color.a = std::stoi(str.substr(aPos, rPos - aPos - 2));
-	color.r = std::stoi(str.substr(rPos, gPos - rPos - 2));
-	color.g = std::stoi(str.substr(gPos, bPos - gPos - 2));
-	color.b = std::stoi(str.substr(bPos));
+	_is >> temp;
+	_is >> colorInt;
+	_color.r = colorInt;
 
-	return is;
+	_is >> temp;
+	_is >> colorInt;
+	_color.g = colorInt;
+
+	_is >> temp;
+	_is >> colorInt;
+	_color.b = colorInt;
+	
+	return _is;
 }
 
 inline std::ostream& operator<<(std::ostream& _os, const sf::FloatRect& _obj) {
@@ -63,25 +61,20 @@ inline std::ostream& operator<<(std::ostream& _os, const sf::FloatRect& _obj) {
 				<< " height: " << _obj.height;
 }
 
-inline std::istream& operator>>(std::istream& is, sf::FloatRect& rect) {
-	std::string str;
-	is >> str;
-	if (str.size() < 25)
-		throw std::invalid_argument("Invalid input for sf::FloatRect");
-    
-	if (str.substr(0, 5) != "left:" || str.substr(str.find("top:") - 1, 5) != " top:" ||
-		str.substr(str.find("width:") - 1, 7) != " width:" || str.substr(str.find("height:") - 1, 8) != " height:")
-		throw std::invalid_argument("Invalid input format for sf::FloatRect");
+inline std::istream& operator>>(std::istream& _is, sf::FloatRect& _rect) {
+	std::string temp;
+	
+	_is >> temp;
+	_is >> _rect.left;
 
-	size_t leftPos = str.find("left:") + 5;
-	size_t topPos = str.find("top:") + 5;
-	size_t widthPos = str.find("width:") + 7;
-	size_t heightPos = str.find("height:") + 8;
+	_is >> temp;
+	_is >> _rect.top;
 
-	rect.left = std::stof(str.substr(leftPos, topPos - leftPos - 5));
-	rect.top = std::stof(str.substr(topPos, widthPos - topPos - 7));
-	rect.width = std::stof(str.substr(widthPos, heightPos - widthPos - 8));
-	rect.height = std::stof(str.substr(heightPos));
+	_is >> temp;
+	_is >> _rect.width;
 
-	return is;
+	_is >> temp;
+	_is >> _rect.height;
+
+	return _is;
 }

@@ -1,26 +1,10 @@
 ﻿#include <utility>
-
 #include "../../Headers/Engine/Object.h"
 
-Object::Object(const std::string& typeName, Type* parentType): Object( Utilities::GenerateUniqueId(), typeName, parentType)
+Object::Object(const std::string& typeName, Type* parentType): id(Utilities::GenerateUniqueId()),
+                                                               type(typeName, parentType)
 {
 }
-
-Object::Object(const uint64_t& _id, const std::string& typeName, Type* parentType) : id(_id), type(typeName, parentType)
-{
-}
-
-void Object::InitObject(const std::string& typeName, Type* parentType)
-{
-	type = Type(typeName, parentType);
-}
-
-Object::Object(const std::string& typeName, Type* parentType, TList<BaseField*> fields) : type(typeName, parentType)
-{
-	
-}
-
-
 
 Type* Object::GetType()
 {
@@ -32,13 +16,24 @@ uint64_t Object::GetId() const
 	return id;
 }
 
+void Object::SetId(uint64_t _id)
+{
+	if (id == _id)
+	{
+		return;
+	}
+	onIdChanged.InvokeEvent(id, _id);
+	id = _id;
+}
+
 uint64_t Object::Serialize(SerializeBuffer& buffer, const std::string_view _previousContent)
 {
+	if (!CanBeSerialized) return -1;
 	static const std::string NEWLINE_PREFIX = "--- ";
 	static const std::string TYPE_PREFIX = "!t!";
 	static const std::string ID_PREFIX = "!i!";
 		
-	buffer.mainBuffer += NEWLINE_PREFIX + TYPE_PREFIX + std::to_string(GetType()->GetId()) + ID_PREFIX + std::to_string(GetId()) + "\n";
+	buffer.mainBuffer += NEWLINE_PREFIX + TYPE_PREFIX + GetType()->GetName() + ID_PREFIX + std::to_string(GetId()) + "\n";
 		
 	buffer.mainBuffer += ("id: " + std::to_string(id) + "\n");
 	for (auto& _field : GetType()->GetAllFields())
@@ -75,6 +70,6 @@ bool Object::Deserialize(const std::string& _serialised, const std::string& _ser
 	return result;
 }
 
-void Object::Deserialize(const TList<std::string>& _serialised)
-{
-}
+// void Object::Deserialize(const TList<std::string>& _serialised)
+// {
+// }

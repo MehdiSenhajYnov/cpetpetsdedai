@@ -1,10 +1,11 @@
 ﻿#pragma once
-#include "Headers/Components/Camera.h"
+#include "Headers/Engine/Object.h"
 
+class Camera;
 // SINGLETON
 class CameraManager : public Object{
 public:
-	AddType(CameraManager, Object);
+	ADD_TYPE(CameraManager, Object, REG_TYPE);
 	static CameraManager* GetInstance();
 
 	static void ResetInstance();
@@ -16,8 +17,7 @@ public:
 	TList<Camera*>* GetCameras();
 
 private:
-	static CameraManager* instance;
-	Camera* mainCamera;
+	Camera* mainCamera = nullptr;
 	TList<Camera*> cameras;
 	CameraManager();
 

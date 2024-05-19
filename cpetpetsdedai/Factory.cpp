@@ -3,7 +3,7 @@
 
 Factory* Factory::GetInstance()
 {
-    static Factory* instance;
+    static Factory* instance = nullptr;
 
     if (instance == nullptr)
     {
@@ -53,9 +53,54 @@ Factory::~Factory()
 
 }
 
+void Factory::RegisterType(const std::string& name, const std::function<Object*()>& function, const std::function<Object*(uint64_t)>& functionWithId)
+{
+    if (!_objNameToCreation.contains(name))
+    {
+        _objNameToCreation[name] = function;
+        _objNameToCreationWithId[name] = functionWithId;
+    }
+}
+
 void Factory::ResetInstance()
 {
     auto temp = GetInstance();
     delete temp;
     temp = nullptr;
 }
+
+void Factory::OnObjectIDChanged(uint64_t oldId, uint64_t newId)
+{
+    if (objectById.contains(oldId))
+    {
+        auto object = objectById[oldId];
+        objectById.erase(oldId);
+        objectById[newId] = object;
+    }
+}
+
+bool Factory::CanBeCreated(const std::string& name)
+{
+    return _objNameToCreation.contains(name);
+}
+
+Object* Factory::CreateObjectByName(const std::string& name)
+{
+    if (_objNameToCreation.contains(name))
+    {
+        return _objNameToCreation[name]();
+    }
+
+    return nullptr;
+}
+
+Object* Factory::CreateObjectByName(const std::string& name, uint64_t id)
+{
+    if (_objNameToCreationWithId.contains(name))
+    {
+        return _objNameToCreationWithId[name](id);
+    }
+    return nullptr;
+}
+
+

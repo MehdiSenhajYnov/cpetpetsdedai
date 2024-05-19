@@ -5,6 +5,7 @@
 #include <future>
 #include <memory>
 
+#include "GameSystem.h"
 #include "../../TList.h"
 
 class Collider;
@@ -16,11 +17,13 @@ class CircleCollider;
 class CustomCollider;
 
 
-class PhysicsEngine
+class PhysicsEngine : public GameSystem
 {
 public:
-	PhysicsEngine();
-	void Init(Scene* _scene, GraphicDebugger* _graphicDebugger);
+	static PhysicsEngine* GetInstance();
+	static void ResetInstance();
+	
+	void Init(Scene* _scene);
 
 	bool ObjectCanMoveBy(Collider* colliderToCheck, sf::Vector2f _moveBy);
 	//bool IsColliderTouchingCollider(Collider* firstCollider, Collider* Collider);
@@ -55,6 +58,8 @@ private:
 
 	GraphicDebugger* graphicDebugger;
 	bool MoveObject(Collider* _colliderToMove, sf::Vector2f _moveby, float deltaTime);
+
+	PhysicsEngine();
 
 };
 

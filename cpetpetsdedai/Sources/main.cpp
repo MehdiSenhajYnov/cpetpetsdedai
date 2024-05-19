@@ -8,25 +8,6 @@ void TestSerialization()
 	std::string_view curSerialization;
 	
 	GameObject gameObject = GameObject();
-
-	// if constexpr (isBaseOf<Object, decltype(gameObject)>())
-	// {
-	// 	std::cout << "GameObject is convertible to Object" << std::endl;
-	// }
-	//
-	// GameObject* gameObjectPtr = &gameObject;
-	// if constexpr (isBaseOf<Object, decltype(gameObjectPtr)>())
-	// {
-	// 	std::cout << "GameObject* is convertible to Object*" << std::endl;
-	// }
-	//
-	// GameObject** gameObjectPtrPtr = &gameObjectPtr;
-	// if constexpr (isBaseOf<Object, decltype(gameObjectPtrPtr)>())
-	// {
-	// 	std::cout << "GameObject** is convertible to Object**" << std::endl;
-	// }
-
-	
 	
 	gameObject.Init("TestSerialisation");
 	gameObject.SetPosition(sf::Vector2f(10, 10));
@@ -57,16 +38,19 @@ void DeserialisationTest()
 		if (serializedElement.find(toFindGameObjectID) != std::string::npos)
 		{
 			int indexOfNewLine = Utilities::IndexOf(serializedElement, "\n");
+			int indexOfIdDeclaration = Utilities::IndexOf(serializedElement, "!i!");
+			uint64_t objID = std::stoull(serializedElement.substr(indexOfIdDeclaration + 3, indexOfNewLine - indexOfIdDeclaration - 3));
+			
 			std::string  serializedGameObject = serializedElement.substr(indexOfNewLine + 1);
-			GameObject gameObject = GameObject();
-			gameObject.Deserialize(serializedGameObject, sceneContent);
+			GameObject* gameObject = Factory::GetInstance()->CreateObject<GameObject>(objID);
+			gameObject->Deserialize(serializedGameObject, sceneContent);
 			std::cout << "GameObject found" << std::endl;
-
-
 			// on resérialize pour voir si le contenu est le même
 			SerializeBuffer buffer;
-			gameObject.Serialize(buffer, "");
+			gameObject->Serialize(buffer, "");
 			FileUtilities::WriteInFile("Scenes/TestDeserialization.sc", buffer.startBuffer + buffer.mainBuffer + buffer.endBuffer);
+			
+			Factory::GetInstance()->DestroyObject(gameObject);
 			break;
 		}
 		
@@ -75,30 +59,8 @@ void DeserialisationTest()
 }
 
 
-
 int main()
 {
-	
-	// std::cout << "all types : " << std::endl;
-	// for(auto& [_typename, _type] : Type::GetAllTypes())
-	// {
-	// 	std::cout  << _type->GetName();
-	// 	if (_type->GetParent() != nullptr)
-	// 	{
-	// 		std::cout << " parent : " << _type->GetParent()->GetName();
-	// 	}
-	// 	std::cout << std::endl;
-	// 	
-	// }
-
-
-	// auto result = Type::GetAllChildren(Component::GetStaticType());
-	// std::cout << "Component have " << result.size() << " childs" << std::endl;
-	// for(auto& _val : result)
-	// {
-	// 	std::cout << _val->GetName() << std::endl;
-	// }
-
 	GameManager gameManager;
 	gameManager.Run();
 	return 0;

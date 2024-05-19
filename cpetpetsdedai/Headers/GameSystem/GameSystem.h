@@ -4,7 +4,7 @@
 class GameSystem : public Object
 {
 public:
-    AddType(GameSystem, Object)
+    ADD_TYPE(GameSystem, Object, REG_TYPE)
     GameSystem() = default;
     GameSystem(const std::string& typeName, Type* parentType)
         : Object(typeName, parentType)

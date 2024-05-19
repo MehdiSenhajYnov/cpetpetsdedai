@@ -6,13 +6,13 @@ enum AlignType
 {
     AutoHorizontal,
     AutoVertical,
-    Manual,
+    // Manual,
 };
 class InspectorProperty : public EngineUIElement
 {
 public:
     virtual ~InspectorProperty() override;
-    void Draw(sf::RenderWindow* window) override;
+    void Draw(sf::RenderWindow* _window) override;
     void Update(float _deltaTime) override;
     void Init(sf::RenderWindow* _window) override;
     void SetPosition(const sf::Vector2f& _position) override;
@@ -23,9 +23,9 @@ public:
     void AddPropertyValue(TextInput* _propertyValue);
     void AddPropertyValue();
 
-    sf::Vector2f GetSize() const;
+    sf::Vector2f GetSize() const override;
 private:
-    TextUIElement* propertyName;
+    TextUIElement* propertyName = nullptr;
     TList<TextInput*> propertyValues;
 
     sf::Vector2f absoluteFirstValueOffset = { 0.0f, 0.0f };

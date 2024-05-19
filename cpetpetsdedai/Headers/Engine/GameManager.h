@@ -5,27 +5,23 @@
 #include "Object.h"
 #include "../Scenes/SceneManager.h"
 
-
-class Scene;
-
 class GameManager : public Object
 {
 public:
 	GameManager();
-	~GameManager();
+	~GameManager() override;
 	void Run();
 	void OnChangeSceneAsked(SceneManager::SceneEnum sceneToUse);
 	void ChangeScene(SceneManager::SceneEnum sceneToUse);
 	void DeleteScene();
 	
 private:
-	SceneManager::SceneEnum newScene;
-	bool haveToChangeScene;
+	SceneManager::SceneEnum newScene = SceneManager::SceneEnum::Menu;
+	bool haveToChangeScene = false;
 	bool iswindowFocus;
 	void WindowsEvents();
 	void InputEvents();
 
-	Scene* currentScene;
 	sf::RenderWindow window;
 
 	TList<sf::Event> eventsOfTick;

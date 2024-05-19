@@ -3,8 +3,8 @@
 class GameObject;
 enum ComponentWorkType
 {
-    Play,
-    Editor,
+    PlayOnly,
+    EditorOnly,
     PlayAndEditor,
 };
 class BaseComponent : public Object
@@ -12,7 +12,7 @@ class BaseComponent : public Object
 public:
     BaseComponent();
     BaseComponent(const std::string& _typeName, Type* parentType);
-    AddType(BaseComponent, Object)
+    ADD_TYPE(BaseComponent, Object, REG_TYPE)
 
     virtual void Init();
     virtual void InitBaseComponent(GameObject* _gameObject);

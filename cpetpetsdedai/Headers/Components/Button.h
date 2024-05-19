@@ -19,7 +19,7 @@ enum class ButtonState
 class Button : public Component
 {
 public:
-	AddType(Button, Component)
+	ADD_TYPE(Button, Component, REG_TYPE)
 	Button();
 
 	void Init(SpriteRenderer* _spriteRenderer);
@@ -66,30 +66,30 @@ public:
 	Event<Button*> OnMouseClickDown;
 	Event<Button*> OnMouseClickUp;
 private:
-	bool buttonInitialized;
+	bool buttonInitialized = false;
 
-	sf::Vector2f oldObjPosition;
-	sf::Vector2i mousePosition;
+	sf::Vector2f oldObjPosition = sf::Vector2f(0, 0);
+	sf::Vector2i mousePosition = sf::Vector2i(0, 0);
 
-	bool isMouseInside;
-	bool isMousePressingTheButton;
+	bool isMouseInside = false;
+	bool isMousePressingTheButton = false;
 	
-	bool isMousePressed;
-	bool ClickOnTheButton;
-	bool isMouseHover;
+	bool isMousePressed = false;
+	bool ClickOnTheButton = false;
+	bool isMouseHover = false;
 
-	ButtonState tempState;
-	ButtonState buttonState;
+	ButtonState tempState = ButtonState::Normal;
+	ButtonState buttonState = ButtonState::Normal;
 
-	SpriteRenderer* spriteRenderer;
-	TextComponent* textComponent;
+	SpriteRenderer* spriteRenderer = nullptr;
+	TextComponent* textComponent = nullptr;
 
 	sf::Color baseColor = sf::Color(0, 0, 0);
 	sf::Color hoverColor = sf::Color(110, 110, 110);
 	sf::Color pressedColor = sf::Color(80, 80, 80);
 	sf::Color textColor = sf::Color::White;
 	
-	bool wantHoverColor ;
-	bool wantPressedColor ;
+	bool wantHoverColor = false;
+	bool wantPressedColor = false;
 };
 

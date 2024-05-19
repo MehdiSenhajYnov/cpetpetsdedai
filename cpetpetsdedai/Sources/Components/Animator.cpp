@@ -9,9 +9,9 @@ Animator::Animator(): Animator("Animator", Component::GetStaticType())
 
 Animator::Animator(const std::string& _name, Type* parentType): Component(_name, parentType), spriteRenderer(nullptr)
 {
-    SerializeField(std::vector<Animation>, animations);
-    SerializeField(sf::Sprite, baseSprite);
-    SerializeField(SpriteRenderer*, spriteRenderer);
+    //SERIALIZE_FIELD(animations)
+    //SERIALIZE_FIELD(baseSprite)
+    SERIALIZE_FIELD(spriteRenderer)
 }
 
 void Animator::Init(SpriteRenderer* _spriteRenderer)
@@ -21,19 +21,19 @@ void Animator::Init(SpriteRenderer* _spriteRenderer)
     
 }
 
-void Animator::Init(std::vector<Animation> _animations)
+void Animator::SetAnimations(std::vector<Animation*> _animations)
 {
     animations = _animations;
 }
 
-void Animator::AddAnimation(Animation _animation)
+void Animator::AddAnimation(Animation* _animation)
 {
     animations.push_back(_animation);
 }
 
-std::vector<Animation>* Animator::GetAnimations()
+std::vector<Animation*>& Animator::GetAnimations()
 {
-    return &animations;
+    return animations;
 }
 
 void Animator::Stop()
@@ -52,11 +52,20 @@ void Animator::Resume()
     state = AnimationState::Playing;
 }
 
+Animation* Animator::CreateAnimation(std::string _name, float _duration, bool _loop,
+    std::initializer_list<std::string> _frameNames)
+{
+    Animation* newAnimation = new Animation();
+    newAnimation->Init(_name, _duration, _loop, _frameNames);
+    animations.push_back(newAnimation);
+    return newAnimation;
+}
+
 void Animator::Play(std::string _name)
 {
     for (auto& anim : animations)
     {
-        if (anim.name == _name)
+        if (anim->name == _name)
         {
             currentAnimation = anim;
 
@@ -89,7 +98,7 @@ void Animator::Update(float deltaTime)
     if (currentTime >= nextFrameTime)
     {
         bool isAnimationEnd = true;
-        for (auto& [frameTime, frameName] : currentAnimation.timeFrames)
+        for (auto& [frameTime, frameName] : currentAnimation->timeFrames)
         {
             if (currentTime < frameTime)
             {
@@ -112,4 +121,10 @@ void Animator::Update(float deltaTime)
 
 Animator::~Animator()
 {
+    for (auto& element : animations)
+    {
+        delete element;
+        element = nullptr;
+    }
+    animations.clear();
 }

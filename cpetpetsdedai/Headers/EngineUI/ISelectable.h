@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "../../EngineUI.h"
 #include "../Utilities/Event.h"
-
+#include "../Utilities/Utilities.h"
 enum class SelectableState
 {
 	Normal,
@@ -48,8 +48,8 @@ public:
 	Event<ISelectable*> OnMouseClickDown;
 	Event<ISelectable*> OnMouseClickUp;
 
-private:
-    void OnMouseKeyDown();
+protected:
+    virtual void OnMouseKeyDown();
     void OnMouseKeyUp();
     [[nodiscard]] bool IsInISelectable(const sf::Vector2f& positionToCheck);
 

@@ -12,13 +12,12 @@ class Scene;
 
 class SceneFileEditor : public GameSystem{
 public:
+	ADD_TYPE(SceneFileEditor, GameSystem, REG_TYPE)
 	SceneFileEditor();
 	~SceneFileEditor() override;
-	AddType(SceneEditor, GameSystem)
 	
 	bool CreateNewScene() const;
 	void LoadScene() const;
-	void TestLoadScene(const TList<std::string>& _serialised) const;
 	
 	void SaveScene() const;
 	
@@ -40,7 +39,7 @@ public:
 private:
 	static std::string scenePath;
 	static std::string sceneFileExtension;
-	Scene* level;
+	Scene* level = nullptr;
 	
 	static inline const std::string NEWLINE_PREFIX = "--- ";
 	static inline const std::string TYPE_PREFIX = "!t!";

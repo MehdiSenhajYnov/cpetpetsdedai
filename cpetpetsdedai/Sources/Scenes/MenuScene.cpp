@@ -7,13 +7,16 @@
 
 MenuScene::MenuScene() : Scene("MenuScene", Scene::GetStaticType())
 {
+
+
+	//MethodContainer::AddFunction<MenuScene, void, Button*>("OnExitButtonClicked" + std::to_string(GetId()), &MenuScene::OnExitButtonClicked, this);
 }
 
 void MenuScene::OnPlayButtonClicked(Button* btn)
 {
 	std::cout << "PLAY clicked !" << std::endl;
 	//loadingButtonComponent.SetString("Loading ...");
-	SceneManager::SetLevel(1);
+	SceneManager::GetInstance()->SetLevel(1);
 	OnSceneChanged();
 }
 
@@ -28,19 +31,34 @@ void MenuScene::InitializeScene(sf::RenderWindow* _window)
 {
 	Scene::InitializeScene(_window);
 
-	playButtonObj = CreateGameObjectImmediate("playButton");
-	exitButtonObj = CreateGameObjectImmediate("exitButton");
+	GameObject* playButtonObj = nullptr;
+	GameObject* exitButtonObj = nullptr;
+
+	Button* playButtonComponent = nullptr;
+	Button* exitButtonComponent = nullptr;
+	
+	playButtonObj = Create<GameObject>();
+	playButtonObj->Init("playButton");
+	
+	exitButtonObj = Create<GameObject>();
+	exitButtonObj->Init("exitButton");
 	
 	playButtonObj->SetPosition((float)window->getSize().x / 2, (float)window->getSize().y / 2 - 50);
 
 	playButtonComponent = playButtonObj->AddComponent<Button>();
 	playButtonComponent->InitDefaultButton("PLAY");
-	playButtonComponent->OnButtonClicked.Subscribe(&MenuScene::OnPlayButtonClicked, this);
 	
+	//playButtonComponent->OnButtonClicked.Subscribe(&MenuScene::OnPlayButtonClicked, this);
+
+	//MethodContainer::AddFunction<MenuScene, void, Button*>("OnPlayButtonClicked", &MenuScene::OnPlayButtonClicked, this);
+
+	
+	playButtonComponent->OnButtonClicked.SubscribeSerializable("OnPlayButtonClicked" + std::to_string(GetId()));
 	
 	exitButtonObj->SetPosition((float)window->getSize().x / 2, (float)window->getSize().y / 2 + 50);
 
 	exitButtonComponent = exitButtonObj->AddComponent<Button>();
+	exitButtonComponent->OnButtonClicked.SubscribeSerializable("OnExitButtonClicked" + std::to_string(GetId()));
 	exitButtonComponent->InitDefaultButton("EXIT");
 	exitButtonComponent->OnButtonClicked.Subscribe(&MenuScene::OnExitButtonClicked, this);
 
@@ -69,4 +87,10 @@ void MenuScene::DestroyScene()
 void MenuScene::OnKeyDown(sf::Keyboard::Key pressedKey)
 {
 
+}
+
+void MenuScene::AddMethods()
+{
+	SERIALIZE_METHOD(MenuScene, void, OnPlayButtonClicked, Button*)
+	SERIALIZE_METHOD(MenuScene, void, OnExitButtonClicked, Button*)
 }

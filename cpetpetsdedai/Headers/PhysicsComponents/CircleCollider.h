@@ -6,10 +6,11 @@
 class CircleCollider : public Collider
 {
 public:
+	ADD_TYPE(CircleCollider, Collider, REG_TYPE)
 	CircleCollider();
 	void Init(sf::Vector2f _topLeftPoint, float radius, int accuracy);
-private:
 	void Start() override;
+private:
 	void ColliderUpdate(float deltaTime) override;
 };
 

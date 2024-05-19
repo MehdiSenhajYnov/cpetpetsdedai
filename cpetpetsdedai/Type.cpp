@@ -1,19 +1,18 @@
 ﻿#include "Type.h"
+#include "Headers/Engine/Field.h"
+#include "Headers/Engine/TypeContainer.h"
 
 int Type::typeCount = 0;
 
 Type::Type(const std::string& name, Type* parent): name(name), parent(parent)
 {
     id = std::hash<std::string>{}(name);
-    if (!GetAllTypes().contains(name))
+    if (!TypeContainer::GetAllTypes().contains(name) || !TypeContainer::GetAllTypesById().contains(id))
     {
-        GetAllTypes()[name] = this;
+        TypeContainer::AddType(this, name, id);
         ++typeCount;
     }
-    if (!GetAllTypesById().contains(id))
-    {
-        GetAllTypesById()[id] = this;
-    }
+
 }
 
 Type::Type(const std::string& name, Type* parent, TList<BaseField*> fields) : id(0), name(name), parent(parent)
@@ -31,7 +30,7 @@ Type::~Type()
         delete toDelete;
         toDelete = nullptr;
     }
-    GetAllTypes().clear();
+    GetAllFields().clear();
 }
 
 int Type::GetId() const
@@ -56,19 +55,24 @@ bool Type::Equals(const Type& Other) const
 
 bool Type::Equals(const Type* _other) const
 {
+    if (_other == nullptr)
+    {
+        return false;
+    }
     return name == _other->name && (parent == nullptr || parent == _other->parent);
 }
 
-std::map<std::string, Type*>& Type::GetAllTypes()
+bool Type::Equals(const Type* _other, const Type* _other2)
 {
-    static std::map<std::string, Type*> allTypes;
-    return allTypes;
-}
-
-std::map<int, Type*>& Type::GetAllTypesById()
-{
-    static std::map<int, Type*> allTypesById;
-    return allTypesById;
+    if (_other == nullptr && _other2 == nullptr)
+    {
+        return true;
+    }
+    if (_other == nullptr || _other2 == nullptr)
+    {
+        return false;
+    }
+    return _other->Equals(_other2);
 }
 
 TList<BaseField*>& Type::GetAllFields()
@@ -78,9 +82,9 @@ TList<BaseField*>& Type::GetAllFields()
 
 Type* Type::GetType(const std::string& name)
 {
-    if (GetAllTypes().contains(name))
+    if (TypeContainer::GetAllTypes().contains(name))
     {
-        return GetAllTypes()[name];
+        return TypeContainer::GetAllTypes()[name];
     }
     return nullptr;
 }
@@ -88,11 +92,26 @@ Type* Type::GetType(const std::string& name)
 std::vector<Type*> Type::GetAllChildren(const Type* parent)
 {
     std::vector<Type*> children;
-    for (auto& [type_name, type] : GetAllTypes())
+    for (auto& [type_name, type] : TypeContainer::GetAllTypes())
     {
-        if (type->parent == parent)
+        if (Equals(type->parent, parent))
         {
             children.push_back(type);
+        }
+    }
+    return children;
+}
+
+std::vector<Type*> Type::GetAllChildrenRecursive(const Type* parent)
+{
+    std::vector<Type*> children;
+    for (auto& [type_name, type] : TypeContainer::GetAllTypes())
+    {
+        if (Equals(type->parent, parent))
+        {
+            children.push_back(type);
+            auto childrenOfChild = GetAllChildrenRecursive(type);
+            children.insert(children.end(), childrenOfChild.begin(), childrenOfChild.end());
         }
     }
     return children;

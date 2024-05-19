@@ -4,6 +4,8 @@
 #include "Sources/EngineUIElement.h"
 #include "Factory.h"
 
+class IClickable;
+
 namespace sf
 {
     class Cursor;
@@ -13,7 +15,7 @@ class EngineUI : public Object
 {
 public:
 
-    AddType(EngineUI, Object)
+    ADD_TYPE(EngineUI, Object, REG_TYPE)
 
     static EngineUI* GetInstance();
     static void ResetInstance();

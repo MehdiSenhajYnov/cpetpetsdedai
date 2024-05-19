@@ -11,9 +11,9 @@
 
 
 
-GameManager::GameManager() : newScene(), haveToChangeScene(false), currentScene(nullptr),
+GameManager::GameManager() :
                              //window(sf::VideoMode(1000, 500), "Simple 2D Game", sf::Style::Resize)
-                             window(sf::VideoMode(1500, 900), "Simple 2D Game", sf::Style::Default)
+                             window(sf::VideoMode(1900, 1200), "Simple 2D Game", sf::Style::Default)
 {
 	iswindowFocus = true;
 }
@@ -34,12 +34,11 @@ void GameManager::Run()
 	singletonManager.InitAll();
 	EngineUI::GetInstance()->Init(&window);
 	
-	SceneManager::OnSceneChanged.Subscribe(&GameManager::OnChangeSceneAsked, this);
+	SceneManager::GetInstance()->OnSceneChanged.Subscribe(&GameManager::OnChangeSceneAsked, this);
 	haveToChangeScene = false;
 	OnChangeSceneAsked(SceneManager::SceneEnum::Menu);
 
 	sf::Clock dtClock;
-	float deltaTime = 0;
 
 	window.setKeyRepeatEnabled(false);
 	while (window.isOpen())
@@ -51,11 +50,10 @@ void GameManager::Run()
 		{
 			ChangeScene(newScene);
 		}
-		deltaTime = dtClock.restart().asSeconds();
 		RendererManager::GetInstance()->Clear();
 		Input::Clear();
 		InputEvents();
-		currentScene->BaseSceneUpdate(deltaTime);
+		SceneManager::GetInstance()->GetCurrentScene()->BaseSceneUpdate(dtClock.restart().asSeconds());
 		RendererManager::GetInstance()->DrawProcess();
 	}
 
@@ -77,38 +75,45 @@ void GameManager::ChangeScene(SceneManager::SceneEnum sceneToUse)
 	
 	if (sceneToUse == SceneManager::SceneEnum::Menu)
 	{
-		currentScene = new MenuScene();
-		//currentScene = Factory::GetInstance()->CreateObject<MenuScene>();
+		SceneManager::GetInstance()->SetCurrentScene(new MenuScene());
+		//currentSceneType = Factory::GetInstance()->CreateObject<MenuScene>();
 	}
 	else if (sceneToUse == SceneManager::SceneEnum::Level1)
 	{
-		//currentScene = Factory::GetInstance()->CreateObject<EditorScene>();
-		currentScene = new EditorScene();
-
+		//currentSceneType = Factory::GetInstance()->CreateObject<EditorScene>();
+		SceneManager::GetInstance()->SetCurrentScene(new EditorScene());
 	}
 
-	bool CreateScene = currentScene->sceneFileEditor.CreateNewScene();
+	//bool CreateScene = SceneManager::GetInstance()->GetCurrentScene()->sceneFileEditor.CreateNewScene();
+
 	// if (!CreateScene)
 	// {
-	// 	 currentScene->sceneFileEditor.LoadScene();
 	// } else
 	// {
 	// }
-	currentScene->InitializeScene(&window);
+
+	
+	SceneManager::GetInstance()->GetCurrentScene()->BaseInit(&window);
+
+	SceneManager::GetInstance()->GetCurrentScene()->sceneFileEditor.LoadScene();
+	
+	// SceneManager::GetInstance()->GetCurrentScene()->AddMethods();
+	// SceneManager::GetInstance()->GetCurrentScene()->InitializeScene(&window);
+	
 	haveToChangeScene = false;
 
 }
 
 void GameManager::DeleteScene()
 {
-	if (currentScene == nullptr)
+	if (SceneManager::GetInstance()->GetCurrentScene() == nullptr)
 	{
 		return;
 	}
-	//Factory::GetInstance()->DestroyObject(currentScene);
-	currentScene->PreDestroy();
-	delete currentScene;
-	currentScene = nullptr;
+	//Factory::GetInstance()->DestroyObject(currentSceneType);
+	SceneManager::GetInstance()->GetCurrentScene()->PreDestroy();
+	delete SceneManager::GetInstance()->GetCurrentScene();
+	SceneManager::GetInstance()->SetCurrentScene(nullptr);
 }
 
 void GameManager::WindowsEvents()
@@ -129,7 +134,7 @@ void GameManager::WindowsEvents()
 			window.close();
 		} else if(event.type == sf::Event::Resized)
 		{
-			window.setView(sf::View(sf::FloatRect(0, 0, event.size.width, event.size.height)));
+			window.setView(sf::View(sf::FloatRect(0, 0, (float)event.size.width, (float)event.size.height)));
 		}
 		else
 		{
@@ -150,9 +155,9 @@ void GameManager::InputEvents()
 				window.close();
 			}
 
-			if (currentScene != nullptr && iswindowFocus)
+			if (SceneManager::GetInstance()->GetCurrentScene() != nullptr && iswindowFocus)
 			{
-				currentScene->OnKeyDown(event.key.code);
+				SceneManager::GetInstance()->GetCurrentScene()->OnKeyDown(event.key.code);
 			}
 			Input::AddKeyDown(Input::FromSFKeyboard(event.key.code));
 		}
@@ -163,17 +168,17 @@ void GameManager::InputEvents()
 		
 		if (event.type == sf::Event::MouseButtonPressed)
 		{
-			if (currentScene != nullptr && iswindowFocus)
+			if (SceneManager::GetInstance()->GetCurrentScene() != nullptr && iswindowFocus)
 			{
-				currentScene->OnMouseKeyDown(event.mouseButton.button);
+				SceneManager::GetInstance()->GetCurrentScene()->OnMouseKeyDown(event.mouseButton.button);
 				Input::AddKeyDown(Input::FromSFMouse(event.mouseButton.button));
 			}
 		}
 		if (event.type == sf::Event::MouseButtonReleased)
 		{
-			if (currentScene != nullptr && iswindowFocus)
+			if (SceneManager::GetInstance()->GetCurrentScene() != nullptr && iswindowFocus)
 			{
-				currentScene->OnMouseKeyUp(event.mouseButton.button);
+				SceneManager::GetInstance()->GetCurrentScene()->OnMouseKeyUp(event.mouseButton.button);
 				Input::AddKeyUp(Input::FromSFMouse(event.mouseButton.button));
 			}
 		}

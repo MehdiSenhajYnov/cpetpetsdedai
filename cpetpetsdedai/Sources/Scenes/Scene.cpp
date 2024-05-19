@@ -1,9 +1,11 @@
 #include "../../Headers/Scenes/Scene.h"
-#include "../../CameraManager.h"
+
+#include "../../EditorCameraUserMove.h"
 #include "../../EngineUI.h"
 #include "../../Headers/Components/Camera.h"
 #include "../../Headers/Components/Component.h"
 #include "../../Headers/Engine/GameObject.h"
+#include "../../Headers/GameSystem/PhysicsEngine.h"
 
 Scene::Scene() : Scene("Scene", Object::GetStaticType())
 {
@@ -13,34 +15,76 @@ Scene::Scene(const std::string& _typeName, Type* parentType) : Object(_typeName,
 {
 	sceneFileEditor.SetCurrentScene(this);
 }
+//
+// GameObject* Scene::CreateGameObject(const std::string& _gameObjectName)
+// {
+// 	GameObject* newGameObject = Factory::GetInstance()->CreateObject<GameObject>();
+// 	newGameObject->Init(_gameObjectName);
+// 	gameObjectsToAdd.push_back(newGameObject);
+// 	return newGameObject;
+// }
+//
+// GameObject* Scene::CreateGameObject(const std::string& _gameObjectName, uint64_t _id)
+// {
+// 	GameObject* newGameObject = Factory::GetInstance()->CreateObject<GameObject>(_id);
+// 	newGameObject->Init(_gameObjectName);
+// 	gameObjectsToAdd.push_back(newGameObject);
+// 	return newGameObject;
+// }
+//
+// GameObject* Scene::CreateGameObject(uint64_t _id)
+// {
+// 	GameObject* newGameObject = Factory::GetInstance()->CreateObject<GameObject>(_id);
+// 	gameObjectsToAdd.push_back(newGameObject);
+// 	return newGameObject;
+// }
+//
+// GameObject* Scene::CreateGameObjectImmediate(const std::string& _gameObjectName)
+// {
+// 	GameObject* newGameObject = Factory::GetInstance()->CreateObject<GameObject>();
+// 	newGameObject->Init(_gameObjectName);
+// 	gameObjects.push_back(newGameObject);
+// 	return newGameObject;
+// }
+//
+// GameObject* Scene::CreateGameObjectImmediate(const std::string& _gameObjectName, uint64_t _id)
+// {
+// 	GameObject* newGameObject = Factory::GetInstance()->CreateObject<GameObject>(_id);
+// 	newGameObject->Init(_gameObjectName);
+// 	gameObjects.push_back(newGameObject);
+// 	return newGameObject;
+// }
+//
+// GameObject* Scene::CreateGameObjectImmediate(uint64_t _id)
+// {
+// 	GameObject* newGameObject = Factory::GetInstance()->CreateObject<GameObject>(_id);
+// 	gameObjects.push_back(newGameObject);
+// 	return newGameObject;
+// }
 
-GameObject* Scene::CreateGameObject(const std::string& _gameObjectName)
-{
-	GameObject* newGameObject = Factory::GetInstance()->CreateObject<GameObject>();
-	newGameObject->Init(_gameObjectName);
-	gameObjectsToAdd.push_back(newGameObject);
-	return newGameObject;
-}
-
-GameObject* Scene::CreateGameObjectImmediate(const std::string& _gameObjectName)
-{
-	GameObject* newGameObject = Factory::GetInstance()->CreateObject<GameObject>();
-	newGameObject->Init(_gameObjectName);
-	gameObjects.push_back(newGameObject);
-	//gamesObjectsComponents[newGameObject] = std::vector<Component*>();
-	return newGameObject;
-}
-
-
-
-void Scene::InitializeScene(sf::RenderWindow* _window)
+void Scene::BaseInit(sf::RenderWindow* _window)
 {
 	window = _window;
+	eventID = Factory::GetInstance()->OnGameObjectCreated.Subscribe(&Scene::OnObjectCreated, this);
+}
+void Scene::InitializeScene(sf::RenderWindow* _window)
+{
+	// window = _window;
+	// eventID = Factory::GetInstance()->OnGameObjectCreated.Subscribe(&Scene::OnObjectCreated, this);
 
-	mainCameraObject = CreateGameObjectImmediate("mainCameraObject");
+	
+	mainCameraObject = Create<GameObject>();
+	mainCameraObject->Init("mainCameraObject");
 	mainCamera = mainCameraObject->AddComponent<Camera>();
-	mainCamera->Init(sf::Vector2f(1920, 1080), window);
-	CameraManager::GetInstance()->SetMainCamera(mainCamera);
+	mainCamera->Init(sf::Vector2f(1920, 1080));
+	
+	mainCameraObject->AddComponent<EditorCameraUserMove>();
+	
+}
+
+sf::RenderWindow* Scene::GetWindow() const
+{
+	return window;
 }
 
 void Scene::RemoveGameObjectImmediate(GameObject* _gameObjectToRemove)
@@ -60,23 +104,8 @@ TList<GameObject*>& Scene::GetGameObjects()
 	return gameObjects;
 }
 
-TList<DrawableLayer*> Scene::GetDrawableLayers() const
-{
-	TList<DrawableLayer*> drawableLayers;
-	for (auto& _gameObject : gameObjects)
-	{
-		for (auto& _drawableComponent : *(_gameObject->GetDrawableComponents()))
-		{
-			drawableLayers.push_back(&_drawableComponent);
-		}
-	}
-
-	return drawableLayers;
-}
-
 void Scene::BaseSceneUpdate(float deltaTime)
 {
-	UpdatePreComponent(deltaTime);
 	
 	// TODO : Change the position of this loop
 	for (auto& _uiElement : EngineUI::GetInstance()->GetUIElements())
@@ -95,20 +124,29 @@ void Scene::BaseSceneUpdate(float deltaTime)
 		RemoveGameObjectImmediate(_gameObject);
 	}
 	gameObjectsToRemove.clear();
+
+	UpdatePreComponent(deltaTime);
+
 	
-	for (auto& _gameObject : gameObjects)
+	for (int i = 0; i < gameObjects.size(); ++i)
 	{
+		auto _gameObject = gameObjects[i];
+		if (_gameObject == nullptr) continue;
+		
+		_gameObject->ComponentsManagement();
 		if (!_gameObject->GetIsActive())
 		{
 			continue;
 		}
-		for (auto& component : *_gameObject->GetComponents())
+		for (int j = 0; j < _gameObject->GetComponents().size(); ++j)
 		{
-			if (sceneMode == SceneMode::EditMode && component->componentWorkType == ComponentWorkType::Play)
+			auto component = _gameObject->GetComponents()[j];
+
+			if (sceneMode == SceneMode::EditMode && component->componentWorkType == ComponentWorkType::PlayOnly)
 			{
 				continue;
 			}
-			if (sceneMode == SceneMode::PlayMode && component->componentWorkType == ComponentWorkType::Editor)
+			if (sceneMode == SceneMode::PlayMode && component->componentWorkType == ComponentWorkType::EditorOnly)
 			{
 				continue;
 			}
@@ -116,6 +154,36 @@ void Scene::BaseSceneUpdate(float deltaTime)
 			component->Update(deltaTime);
 		}
 	}
+
+	if (sceneMode == SceneMode::PlayMode)
+	{
+		PhysicsEngine::GetInstance()->UpdatePhysics(deltaTime);
+	}
+
+	for (int i = 0; i < gameObjects.size(); ++i)
+	{
+		auto _gameObject = gameObjects[i];
+		if (!_gameObject->GetIsActive())
+		{
+			continue;
+		}
+		for (int j = 0; j < _gameObject->GetComponents().size(); ++j)
+		{
+			auto component = _gameObject->GetComponents()[j];
+
+			if (sceneMode == SceneMode::EditMode && component->componentWorkType == ComponentWorkType::PlayOnly)
+			{
+				continue;
+			}
+			if (sceneMode == SceneMode::PlayMode && component->componentWorkType == ComponentWorkType::EditorOnly)
+			{
+				continue;
+			}
+			
+			component->LateUpdate(deltaTime);
+		}
+	}
+	
 
 	UpdatePostComponent(deltaTime);
 }
@@ -148,6 +216,14 @@ void Scene::OnMouseKeyUp(sf::Mouse::Button pressedKey)
 	}
 }
 
+void Scene::OnObjectCreated(Object* _object)
+{
+	
+	if (Type::IsOrIsDescendantOf(_object->GetType(), GameObject::GetStaticType()))
+	{
+		gameObjectsToAdd.push_back(dynamic_cast<GameObject*>(_object));
+	}
+}
 
 
 void Scene::ClearAll()
@@ -178,8 +254,11 @@ void Scene::PreDestroy()
 	DestroyScene();
 }
 
+
+
 Scene::~Scene()
 {
+	Factory::GetInstance()->OnGameObjectCreated.Unsubscribe(eventID);
 	ClearAll();
 	
 }

@@ -6,15 +6,8 @@
 SpriteRenderer::SpriteRenderer() : SpriteRenderer("SpriteRenderer", DrawableComponent::GetStaticType()) { }
 SpriteRenderer::SpriteRenderer(const std::string& _typeName, Type* parentType) : DrawableComponent(_typeName, parentType)
 {
-    SerializeField(std::string, spriteName)
-    SerializeField(sf::Color, color)
-}
-
-SpriteRenderer::SpriteRenderer(uint64_t _id): SpriteRenderer(_id, "SpriteRenderer", Object::GetStaticType()) {}
-SpriteRenderer::SpriteRenderer(const uint64_t& _id, const std::string& _name, Type* parentType): DrawableComponent(_id, _name, parentType)
-{
-    SerializeField(std::string, spriteName)
-    SerializeField(sf::Color, color)
+    SERIALIZE_FIELD_CSET(spriteName, &SpriteRenderer::SetSprite)
+    SERIALIZE_FIELD_CSET(color, &SpriteRenderer::SetColorCSET)
 }
 
 void SpriteRenderer::Start()
@@ -31,30 +24,34 @@ sf::Sprite* SpriteRenderer::GetSprite()
     return &sprite;
 }
 
-void SpriteRenderer::SetSprite(const std::string& texturepath)
+// y a pas const std::string& pour pouvoir utiliser le serializeField facilement
+void SpriteRenderer::SetSprite(std::string _spriteName)
 {
-    spriteTexture = TextureManager::Instance()->GetTexture(texturepath);
+    spriteName = _spriteName;
+    spriteTexture = TextureManager::Instance()->GetTexture(_spriteName);
     if (spriteTexture == nullptr)
     {
         std::cout << "Texture not found" << std::endl;
         return;
     }
     sprite.setTexture(*spriteTexture);
+    sprite.setTextureRect(sf::IntRect(0, 0, spriteTexture->getSize().x, spriteTexture->getSize().y));
     
     ResetOrigin();
 }
 
 void SpriteRenderer::SetSprite(const std::string& _spriteName, sf::IntRect textureRect)
 {
+    spriteName = _spriteName;
     spriteTexture = TextureManager::Instance()->GetTexture(_spriteName);
-    //TODO: Set the texture rectangle
-
     if (spriteTexture == nullptr)
     {
         std::cout << "Texture not found" << std::endl;
         return;
     }
     sprite.setTexture(*spriteTexture);
+    sprite.setTextureRect(textureRect);
+    
     ResetOrigin();
 }
 
@@ -76,6 +73,11 @@ void SpriteRenderer::SetTexture(const sf::Texture* _texture)
     ResetOrigin();
 }
 
+void SpriteRenderer::SetColorCSET(sf::Color _color)
+{
+    SetColor(_color);
+}
+
 void SpriteRenderer::SetColor(const sf::Color& _color)
 {
     color = _color;
@@ -92,9 +94,9 @@ const sf::Drawable* SpriteRenderer::GetDrawable()
     return &sprite;
 }
 
-void SpriteRenderer::setPosition(sf::Vector2f pos)
+void SpriteRenderer::setPosition(sf::Vector2f _pos)
 {
-    sprite.setPosition(pos);
+    sprite.setPosition(_pos);
 }
 
 sf::FloatRect SpriteRenderer::GetBounds()
@@ -109,14 +111,9 @@ sf::Vector2f SpriteRenderer::GetOriginalSize()
         return sf::Vector2f(0, 0);
     }
 	return sf::Vector2f(
-        GetSprite()->getTexture()->getSize().x,
-        GetSprite()->getTexture()->getSize().y
+        (float)GetSprite()->getTexture()->getSize().x,
+        (float)GetSprite()->getTexture()->getSize().y
     );
-}
-
-void SpriteRenderer::SetOrigin(sf::Vector2f origin)
-{
-    sprite.setOrigin(origin);
 }
 
 void SpriteRenderer::ResetOrigin()
@@ -127,12 +124,23 @@ void SpriteRenderer::ResetOrigin()
 void SpriteRenderer::SetDrawScale(sf::Vector2f _drawScale)
 {
     sprite.setScale(_drawScale);
+    ResetOrigin();
 }
 
 sf::Vector2f SpriteRenderer::GetCenter() const
 {
     return sf::Vector2f(sprite.getLocalBounds().left + sprite.getLocalBounds().width / 2.0f,
         sprite.getLocalBounds().top + sprite.getLocalBounds().height / 2.0f);
+}
+
+void SpriteRenderer::InternalSetOrigin(const sf::Vector2f _origin)
+{
+    sprite.setOrigin(_origin);
+}
+
+void SpriteRenderer::SetScale(sf::Vector2f _scale)
+{
+    DrawableComponent::SetScale(_scale);
 }
 
 

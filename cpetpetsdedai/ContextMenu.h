@@ -12,7 +12,7 @@ public:
 	{
 		positionType = PositionType::UI;
 	}
-	AddType(ContextMenu, GameObject)
+	ADD_TYPE(ContextMenu, GameObject, REG_TYPE)
 
 	
 	template<typename Class>

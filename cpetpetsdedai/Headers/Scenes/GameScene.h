@@ -1,8 +1,6 @@
 #pragma once
 #include "Scene.h"
 #include "../Animation.h"
-#include "../GameSystem/PhysicsEngine.h"
-#include "../Utilities/GraphicDebugger.h"
 
 class Collider;
 class BoxCollider;
@@ -12,7 +10,7 @@ class GameScene : public Scene
 {
 public:
 	GameScene();
-	AddType(GameScene, Scene)
+	ADD_TYPE(GameScene, Scene, REG_TYPE)
 
 	void InitializeScene(sf::RenderWindow* _window) override;
 	void UpdatePreComponent(float deltaTime) override;
@@ -29,9 +27,6 @@ protected:
 
 	void OnSceneChanged();
 
-	PhysicsEngine physicsEngine;
-	GraphicDebugger graphicDebugger;
-	
 	GameObject* Player;
 	
 	GameObject* Ground;
@@ -39,7 +34,6 @@ protected:
 	GameObject* forceArrow;
 	GameObject* BackgroundObject;
 
-	Animation IdleAnimation;
 	std::vector<Animation> playerAnimations;
 	
 	GameObject* CreateBackground();

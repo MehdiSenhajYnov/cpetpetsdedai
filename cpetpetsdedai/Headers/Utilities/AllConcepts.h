@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 
+class Type;
 template<typename T>
 concept CanString = requires(const T& t) {
     { std::cout << t } -> std::same_as<std::ostream&>;
@@ -38,10 +39,6 @@ concept IsSceneClass = requires (T t) {
     t.DestroyScene();
 };
 
-template<typename T>
-concept IsType = requires(T t) {
-    T::GetStaticType();
-};
 
 struct SerializeBuffer;
 
@@ -74,12 +71,36 @@ template <typename T>
 concept IsVector = InternalIsVector<T>();
 
 template <typename T>
-concept haveGetSize = requires (const T t) {
+concept hasGetSize = requires (const T t) {
     t.GetSize();
 };
 
 template <typename T>
-concept haveOrigin = requires (const T t) {
+concept hasOrigin = requires (const T t) {
     t.GetOrigin();
 };
 
+template<typename T>
+concept IsType = requires(const T t)
+{
+     {T::GetStaticType() } -> std::same_as<Type*>;
+};
+
+
+template<typename T>
+concept HasDefaultConstructor = requires {
+    T();
+};
+
+template<typename... Args>
+class Event;
+
+template<typename T>
+concept HasId = requires (T t){
+    {t.GetId()} -> std::same_as<uint64_t>;
+    t.SetId(std::declval<uint64_t>());
+    {t.OnIdChanged()} -> std::same_as<Event<uint64_t, uint64_t>&>;
+};
+
+template<typename T>
+concept CanBeCreatedInFactory = HasDefaultConstructor<T> && HasId<T>;

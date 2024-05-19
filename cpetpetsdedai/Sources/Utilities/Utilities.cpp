@@ -1,5 +1,4 @@
-﻿#pragma once
-#include "../../Headers/Utilities/Utilities.h"
+﻿#include "../../Headers/Utilities/Utilities.h"
 
 #include <random>
 

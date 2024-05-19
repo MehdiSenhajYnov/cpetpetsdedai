@@ -9,15 +9,7 @@ TextComponent::TextComponent() : TextComponent("TextComponent", DrawableComponen
 
 TextComponent::TextComponent(const std::string& _typeName, Type* parentType): DrawableComponent(_typeName, parentType)
 {
-	SerializeField(std::string, currentText)
-}
-
-
-TextComponent::TextComponent(uint64_t _id): TextComponent(_id, "TextComponent", DrawableComponent::GetStaticType()) {}
-
-TextComponent::TextComponent(const uint64_t& _id, const std::string& _name, Type* parentType): DrawableComponent(_id, _name, parentType)
-{
-	SerializeField(std::string, currentText)
+	SERIALIZE_FIELD_CSET(currentText, &TextComponent::Init)
 }
 
 void TextComponent::Init()
@@ -123,5 +115,10 @@ void TextComponent::SetFontSize(int _fontSize)
 
 void TextComponent::ResetOrigin()
 {
-	Text.setOrigin(GetCenter());
+	SetOrigin(GetCenter());
+}
+
+void TextComponent::InternalSetOrigin(const sf::Vector2f _origin)
+{
+	Text.setOrigin(_origin);
 }

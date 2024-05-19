@@ -7,7 +7,7 @@
 std::string SceneFileEditor::scenePath = "Scenes/";
 std::string SceneFileEditor::sceneFileExtension = ".sc";
 
-SceneFileEditor::SceneFileEditor(): GameSystem("SceneCreator", GameSystem::GetStaticType()), level(nullptr)
+SceneFileEditor::SceneFileEditor(): GameSystem("SceneFileEditor", GameSystem::GetStaticType())
 {
 }
 
@@ -42,59 +42,37 @@ void SceneFileEditor::LoadScene() const
         return;
     }
 
-    std::vector<std::string> sceneFileLines = FileUtilities::ReadLinesFromFile(sceneFilePath);
+    std::string sceneFullContent = FileUtilities::ReadFromFile(sceneFilePath);
+    int endOfSceneIdIndex = Utilities::IndexOf(sceneFullContent, "\n");
+    std::string sceneIdStr = sceneFullContent.substr(9, endOfSceneIdIndex - 9);
+    uint64_t sceneId = std::stoull(sceneIdStr);
+    level->SetId(sceneId);
+
+    level->AddMethods();
     
+    std::string sceneContent = sceneFullContent.substr(endOfSceneIdIndex + 1);
+    
+    auto splittedByNewElements = Utilities::SplitString(sceneContent, "--- ");
+    std::string toFindGameObjectID = "!t!GameObject";
 
-    GameObject* currentGameObject; 
-    for (auto& line : sceneFileLines)
+    for (auto& serializedElement : splittedByNewElements)
     {
-        Object* currentObject;
-        Type* currentType;
-        if (line.starts_with("---"))
+        if (serializedElement.find(toFindGameObjectID) != std::string::npos)
         {
-            int typeStartIndex = Utilities::IndexOf(line, TYPE_PREFIX);
-            int idStartIndex = Utilities::IndexOf(line, ID_PREFIX);
-            if (typeStartIndex == -1 || idStartIndex == -1)
-            {
-                continue;
-            }
-            int typeEndIndex = typeStartIndex + TYPE_PREFIX.size();
-            int idEndIndex = idStartIndex + ID_PREFIX.size();
-            std::string typeString = line.substr(typeEndIndex, idStartIndex - typeEndIndex);
-            std::string idString = line.substr(idEndIndex, line.size() - idEndIndex);
-            currentType = Type::GetType(typeString);
-            if (currentType == nullptr)
-            {
-                continue;
-            }
-            if (currentType->Equals(GameObject::GetStaticType()))
-            {
-                currentGameObject = level->CreateGameObject("temp");
-                currentObject = currentGameObject;
-                
-            }
-            else
-            {
-                std::cout << "Type not recognized. type name : " << typeString << std::endl;
-            }
-        }
-        
-    }
-}
-
-void SceneFileEditor::TestLoadScene(const TList<std::string>& _serialised) const
-{
-    std::string toFindGameObjectID = "!t!-1829605404";
-    for (auto& line : _serialised)
-    {
-        if (line.find(toFindGameObjectID) != std::string::npos)
-        {
-            GameObject* currentGameObject = level->CreateGameObject("temp");
+            int indexOfNewLine = Utilities::IndexOf(serializedElement, "\n");
+            int indexOfIdDeclaration = Utilities::IndexOf(serializedElement, "!i!");
+            uint64_t objID = std::stoull(serializedElement.substr(indexOfIdDeclaration + 3, indexOfNewLine - indexOfIdDeclaration - 3));
+			
+            std::string  serializedGameObject = serializedElement.substr(indexOfNewLine + 1);
+            GameObject* gameObject = Create<GameObject>(objID);
             
+            gameObject->Deserialize(serializedGameObject, sceneContent);
         }
+		
     }
-}
 
+
+}
 
 void SceneFileEditor::SaveScene() const
 {
@@ -103,13 +81,14 @@ void SceneFileEditor::SaveScene() const
     buffers.reserve(level->GetGameObjects().size());
 
     std::string tempContent;
-    std::string finalContent;
+
+    std::string finalContent = "SCENEID: " + std::to_string(level->GetId()) + "\n";
     
     for (int i = 0; i < level->GetGameObjects().size(); ++i)
     {
         buffers.push_back(SerializeBuffer());
      
-        uint64_t objID = level->GetGameObjects()[i]->Serialize(buffers[i], tempContent);
+        level->GetGameObjects()[i]->Serialize(buffers[i], tempContent);
         tempContent += (buffers[i].startBuffer + buffers[i].mainBuffer + buffers[i].endBuffer);
         
         finalContent += buffers[i].startBuffer;
@@ -124,7 +103,8 @@ void SceneFileEditor::SaveScene() const
     {
         finalContent += buffer.endBuffer;
     }
-
+    
+    
     FileUtilities::WriteInFile(GetScenePath(), finalContent);
 }
 

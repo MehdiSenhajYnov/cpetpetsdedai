@@ -10,6 +10,6 @@ struct SerializeBuffer {
 
 	std::string GetAll()
 	{
-		return startBuffer + mainBuffer + endBuffer;
+		return startBuffer + "\n" + mainBuffer + "\n" + endBuffer;
 	}
 };

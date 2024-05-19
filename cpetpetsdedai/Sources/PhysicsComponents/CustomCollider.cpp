@@ -1,10 +1,8 @@
-#pragma once
 #include "../../Headers/PhysicsComponents/CustomCollider.h"
 #include "../../Headers/Engine/GameObject.h"
 
 
-
-CustomCollider::CustomCollider()
+CustomCollider::CustomCollider() : Collider("CustomCollider", Collider::GetStaticType())
 {
 }
 

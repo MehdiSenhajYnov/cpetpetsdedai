@@ -13,11 +13,12 @@ class GameObject;
 class Collider : public Component
 {
 public:
-	AddType(Collider, Component)
+	ADD_TYPE(Collider, Component, REG_TYPE)
 	Collider();
+	Collider(const std::string& _name, Type* parentType);
 
 	virtual ~Collider();
-	void SetVisible(bool _visibleState, Camera* cameraToUse);
+	void SetVisible(bool _visibleState);
 
 	std::vector<sf::Vector2f> GetAllPoints();
 	std::vector<sf::Vector2f> GetAllPointsOnObject();
@@ -34,7 +35,7 @@ public:
 	void SetVelocity(sf::Vector2f newVelocity);
 
 	sf::Vector2f GetVelocity();
-	bool Gravity;
+	bool Gravity = false;
 
 	Event<Collider*, sf::Vector2f>* OnCollisionEnter();
 	Event<Collider*>* OnCollisionExit();
@@ -50,11 +51,11 @@ protected:
 
 	std::map < Collider*, sf::Vector2f>  currentCollisions;
 
-	sf::ConvexShape* shape_ptr;
+	sf::ConvexShape* shape_ptr = nullptr;
 	sf::ConvexShape shape;
 
-	bool Visible;
-	sf::Vector2f velocity;
+	bool Visible = false;
+	sf::Vector2f velocity = { 0, 0 };
 	//sf::Vector2f acceleration;
 
 	void FireCollisionEnter(Collider* CollideWith, sf::Vector2f ContactPoint);
@@ -67,7 +68,7 @@ protected:
 	const float frictionForce = 0.99f;
 	const float gravityForce = 90;
 
-	bool IsStatic;
+	bool IsStatic = false;
 
 	Event<Collider*, sf::Vector2f> onCollisionEnter;
 	Event<Collider*> onCollisionExit;

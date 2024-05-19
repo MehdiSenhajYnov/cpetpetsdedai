@@ -3,7 +3,14 @@
 #include "../../RendererManager.h"
 #include "../../Headers/Engine/GameObject.h"
 
-DefaultConstructor(DrawableComponent, Component)
+DrawableComponent::DrawableComponent() : DrawableComponent("DrawableComponent", Component::GetStaticType()) { }
+DrawableComponent::DrawableComponent(const std::string& _typeName, Type* parentType) : Component(_typeName, parentType)
+{
+    SERIALIZE_FIELD(alreadyInit)
+    SERIALIZE_FIELD(Scale)
+    SERIALIZE_FIELD(OffsetPosition)
+    SERIALIZE_FIELD(ZIndex)
+}
 
 DrawableComponent::~DrawableComponent()
 {
@@ -11,7 +18,15 @@ DrawableComponent::~DrawableComponent()
 
 sf::Vector2f DrawableComponent::GetCurrentSize()
 {
-    return {GetOriginalSize().x * Scale.x, GetOriginalSize().y * Scale.y};
+    sf::Vector2f result = {GetOriginalSize().x * Scale.x, GetOriginalSize().y * Scale.y};
+
+    // if (GetAttachedObject() != nullptr)
+    // {
+    //     result.x *= GetAttachedObject()->GetScale().x;
+    //     result.y *= GetAttachedObject()->GetScale().y;
+    // }
+    
+    return result;
 }
 
 void DrawableComponent::InitBaseComponent(GameObject* _gameObject)
@@ -26,15 +41,12 @@ void DrawableComponent::Init()
     {
         return;
     }
-    gameObject->AddDrawableComponent(this);
     alreadyInit = true;
 }
 
 void DrawableComponent::PreDestroy()
 {
-    gameObject->RemoveDrawableComponent(this);
     Component::PreDestroy();
-
 }
 
 void DrawableComponent::Update(float deltaTime)
@@ -50,6 +62,17 @@ sf::Vector2f DrawableComponent::GetScale() const
 void DrawableComponent::SetScale(sf::Vector2f _scale)
 {
     Scale = _scale;
+}
+
+sf::Vector2f DrawableComponent::GetOrigin() const
+{
+    return Origin;
+}
+
+void DrawableComponent::SetOrigin(const sf::Vector2f _origin)
+{
+    Origin = _origin;
+    InternalSetOrigin(_origin);
 }
 
 sf::Vector2f DrawableComponent::GetOffsetPosition() const

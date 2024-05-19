@@ -4,7 +4,7 @@
 class FileExplorer : public Panel
 {
 public:
-    AddType(FileExplorer, Panel)
+    ADD_TYPE(FileExplorer, Panel, REG_TYPE)
     HeaderDefaultConstructor(FileExplorer)
     
     void Draw(sf::RenderWindow* _window) override;

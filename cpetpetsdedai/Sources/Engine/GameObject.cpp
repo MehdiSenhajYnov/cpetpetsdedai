@@ -1,37 +1,32 @@
 #include "../../Headers/Engine/GameObject.h"
 #include "../../Headers/GameSystem/TextureManager.h"
 #include "../../Headers/Components/Component.h"
-#include "../../Headers/Components/DrawableComponent.h"
-#include "../../Headers/Utilities/Utilities.h"
-
 
 GameObject::GameObject(): GameObject("GameObject", Object::GetStaticType())
 {
 }
 
-GameObject::GameObject(const std::string& _name, Type* parentType) : Object(_name, parentType),
-	positionType(World), scale(1,1), position(0,0), isActive(true), parent(nullptr)
+GameObject::GameObject(const std::string& _name, Type* parentType) : Object(_name, parentType)
 {
-	
-	SerializeField(std::string, name);
-	SerializeField(sf::Vector2f, position);
-	SerializeField(sf::Vector2f, scale);
-	SerializeField(PositionType, positionType);
-	SerializeField(bool, isActive);
-	SerializeField(GameObject*, parent);
-	//SerializeField(TList<std::string>, _tags);
-	//SerializeField(TList<Component*>, components);
+	SERIALIZE_FIELD(name)
+	SERIALIZE_FIELD(position)
+	SERIALIZE_FIELD(scale)
+	SERIALIZE_FIELD(positionType)
+	SERIALIZE_FIELD(isActive)
+	SERIALIZE_FIELD(parent)
+	SERIALIZE_FIELD(_tags)
 
-	// auto _changenameInvoke = [this](std::string _newValue) { this->name = _newValue; };
-	// std::function<std::string()> _nameGetInvoke = [this]() { return this->name; };
-	// GetType()->CreateField<std::string>("name", _changenameInvoke, _nameGetInvoke);;
-	//
-
+	auto _componentsSetInvoke = [this](decltype(components) _newValue)
+	{
+		this->components = _newValue;
+		for (auto& _component : components)
+		{
+			_component->Start();
+		}
+	};
+	std::function<decltype(components)()> _componentsGetInvoke = [this]() { return this->components; };
+	GetType()->CreateField<decltype(components)>("components", _componentsSetInvoke, _componentsGetInvoke);
 }
-
-DefaultConstructorId(GameObject, Object)
-DefaultConstructorIdTypeParams(GameObject, Object)
-
 
 
 GameObject::~GameObject()
@@ -41,13 +36,30 @@ GameObject::~GameObject()
 		Factory::GetInstance()->DestroyObject(_componentToDelete);
 	}
 	components.clear();
-	drawableComponents.clear();
 	_tags.clear();
 }
 
 void GameObject::Init(const std::string& _name)
 {
 	name = _name;
+}
+
+void GameObject::ComponentsManagement()
+{
+	if (componentsToAdd.size() > 0)
+	{
+		components.AppendVector(componentsToAdd);
+		componentsToAdd.clear();
+	}
+	if (componentsToRemove.size() > 0)
+	{
+		for (auto& _componentToRemove : componentsToRemove)
+		{
+			components.RemoveElement(_componentToRemove);
+			Factory::GetInstance()->DestroyObject(_componentToRemove);
+		}
+		componentsToRemove.clear();
+	}
 }
 
 void GameObject::SetPosition(const sf::Vector2f& _newposition)
@@ -149,55 +161,30 @@ void GameObject::RemoveTags(const std::string& _tagToRemove)
 	}
 }
 
-
-TList<Component*>* GameObject::GetComponents()
+TList<Component*>& GameObject::GetComponents()
 {
-	return &components;
+	return components;
 }
 
-void GameObject::AddDrawableComponent(DrawableComponent* _drawableComponent)
+Component* GameObject::AddComponentByName(const std::string& _typeName)
 {
-	bool added = false;
-	for(int i = 0; i < drawableComponents.size(); ++i)
+	Object* _obj = Factory::GetInstance()->CreateObjectByName(_typeName);
+	if (_obj == nullptr)
 	{
-		if (drawableComponents[i].ZIndex == _drawableComponent->GetZIndex())
-		{
-			drawableComponents[i].drawableComponents.push_back(_drawableComponent);
-			added = true;
-			return;
-		}
-		if (drawableComponents[i].ZIndex > _drawableComponent->GetZIndex())
-		{
-			drawableComponents.insert(drawableComponents.begin() + i, DrawableLayer(_drawableComponent->GetZIndex()));
-			drawableComponents[i].drawableComponents.push_back(_drawableComponent);
-			added = true;
-			return;
-		}
+		std::cout << "Component with name " << _typeName << " not found" << std::endl;
+		return nullptr;
 	}
-
-	if (!added)
+	Component* component = dynamic_cast<Component*>(_obj);
+	if (component)
 	{
-		drawableComponents.push_back(DrawableLayer(_drawableComponent->GetZIndex()));
-		drawableComponents[drawableComponents.size() - 1].drawableComponents.push_back(_drawableComponent);
+		component->InitBaseComponent(this);
+		components.push_back(component);
+		component->Start();
+		return component;
 	}
-	
-}
-
-void GameObject::RemoveDrawableComponent(DrawableComponent* _drawableComponent)
-{
-	for (int i = 0; i < drawableComponents.size(); i++)
-	{
-		if (i == _drawableComponent->GetZIndex())
-		{
-			drawableComponents[i].drawableComponents.RemoveElement(_drawableComponent);
-			break;
-		}
-	}
-}
-
-TList<DrawableLayer>* GameObject::GetDrawableComponents()
-{
-	return &drawableComponents;
+	std::cout << _typeName << " is not a component" << std::endl;
+	Factory::GetInstance()->DestroyObject(_obj);
+	return nullptr;
 }
 
 GameObject* GameObject::GetParent() const

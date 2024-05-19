@@ -8,12 +8,10 @@ public:
 	TextComponent();
 
 	TextComponent(const std::string& _typeName, Type* parentType);
-	TextComponent(const uint64_t& _id, const std::string& _name, Type* parentType);
-	TextComponent(uint64_t _id);
 
 	void                Init() override;
 	void                Init(std::string _text);
-	AddType(TextComponent, DrawableComponent);
+	ADD_TYPE(TextComponent, DrawableComponent, REG_TYPE);
 	
 	void                SetString(std::string _newTextString);
 	std::string         GetString() const;
@@ -30,7 +28,10 @@ public:
 	sf::Vector2f GetCenter() const ;
 
 	void SetFontSize(int _fontSize);
+	
 	void ResetOrigin();
+	void InternalSetOrigin(const sf::Vector2f _origin) override;
+
 private:
 	static sf::Font font;
 	static bool fontLoaded;

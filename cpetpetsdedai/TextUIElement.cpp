@@ -7,13 +7,24 @@ DefaultConstructor(TextUIElement, EngineUIElement)
 sf::Font TextUIElement::font;
 bool TextUIElement::fontLoaded;
 
-void TextUIElement::Draw(sf::RenderWindow* window)
+void TextUIElement::Draw(sf::RenderWindow* _window)
 {
     window->draw(text);
 }
 
 void TextUIElement::Update(float _deltaTime)
 {
+}
+
+void TextUIElement::SetText(const std::string& _text)
+{
+    if (text.getString() == _text)
+    {
+        return;
+    }
+        
+    text.setString(_text);
+    OnTextChange.InvokeEvent(_text);
 }
 
 void TextUIElement::Init(sf::RenderWindow* _window)

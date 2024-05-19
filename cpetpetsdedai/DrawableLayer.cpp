@@ -4,12 +4,11 @@
 
 DrawableLayer::DrawableLayer() : DrawableLayer("DrawableLayer", Object::GetStaticType()) { }
 DrawableLayer::DrawableLayer(const std::string& _typeName, Type* parentType) : Object(_typeName, parentType) { }
-DrawableLayer::DrawableLayer(uint64_t _id): DrawableLayer(_id, "DrawableLayer", Object::GetStaticType()) {}
-DrawableLayer::DrawableLayer(const uint64_t& _id, const std::string& _name, Type* parentType): Object(_id, _name, parentType) {}
 
 DrawableLayer::DrawableLayer(int _zIndex): Object("DrawableLayer", Object::GetStaticType()), ZIndex(_zIndex)
 {
-    
+    SERIALIZE_FIELD(ZIndex)
+    SERIALIZE_FIELD(drawableComponents)
 }
 
 DrawableComponent* DrawableLayer::operator[](const int& index)

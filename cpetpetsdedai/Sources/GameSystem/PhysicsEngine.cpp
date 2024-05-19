@@ -4,22 +4,35 @@
 #include "../../Headers/PhysicsComponents/CircleCollider.h"
 #include "../../Headers/PhysicsComponents/CustomCollider.h"
 #include "../../Headers/Scenes/Scene.h"
-#include "../../Headers/Utilities/GraphicDebugger.h"
 #include "../../Headers/Utilities/MyMath.h"
 #include "../../Headers/Engine/GameObject.h"
 
-PhysicsEngine::PhysicsEngine() : scene(nullptr), graphicDebugger(nullptr), modifyMode(false)
+PhysicsEngine::PhysicsEngine() : scene(nullptr), modifyMode(false), graphicDebugger(nullptr)
 {
 	
 }
 
-void PhysicsEngine::Init(Scene* _scene, GraphicDebugger* _graphicDebugger)
+PhysicsEngine* PhysicsEngine::GetInstance()
+{
+	static PhysicsEngine* instance = nullptr;
+	if (instance == nullptr)
+	{
+		instance = new PhysicsEngine();
+	}
+	return instance;
+}
+
+void PhysicsEngine::ResetInstance()
+{
+	PhysicsEngine* instance = GetInstance();
+	delete instance;
+	instance = nullptr;
+}
+
+void PhysicsEngine::Init(Scene* _scene)
 {
 	scene = _scene; 
 	modifyMode = false; 
-	graphicDebugger = _graphicDebugger;
-
-	graphicDebugger->AddPointToDebug("contactPoint", sf::Vector2f(0, 0), sf::Color::Cyan);
 }
 
 
@@ -186,7 +199,7 @@ void PhysicsEngine::SetModifyMode(bool newState)
 	modifyMode = newState;
 	for (int i = 0; i < AllColliders.size(); i++)
 	{
-		AllColliders[i]->SetVisible(newState, graphicDebugger->mainCamera);
+		AllColliders[i]->SetVisible(newState);
 	}
 }
 
@@ -340,7 +353,7 @@ bool PhysicsEngine::ShapeAreTouching
 					OutComplementaryAxePoint1 = col2PointA;
 					OutComplementaryAxePoint2 = col2PointB;
 				}
-				graphicDebugger->ChangePositionOfPoint("contactPoint", OutContactPoint);
+				//graphicDebugger->ChangePositionOfPoint("contactPoint", OutContactPoint);
 				return true;
 			}
 		}

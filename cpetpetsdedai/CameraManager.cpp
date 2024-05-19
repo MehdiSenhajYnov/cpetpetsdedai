@@ -1,9 +1,10 @@
 ﻿#include "CameraManager.h"
 
-CameraManager* CameraManager::instance;
 
 CameraManager* CameraManager::GetInstance()
 {
+	static CameraManager* instance;
+
 	if (instance == nullptr)
 	{
 		instance = new CameraManager();
@@ -13,11 +14,9 @@ CameraManager* CameraManager::GetInstance()
 
 void CameraManager::ResetInstance()
 {
-	if(instance != nullptr)
-	{
-		delete instance;
-		instance = nullptr;
-	}
+	auto instance = GetInstance();
+	delete instance;
+	instance = nullptr;
 }
 
 Camera* CameraManager::GetMainCamera() const
@@ -33,11 +32,26 @@ void CameraManager::SetMainCamera(Camera* camera)
 void CameraManager::AddCamera(Camera* camera)
 {
 	cameras.push_back(camera);
+	if (mainCamera == nullptr)
+	{
+		SetMainCamera(camera);
+	}
 }
 
 void CameraManager::RemoveCamera(Camera* camera)
 {
 	cameras.RemoveElement(camera);
+	if (mainCamera == camera)
+	{
+		if (!cameras.empty())
+		{
+			SetMainCamera(cameras[0]);
+		}
+		else
+		{
+			SetMainCamera(nullptr);
+		}
+	}
 }
 
 TList<Camera*>* CameraManager::GetCameras()

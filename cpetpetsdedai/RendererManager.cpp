@@ -1,10 +1,10 @@
 ﻿#include "RendererManager.h"
 #include "CameraManager.h"
+#include "DrawableLayer.h"
 #include "EngineUI.h"
-#include "TextComponent.h"
 #include "Headers/Components/DrawableComponent.h"
 #include "Headers/Engine/GameObject.h"
-#include "DrawableLayer.h"
+#include "Headers/Components/Camera.h"
 
 RendererManager* RendererManager::instance;
 
@@ -21,6 +21,8 @@ void RendererManager::Clear()
 
 void RendererManager::DrawProcess()
 {
+	if (CameraManager::GetInstance()->GetMainCamera() == nullptr) return;
+	if (CameraManager::GetInstance()->GetMainCamera()->GetAttachedObject() == nullptr) return;
 	fordebug.clear();
 	for(auto& drawableLayer : drawableLayers)
 	{
@@ -46,10 +48,10 @@ void RendererManager::DrawProcess()
 			}
 			
 			if (drawableComponent->GetDrawable() == nullptr) continue;
-			if (!isOnDisplay(drawableComponent))
-			{
-				continue;
-			}
+			// if (!isOnDisplay(drawableComponent))
+			// {
+			// 	continue;
+			// }
 			
 			if (drawableComponent->GetAttachedObject()->positionType != PositionType::UI)
 			{
@@ -150,5 +152,18 @@ void RendererManager::ResetInstance()
 
 bool RendererManager::isOnDisplay(DrawableComponent* toCheck)
 {
+	if (toCheck == nullptr) return false;
+	if (toCheck->GetDrawable() == nullptr) return false;
+	if (CameraManager::GetInstance()->GetMainCamera() == nullptr) return false;
 	return toCheck->GetBounds().intersects(CameraManager::GetInstance()->GetMainCamera()->GetCameraRect());
+}
+
+sf::RenderWindow* RendererManager::GetWindow() const
+{
+	return window;
+}
+
+TList<DrawableLayer>& RendererManager::GetDrawableLayers()
+{
+	return drawableLayers;
 }

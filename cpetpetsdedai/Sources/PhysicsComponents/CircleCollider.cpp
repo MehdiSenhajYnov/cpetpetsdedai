@@ -3,7 +3,7 @@
 #include "../../Headers/Engine/GameObject.h"
 
 
-CircleCollider::CircleCollider()
+CircleCollider::CircleCollider() : Collider("CircleCollider", Collider::GetStaticType())
 {
 }
 

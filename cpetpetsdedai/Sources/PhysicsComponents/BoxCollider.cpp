@@ -1,8 +1,7 @@
-#pragma once
 #include "../../Headers/PhysicsComponents/BoxCollider.h"
 #include "../../Headers/Engine/GameObject.h"
 
-BoxCollider::BoxCollider()
+BoxCollider::BoxCollider() : Collider("BoxCollider", Collider::GetStaticType())
 {
 
 }

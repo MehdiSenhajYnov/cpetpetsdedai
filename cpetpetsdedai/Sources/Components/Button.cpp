@@ -7,22 +7,20 @@
 #include "../../Headers/Utilities/Utilities.h"
 #include "../../TextComponent.h"
 
-Button::Button() : buttonInitialized(false), isMouseInside(false), isMousePressingTheButton(false), isMousePressed(false), ClickOnTheButton(false),
-                   isMouseHover(false),
-                   tempState(),
-                   buttonState(ButtonState::Normal),
-                   spriteRenderer(nullptr),
-                   textComponent(nullptr), wantHoverColor(false), wantPressedColor(false)
+Button::Button() : Component("Button", Component::GetStaticType())
 {
-	SerializeField(sf::Color, baseColor)
-	SerializeField(sf::Color, hoverColor)
-	SerializeField(sf::Color, pressedColor)
-	SerializeField(sf::Color, textColor)
-	SerializeField(bool, wantHoverColor)
-	SerializeField(bool, wantPressedColor)
+	SERIALIZE_FIELD(baseColor)
+	SERIALIZE_FIELD(hoverColor)
+	SERIALIZE_FIELD(pressedColor)
+	SERIALIZE_FIELD(textColor)
+	SERIALIZE_FIELD(wantHoverColor)
+	SERIALIZE_FIELD(wantPressedColor)
 	
-	SerializeField(SpriteRenderer*, spriteRenderer)
-	SerializeField(TextComponent*, textComponent)
+	SERIALIZE_FIELD(spriteRenderer)
+	SERIALIZE_FIELD(textComponent)
+	SERIALIZE_FIELD(buttonInitialized)
+	
+	SERIALIZE_FIELD(OnButtonClicked)
 	
 }
 
@@ -75,6 +73,22 @@ TextComponent* Button::GetTextComponent() const
 
 bool Button::IsInButton(const sf::Vector2i& positionToCheck) const
 {
+	if (spriteRenderer == nullptr)
+	{
+		return false;
+	}
+	if (gameObject == nullptr)
+	{
+		return false;
+	}
+	if (CameraManager::GetInstance()->GetMainCamera() == nullptr)
+	{
+		return false;
+	}
+	if (CameraManager::GetInstance()->GetMainCamera()->GetAttachedObject() == nullptr)
+	{
+		return false;
+	}
 	return Utilities::IsInBounds(sf::Vector2f(positionToCheck.x, positionToCheck.y),
 	                             gameObject->GetPosition() - CameraManager::GetInstance()->GetMainCamera()->GetAttachedObject()->GetPosition() + spriteRenderer->GetOffsetPosition(),
 	                             spriteRenderer->GetCurrentSize(), Center);
@@ -104,7 +118,7 @@ void Button::Update(float _deltaTime)
 	{
 		return;
 	}
-	mousePosition = sf::Mouse::getPosition(*CameraManager::GetInstance()->GetMainCamera()->GetCurrentWindow());
+	mousePosition = sf::Mouse::getPosition(*RendererManager::GetInstance()->GetWindow());
 	
 	UpdatePosition();
 	

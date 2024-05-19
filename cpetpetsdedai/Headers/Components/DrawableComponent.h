@@ -8,17 +8,16 @@ class DrawableComponent : public Component
 {
 public:
     HeaderDefaultConstructor(DrawableComponent)
+    ADD_TYPE(DrawableComponent, Component, REG_TYPE)
 
-    AddType(DrawableComponent, Component)
     ~DrawableComponent() override;
 
     virtual const sf::Drawable* GetDrawable() = 0;
-    virtual void setPosition(sf::Vector2f pos) = 0;
+    virtual void setPosition(sf::Vector2f _pos) = 0;
 
     virtual sf::Vector2f GetOriginalSize() = 0;
     virtual sf::Vector2f GetCurrentSize();
     
-
     virtual int GetZIndex()
     {
         return ZIndex;
@@ -41,7 +40,11 @@ public:
     virtual void SetDrawScale(sf::Vector2f _drawScale) = 0;
 
     sf::Vector2f GetScale() const;
-    void SetScale(sf::Vector2f _scale);
+    virtual void SetScale(sf::Vector2f _scale);
+
+    sf::Vector2f GetOrigin() const;
+    virtual void SetOrigin(const sf::Vector2f _origin);
+    virtual void InternalSetOrigin(const sf::Vector2f _origin) = 0;
 
     sf::Vector2f GetOffsetPosition() const;
     void SetOffsetPosition(sf::Vector2f _offsetPosition);
@@ -53,6 +56,6 @@ private:
     bool alreadyInit = false;
     sf::Vector2f Scale = {1, 1};
     sf::Vector2f OffsetPosition = {0, 0};
-
+    sf::Vector2f Origin = {0, 0};
 
 };

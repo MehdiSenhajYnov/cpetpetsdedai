@@ -22,33 +22,42 @@ class Scene : public Object
 public:
 	Scene();
 	Scene(const std::string& _typeName, Type* parentType);
-	AddType(Scene, Object)
+	ADD_TYPE(Scene, Object, REG_TYPE)
 	virtual ~Scene() override;
 
 	void ClearAll();
 	virtual void PreDestroy() override;
-	
-	virtual void InitializeScene(sf::RenderWindow* _window);
-	
-	std::string sceneName;
-	
-	GameObject* CreateGameObject(const std::string& _gameObjectName);
-	GameObject* CreateGameObjectImmediate(const std::string& _gameObjectName);
 
-	template<typename T>
-	T* CreateGameObjectImmediate(std::string _gameObjectName) requires IsDerivedFrom<T, GameObject>
-	{
-		T* newGameObject = Factory::GetInstance()->CreateObject<T>();
-		newGameObject->Init(_gameObjectName);
-		gameObjects.push_back(newGameObject);
-		return newGameObject;
-	}
+	void BaseInit(sf::RenderWindow* _window);
+	virtual void InitializeScene(sf::RenderWindow* _window);
+	sf::RenderWindow* GetWindow() const;
+
+	std::string sceneName;
+
+	virtual void AddMethods() {};
+	
+	// GameObject* CreateGameObject(const std::string& _gameObjectName);
+	// GameObject* CreateGameObject(const std::string& _gameObjectName, uint64_t _id);
+	// GameObject* CreateGameObject(uint64_t _id);
+	//
+	//
+	// GameObject* CreateGameObjectImmediate(const std::string& _gameObjectName);
+	// GameObject* CreateGameObjectImmediate(const std::string& _gameObjectName, uint64_t _id);
+	// GameObject* CreateGameObjectImmediate(uint64_t _id);
+
+	// template<typename T>
+	// T* CreateGameObjectImmediate(std::string _gameObjectName) requires IsDerivedFrom<T, GameObject>
+	// {
+	// 	T* newGameObject = Factory::GetInstance()->CreateObject<T>();
+	// 	newGameObject->Init(_gameObjectName);
+	// 	gameObjects.push_back(newGameObject);
+	// 	return newGameObject;
+	// }
 
 	void RemoveGameObjectImmediate(GameObject* _gameObjectToRemove);
 	void RemoveGameObject(GameObject* _gameObjectToAdd);
 	
 	TList<GameObject*>& GetGameObjects();
-	TList<DrawableLayer*> GetDrawableLayers() const;
 	
 	void BaseSceneUpdate(float deltaTime);
 	virtual void UpdatePreComponent(float deltaTime) {}
@@ -64,8 +73,9 @@ public:
 	GameObject* mainCameraObject = nullptr;
 	Camera* mainCamera = nullptr;
 	
-	SceneFileEditor sceneFileEditor;
+	SceneFileEditor sceneFileEditor = SceneFileEditor();
 protected:
+	void OnObjectCreated(Object* _object);
 	bool sceneChanged = false;
 
 	sf::RenderWindow* window = nullptr;
@@ -74,5 +84,6 @@ protected:
 	
 	TList<GameObject*> gameObjectsToAdd;
 	TList<GameObject*> gameObjectsToRemove;
+	int eventID = -1;
 };
 

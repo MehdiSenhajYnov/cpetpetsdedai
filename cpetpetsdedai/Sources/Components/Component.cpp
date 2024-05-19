@@ -6,23 +6,11 @@ Component::Component() : Component("Component", Object::GetStaticType())
 }
 
 
-Component::Component(const std::string& _typeName, Type* parentType) : Object(_typeName, parentType),
-                                                                       componentWorkType(Play), gameObject(nullptr)
+Component::Component(const std::string& _typeName, Type* parentType) : Object(_typeName, parentType)
 {
-	SerializeField(ComponentWorkType, componentWorkType)
-	SerializeField(GameObject*, gameObject)
+	SERIALIZE_FIELD(componentWorkType)
+	SERIALIZE_FIELD(gameObject)
 }
-
-Component::Component(const uint64_t& _id, const std::string& _name, Type* parentType): Object(_id, _name, parentType),
-	componentWorkType(Play),
-	gameObject(nullptr), gameObjectId(0)
-{
-	SerializeField(ComponentWorkType, componentWorkType)
-	SerializeField(GameObject*, gameObject)
-}
-
-Component::Component(uint64_t _id): Component(_id, "Component", Object::GetStaticType()) {}
-
 
 void Component::Init()
 {

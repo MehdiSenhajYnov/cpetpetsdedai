@@ -1,10 +1,22 @@
 #include "../../Headers/PhysicsComponents/Collider.h"
 
+#include "../../CameraManager.h"
 #include "../../Headers/Components/Camera.h"
 #include "../../Headers/Engine/GameObject.h"
 #include "../../Headers/Utilities/Utilities.h"
 
-Collider::Collider(){}
+Collider::Collider() : Collider("Collider", Component::GetStaticType())
+{
+}
+
+Collider::Collider(const std::string& _name, Type* parentType) : Component(_name, parentType)
+{
+	SERIALIZE_FIELD(Gravity)
+	SERIALIZE_FIELD(IsStatic)
+	SERIALIZE_FIELD(Visible)
+	SERIALIZE_FIELD(allPoints)
+	SERIALIZE_FIELD(Center)
+}
 
 
 void Collider::Init(TList<sf::Vector2f> _allPoints)
@@ -22,12 +34,6 @@ void Collider::Init(TList<sf::Vector2f> _allPoints)
 		ySum += allPoints[i].y;
 	}
 	Center = sf::Vector2f(xSum / allPoints.size(), ySum / allPoints.size());
-
-	SerializeField(bool, Gravity)
-	SerializeField(bool, IsStatic)
-	SerializeField(bool, Visible)
-	SerializeField(TList<sf::Vector2f>, allPoints)
-	SerializeField(sf::Vector2f, Center)
 }
 
 
@@ -38,15 +44,17 @@ Collider::~Collider()
 
 
 
-void Collider::SetVisible(bool _visibleState, Camera* cameraToUse)
+void Collider::SetVisible(bool _visibleState)
 {
 	Visible = _visibleState;
 
+	auto cameraToUse = CameraManager::GetInstance()->GetMainCamera();
+	if (cameraToUse == nullptr) return;
 	if (Visible)
 	{
 		CreateShape();
 		shape_ptr = &shape;
-		cameraToUse->AddToPermanentDrawablesObjects(shape_ptr, gameObject);
+		//cameraToUse->AddToPermanentDrawablesObjects(shape_ptr, gameObject);
 
 	}
 	else

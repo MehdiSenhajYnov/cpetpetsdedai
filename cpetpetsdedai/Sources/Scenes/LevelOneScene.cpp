@@ -1,5 +1,6 @@
 #include "../../Headers/Scenes/LevelOneScene.h"
 #include "../../Headers/Engine/GameObject.h"
+#include "../../Headers/GameSystem/PhysicsEngine.h"
 #include "../../Headers/PhysicsComponents/BoxCollider.h"
 #include "../../Headers/PhysicsComponents/CustomCollider.h"
 
@@ -21,8 +22,10 @@ void LevelOneScene::SetupMapElements()
 
 void LevelOneScene::SetupElements()
 {
-	Ground = CreateGameObjectImmediate("ground");
-	BoxCollider* groundCollider = physicsEngine.CreateBoxCollider(Ground, sf::Vector2f(0,0), sf::Vector2f(800, 200));
+	Ground = Create<GameObject>();
+	Ground->Init("Ground");
+
+	BoxCollider* groundCollider = PhysicsEngine::GetInstance()->CreateBoxCollider(Ground, sf::Vector2f(0,0), sf::Vector2f(800, 200));
 	
 	Ground->SetPosition(0, 900);
 	groundCollider->Gravity = false;

@@ -2,24 +2,61 @@
 #include <iostream>
 #include <map>
 #include <functional>
+#include "../Engine/MethodContainer.h"
+#include "../../TList.h"
+
+class BaseEvent
+{
+};
 
 template <typename... Args>
-class Event
+class Event : public BaseEvent
 {
 public:
+	Event() = default;
 	~Event();
+
 	int currentCount = 0;
 	template<typename Class>
 	int Subscribe(void(Class::* funcToSubscribe)(Args...), Class* instance);
 	int Subscribe(const std::function<void(Args...)>& funcToSubscribe);
 
-	void Desubscribe(int id);
+	void Unsubscribe(int id);
 	void InvokeEvent(Args... args);
 
 	void DesubscribeAll();
 
+	int SubscribeSerializable(std::string _name)
+	{
+		if (MethodContainer::GetFunctionsWith<void, Args...>().contains(_name))
+		{
+			currentCount++;
+			functionSubscribbed[currentCount] = MethodContainer::GetFunctionsWith<void, Args...>()[_name];
+			serializableFunctionNames.push_back(_name);
+			return currentCount;
+		}
+		return -1;
+	}
+
+	void SubscribeAllSerializablesList()
+	{
+		for (auto& _name : serializableFunctionNames)
+		{
+			if (MethodContainer::GetFunctionsWith<void, Args...>().contains(_name))
+			{
+				currentCount++;
+				functionSubscribbed[currentCount] = MethodContainer::GetFunctionsWith<void, Args...>()[_name];
+			}
+		}
+	}
+	
+	TList<std::string>& GetSerializableFunctionNames()
+	{
+		return serializableFunctionNames;
+	}
 private:
-	std::map<int,std::function<void(Args...)>> functionSubscribbed;
+	std::map<int,std::function<void(Args...)>> functionSubscribbed = std::map<int,std::function<void(Args...)>>();
+	TList<std::string> serializableFunctionNames = TList<std::string>();
 };
 
 template <typename ... Args>
@@ -49,15 +86,11 @@ int Event<Args...>::Subscribe(const std::function<void(Args...)>& funcToSubscrib
 }
 
 template <typename ... Args>
-void Event<Args...>::Desubscribe(int id)
+void Event<Args...>::Unsubscribe(int id)
 {
-	for (int i = 0; i < functionSubscribbed.size(); i++)
+	if (functionSubscribbed.contains(id))
 	{
-		if (functionSubscribbed[i].first == id)
-		{
-			functionSubscribbed.erase(functionSubscribbed.begin() + i);
-			return;
-		}
+		functionSubscribbed.erase(id);
 	}
 }
 
@@ -79,7 +112,7 @@ void Event<Args...>::InvokeEvent(Args ...args)
 }
 
 template<typename ...Args>
-inline void Event<Args...>::DesubscribeAll()
+void Event<Args...>::DesubscribeAll()
 {
 	functionSubscribbed.clear();
 }

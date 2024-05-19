@@ -1,10 +1,12 @@
 ﻿#include "TextInput.h"
 #include "../Input/Input.h"
+#include "../Utilities/MyMath.h"
 
 DefaultConstructor(TextInput, EngineUIElement)
 
-void TextInput::Draw(sf::RenderWindow* window)
+void TextInput::Draw(sf::RenderWindow* _window)
 {
+    if (window == nullptr) return;
     if (isBackgroundVisible)
     {
         window->draw(background);
@@ -28,20 +30,42 @@ void TextInput::Update(float _deltaTime)
     ISelectable::Update(_deltaTime);
     if (GetSelectableState() == SelectableState::Selected)
     {
-        
+        UpdateCarretPosition();
+        if (Input::GetKeyDown(KeyCode::LeftArrow))
+        {
+            DecreaseCarretIndex();
+        }
+        if (Input::GetKeyDown(KeyCode::RightArrow))
+        {
+            IncreaseCarretIndex();
+        }
         if (Input::GetKeyDown(KeyCode::Backspace))
         {
             std::string oldText = text.GetText()->getString();
-            if (!oldText.empty())
+            if (!oldText.empty() && carretIndex > 0)
             {
-                oldText.pop_back();
+                //oldText.pop_back();
+                oldText.erase(carretIndex - 1, 1);
+                
                 text.SetText(oldText);
+                DecreaseCarretIndex();
+                if (sizeType == Adaptive)
+                {
+                    AdaptSize();
+                }
             }
         }
         if (Input::GetKeyDown(KeyCode::Enter))
         {
-            TextSubmit.InvokeEvent(text.GetText()->getString());
-            Deselect();
+            if (Input::GetKey(KeyCode::LShift) || Input::GetKey(KeyCode::RShift))
+            {
+                //text.SetText(text.GetText()->getString() + '\n');                
+                OnUserText('\n');
+            } else
+            {
+                TextSubmit.InvokeEvent(text.GetText()->getString());
+                Deselect();
+            }
         }
 
         carretBlinkTimer += _deltaTime;
@@ -74,7 +98,6 @@ void TextInput::Init(sf::RenderWindow* _window)
     placeholder.SetVerticalOriginToCenter();
     
     
-    text.OnTextChange.Subscribe(&TextInput::OnTextChange, this);
     placeholder.SetText("Type here...");
 
     background.setSize({ 200, 50 });
@@ -117,29 +140,68 @@ void TextInput::SetPosition(const sf::Vector2f& _position)
     EngineUIElement::SetPosition(_position);
     background.setPosition(_position);
     float textYCenter = _position.y + (background.getSize().y/ 2) - text.GetSize().y / 2;
-    text.SetPosition({ _position.x + textLeftPadding, textYCenter });
-    placeholder.SetPosition({ _position.x + textLeftPadding, textYCenter });
+    text.SetPosition({ _position.x + textPadding.x, textYCenter });
+    placeholder.SetPosition({ _position.x + textPadding.x, textYCenter });
+}
+
+void TextInput::AdaptSize()
+{
+    float xSize = text.GetSize().x + textPadding.x * 2;
+    if (xSize < minSize.x )
+    {
+        xSize = minSize.x;
+    } else if (haveMaxSize && xSize > maxSize.x)
+    {
+        xSize = maxSize.x;
+    }
+    float ySize = text.GetSize().y + textPadding.y * 2;
+    if (ySize < minSize.y)
+    {
+        ySize = minSize.y;
+    } else if ( haveMaxSize && ySize > maxSize.y)
+    {
+        ySize = maxSize.y;
+    }
+    
+    SetSize({xSize, ySize});
 }
 
 void TextInput::OnUserText(char _char)
 {
     if (GetSelectableState() != SelectableState::Selected) return;
     if (!ProcessCharInput(_char)) return;
+    std::string newText = text.GetText()->getString();
+    newText.insert(carretIndex, 1, _char);
+    SetText(newText);
+}
+
+void TextInput::SetText(const std::string& _newText)
+{
     std::string oldText = text.GetText()->getString();
-    text.SetText(text.GetText()->getString() + _char);
+    text.SetText(_newText);
+    IncreaseCarretIndex();
     
-    if (text.GetSize().x > background.getSize().x)
+    if (sizeType == Adaptive)
     {
-        text.SetText(oldText);
+        AdaptSize();
+    }
+    else if (sizeType == Fixed)
+    {
+        if (text.GetSize().x > GetSize().x)
+        {
+            text.SetText(oldText);
+        }
+        if (text.GetSize().y > GetSize().y)
+        {
+            text.SetText(oldText);
+        }
+    }
+    else if (sizeType == FixedNoBlock)
+    {
     }
 }
 
-void TextInput::OnTextChange(const std::string& _text)
-{
-    UpdateCarretPosition();
-}
-
-bool TextInput::ProcessCharInput(char _char)
+bool TextInput::ProcessCharInput(const char _char)
 {
     if (inputType == Normal )
     {
@@ -203,10 +265,9 @@ bool TextInput::ProcessCharInput(char _char)
     
 }
 
-void TextInput::UpdateCarretPosition()
-{
-    carret.setPosition(GetPosition().x + text.GetSize().x + carretLeftPadding, GetPosition().y + (background.getSize().y - carret.getSize().y) / 2);
-}
+
+
+
 
 void TextInput::ChangeCursorToTextInput(ISelectable* _selectable)
 {
@@ -216,6 +277,13 @@ void TextInput::ChangeCursorToTextInput(ISelectable* _selectable)
 void TextInput::ChangeCursorToDefault(ISelectable* _selectable)
 {
     ChangeCursor(sf::Cursor::Type::Arrow);
+}
+
+
+
+void TextInput::SetSize(const sf::Vector2f& _size)
+{
+    background.setSize(_size);
 }
 
 void TextInput::ChangeColor(sf::Color _newColor, SelectableState _newState)
@@ -244,7 +312,65 @@ sf::Vector2f TextInput::GetSelectableSize()
 void TextInput::CarretOnSelect(ISelectable* _selectable)
 {
     if (!isInitialized) return;
+
+    float minDistance = 1000000;
+    int minIndex = -1;
+    float maxDistanceAccepted = 1000;
+    for (int i = 0; i < text.GetText()->getString().getSize(); ++i)
+    {
+        float distance = MyMath::DistanceBetweenTwoPoints(text.GetText()->findCharacterPos(i), Input::GetMousePosition());
+        if (distance < minDistance)
+        {
+            minDistance = distance;
+            minIndex = i;
+        }
+    }
+    if (minIndex != -1 && minDistance < maxDistanceAccepted)
+    {
+        ChangeCarretIndex(minIndex);
+    }
+    else
+    {
+        ChangeCarretIndex(text.GetText()->getString().getSize());
+    }
     isCarretVisible = true;
-    
-    UpdateCarretPosition();
 }
+
+void TextInput::UpdateCarretPosition()
+{
+    sf::Vector2f lastLetterPosition;
+    if (!text.GetText()->getString().isEmpty())
+    {
+        lastLetterPosition = text.GetText()->findCharacterPos(carretIndex);
+    } else
+    {
+        lastLetterPosition = sf::Vector2f(GetPosition().x + carretLeftPadding, GetPosition().y + (background.getSize().y - carret.getSize().y) / 2);
+    }
+    carret.setPosition(lastLetterPosition + sf::Vector2f(carretLeftPadding,0));
+}
+
+void TextInput::ChangeCarretIndex(int _newIndex)
+{
+    carretIndex = _newIndex;
+    //UpdateCarretPosition();
+}
+
+void TextInput::IncreaseCarretIndex()
+{
+    carretIndex += 1;
+    if (carretIndex > text.GetText()->getString().getSize())
+    {
+        carretIndex = text.GetText()->getString().getSize();
+    }
+    //UpdateCarretPosition();
+}
+void TextInput::DecreaseCarretIndex()
+{
+    carretIndex -= 1;
+    if (carretIndex < 0)
+    {
+        carretIndex = 0;
+    }
+    //UpdateCarretPosition();
+}
+

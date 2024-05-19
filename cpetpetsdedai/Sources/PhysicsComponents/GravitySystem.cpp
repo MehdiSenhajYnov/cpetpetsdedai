@@ -5,7 +5,7 @@
 
 
 
-GravitySystem::GravitySystem()
+GravitySystem::GravitySystem() : Component("GravitySystem", Object::GetStaticType())
 {
 
 }
@@ -21,12 +21,12 @@ void GravitySystem::Init(BoxCollider* _boxCollider, PhysicsEngine* _physicsEngin
 
 	minY = gameObject->GetPosition().y;
 
-	SerializeField(float, minY)
-	SerializeField(float, maxY)
-	SerializeField(float, gravityForce)
-	SerializeField(bool, isGravityEnable)
-	SerializeField(bool, canBounce)
-	SerializeField(float, multiplier)
+	SERIALIZE_FIELD(minY)
+	SERIALIZE_FIELD(maxY)
+	SERIALIZE_FIELD(gravityForce)
+	SERIALIZE_FIELD(isGravityEnable)
+	SERIALIZE_FIELD(canBounce)
+	SERIALIZE_FIELD(multiplier)
 	//SerializeField(BoxCollider*, boxCollider)
 }
 

@@ -8,6 +8,7 @@
 class GlobalSerializer
 {
 public:
+
     template <typename T>
     static uint64_t Serializer(SerializeBuffer& buffer, T& object, const std::string_view& _previousContent)
     {
@@ -36,8 +37,12 @@ public:
         }
         else if constexpr (IsVector<T>)
         {
-            std::cout << "Serializing vector : " << typeid(T).name() << std::endl;
             SerializeVector(object, buffer, _previousContent);
+            return true;
+        }
+        else if constexpr (IsDerivedFrom<T, BaseEvent>)
+        {
+            SerializeEvent(object, buffer, _previousContent);
             return true;
         }
         else if constexpr (CanString<T>)
@@ -96,6 +101,12 @@ public:
         return 0;
     }
 
+    template <typename T>
+    static uint64_t SerializeEvent(T& outVar, SerializeBuffer& buffer, const std::string_view _previousContent) requires IsDerivedFrom<T,BaseEvent>
+    {
+        GlobalSerializer::Serializer(buffer, outVar.GetSerializableFunctionNames(), _previousContent);
+        return 0;		
+    }
         
     template <typename T>
     static bool IsOrIsPointerSerializable(T& object)

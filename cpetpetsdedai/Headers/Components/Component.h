@@ -5,8 +5,8 @@ class GameObject;
 
 enum ComponentWorkType
 {
-	Play,
-	Editor,
+	PlayOnly,
+	EditorOnly,
 	PlayAndEditor,
 };
 
@@ -18,30 +18,31 @@ class Component : public Object
 {
 protected:
 	Component(const std::string& _name, Type* parentType);
-	Component(const uint64_t& _id, const std::string& _name, Type* parentType);
 public:
 	Component();
-	Component(uint64_t _id);
-
-
 	
 	virtual ~Component() override = default;
-	AddType(Component, Object)
+	ADD_TYPE(Component, Object, REG_TYPE)
 	
 	virtual void Start() = 0;
+
+	
 	virtual void Update(float deltaTime) = 0;
+
+	virtual void LateUpdate(float deltaTime) {};
+
 	virtual void PreDestroy() override {}
 
 	GameObject* GetAttachedObject();
-	ComponentWorkType componentWorkType;
+	ComponentWorkType componentWorkType = PlayAndEditor;
 
 	virtual void Init();
 
 	virtual void InitBaseComponent(GameObject* _gameObject);
 protected:
 
-	GameObject* gameObject;
-	int gameObjectId;
+	GameObject* gameObject = nullptr;
+	int gameObjectId = 0;
 
 private:
 };

@@ -109,24 +109,14 @@ enum KeyCode
     F14,          //!< The F14 key
     F15,          //!< The F15 key
     Pause,        //!< The Pause key
-
-    KeyCount,     //!< Keep last -- the total number of keyboard keys
-
-    // Deprecated values:
-
-    Tilde     = Grave,     //!< \deprecated Use Grave instead
-    Dash      = Hyphen,    //!< \deprecated Use Hyphen instead
-    BackSpace = Backspace, //!< \deprecated Use Backspace instead
-    BackSlash = Backslash, //!< \deprecated Use Backslash instead
-    SemiColon = Semicolon, //!< \deprecated Use Semicolon instead
-    Return    = Enter,     //!< \deprecated Use Enter instead
-    Quote     = Apostrophe,//!< \deprecated Use Apostrophe instead
-
+    
     LeftMouse,       //!< The left mouse button
     RightMouse,      //!< The right mouse button
     MiddleMouse,     //!< The middle (wheel) mouse button
     XButton1Mouse,   //!< The first extra mouse button
     XButton2Mouse,   //!< The second extra mouse button
+
+    KeyCount,     //!< Keep last -- the total number of keyboard keys
 };
 
 
@@ -154,6 +144,7 @@ public:
     {
         keysDown.push_back(_key);
         keyDownEvent.InvokeEvent(_key);
+        AddKey(_key);
     }
     static void AddKey(KeyCode _key)
     {
@@ -218,6 +209,23 @@ public:
     inline static Event<KeyCode> keyUpEvent;
     inline static Event<char> textEnteredEvent;
 
+    static TList<KeyCode> GetKeysDown()
+    {
+        return keysDown;
+    }
+    static TList<KeyCode> GetKeys()
+    {
+        return keys;
+    }
+    static TList<KeyCode> GetKeysUp()
+    {
+        return keysUp;
+    }
+    static TList<char> GetTextEntered()
+    {
+        return textEntered;
+    }
+    
 private:
     inline static TList<KeyCode> keysDown;
     inline static TList<KeyCode> keys;

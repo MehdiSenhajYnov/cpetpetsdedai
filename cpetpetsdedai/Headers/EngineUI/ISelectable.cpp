@@ -74,6 +74,7 @@ void ISelectable::Select()
 
 void ISelectable::Deselect()
 {
+	if (selectableState != SelectableState::Selected) return;
 	tempState = SelectableState::Normal;
 	OnDeselect.InvokeEvent(this);
 	InternalChangeColor(baseColor);

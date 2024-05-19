@@ -241,7 +241,11 @@ sf::Vector2f MyMath::TrouverPointA(const sf::Vector2f& B, const sf::Vector2f& C,
 sf::Vector2f MyMath::GetNormalizedVector(const sf::Vector2f& toNormalize)
 {
 	float norme = std::sqrt(toNormalize.x * toNormalize.x + toNormalize.y * toNormalize.y);
-	return toNormalize / norme;
+	if (norme != 0)
+	{
+		return toNormalize / norme;
+	}
+	return toNormalize;
 }
 
 
@@ -296,4 +300,9 @@ sf::Vector2f MyMath::IntersectionPoint(sf::Vector2f p1, sf::Vector2f p2, sf::Vec
 
 	result = false;
 	return sf::Vector2f(-1, -1);
+}
+
+float MyMath::DistanceBetweenTwoPoints(const sf::Vector2f& p1, const sf::Vector2f& p2)
+{
+	return (float)sqrt(pow(p2.x - p1.x, 2) + pow(p2.y - p1.y, 2));
 }

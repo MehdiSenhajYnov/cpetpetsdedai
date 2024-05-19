@@ -27,16 +27,15 @@ public:
 	GameObject();
 	GameObject(const std::string& _name, Type* parentType);
 
-	GameObject(uint64_t _id);
-	GameObject(const uint64_t& _id, const std::string& _name, Type* parentType);
-	
 	~GameObject() override;
-	AddType(GameObject, Object)
+	ADD_TYPE(GameObject, Object, REG_TYPE)
 	
 	virtual void Init(const std::string& _name);
 
 	
 	#pragma region GettersSetters
+
+	void ComponentsManagement();
 	
 	std::string GetName();
 	void SetName(const std::string& _name);
@@ -72,21 +71,18 @@ public:
 
 	#pragma region ComponentsManagement
 
-	TList<Component*>* GetComponents();
+	TList<Component*>& GetComponents();
 
-	void AddDrawableComponent(DrawableComponent* _drawableComponent);
-	void RemoveDrawableComponent(DrawableComponent* _drawableComponent);
-	
-	TList<DrawableLayer>* GetDrawableComponents();
-	
 	template <typename T, typename... Args>
 	T* AddComponent(Args... args) requires IsBaseOf<Component, T>;
 
 	template <typename T>
 	T* AddComponent() requires IsBaseOf<Component, T>; 
+
+	Component* AddComponentByName(const std::string& _typeName);
 	
 	template <typename T>
-	bool RemoveComponent() requires IsBaseOf<Component, T>;
+	void RemoveComponent() requires IsBaseOf<Component, T>;
 
 	template <typename T>
 	int RemoveAllComponents() requires IsBaseOf<Component, T>;
@@ -99,18 +95,19 @@ public:
 	#pragma endregion ComponentsManagement
 
 public:
-	PositionType positionType;
+	PositionType positionType = PositionType::World;
 private:
 	std::string name = "";
 	sf::Vector2f position = {0, 0};
 	sf::Vector2f scale = {1, 1};
 	TList<std::string> _tags;
-	
+
+	TList<Component*> componentsToAdd;
+	TList<Component*> componentsToRemove;
 	TList<Component*> components;
 	GameObject* parent = nullptr;
 
-	TList<DrawableLayer> drawableComponents;
-	bool isActive = false;
+	bool isActive = true;
 	
 };
 
@@ -120,7 +117,9 @@ T* GameObject::AddComponent(Args... args) requires IsBaseOf<Component, T>
 	T* newComponent = Factory::GetInstance()->CreateObject<T>();
 	newComponent->InitBaseComponent(this);
 	newComponent->Init(std::forward<Args>(args)...);
-	components.push_back(newComponent);
+	newComponent->Start();
+	//components.push_back(newComponent);
+	componentsToAdd.push_back(newComponent);
 	return newComponent;
 }
 
@@ -129,17 +128,19 @@ T* GameObject::AddComponent() requires IsBaseOf<Component, T>
 {
 	T* newComponent = Factory::GetInstance()->CreateObject<T>();
 	newComponent->InitBaseComponent(this);
-	components.push_back(newComponent);
+	newComponent->Start();
+	//components.push_back(newComponent);
+	componentsToAdd.push_back(newComponent);
 	return newComponent;
 }
 
 template <typename T>
-bool GameObject::RemoveComponent() requires IsBaseOf<Component, T>
+void GameObject::RemoveComponent() requires IsBaseOf<Component, T>
 {
 	Component* toDelete = GetComponent<T>();
-	components.RemoveElement(toDelete);
-	Factory::GetInstance()->DestroyObject(toDelete);
-	return false;
+	componentsToRemove.push_back(toDelete);
+	//components.RemoveElement(toDelete);
+	//Factory::GetInstance()->DestroyObject(toDelete);;
 }
 
 template <typename T>

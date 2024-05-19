@@ -22,6 +22,10 @@ public:
 	static void ResetInstance();
 	bool isOnDisplay(DrawableComponent* toCheck);
 
+	sf::RenderWindow* GetWindow() const;
+
+	TList<DrawableLayer>& GetDrawableLayers();
+
 private:
 	RendererManager() = default;
 	sf::RenderWindow* window;

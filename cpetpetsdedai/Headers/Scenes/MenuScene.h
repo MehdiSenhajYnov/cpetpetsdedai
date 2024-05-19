@@ -6,15 +6,11 @@ class Button;
 class MenuScene : public Scene
 {
 public:
+	ADD_TYPE(MenuScene, Scene, REG_TYPE)
 	MenuScene();
-	AddType(MenuScene, Scene)
 	
 private:
-	GameObject* playButtonObj = nullptr;
-	GameObject* exitButtonObj = nullptr;
 
-	Button* playButtonComponent = nullptr;
-	Button* exitButtonComponent = nullptr;
 
 
 	//GameObject* LoadingObj;
@@ -31,6 +27,10 @@ private:
 	void DestroyScene() override;
 	void OnKeyDown(sf::Keyboard::Key pressedKey) override;
 
+public:
+	void AddMethods() override;
+
+private:
 	sf::Color normalButtonColor = sf::Color(0, 0, 0);
 	sf::Color hoverButtonColor = sf::Color(110, 110, 110);
 	sf::Color pressedButtonColor = sf::Color(80, 80, 80);

@@ -16,15 +16,15 @@ enum class AnimationState
 class Animator : public Component
 {
 public:
-    AddType(Animator, Component)
+    ADD_TYPE(Animator, Component, REG_TYPE)
     Animator();
     Animator(const std::string& _name, Type* parentType);
     void Init(SpriteRenderer* _spriteRenderer);
-    void Init(std::vector<Animation> _animations);
+    void SetAnimations(std::vector<Animation*> _animations);
 
-    void AddAnimation(Animation _animation);
+    void AddAnimation(Animation* _animation);
 
-    std::vector<Animation>* GetAnimations();
+    std::vector<Animation*>& GetAnimations();
 
     AnimationState state = AnimationState::Stopped;
     
@@ -32,15 +32,17 @@ public:
     void Stop();
     void Pause();
     void Resume();
+
+    Animation* CreateAnimation(std::string _name, float _duration, bool _loop, std::initializer_list<std::string> _frameNames = {});
     
     void Start() override;
     void Update(float deltaTime) override;
     ~Animator() override;
 private:
-    std::vector<Animation> animations;
+    std::vector<Animation*> animations;
     SpriteRenderer* spriteRenderer;
     sf::Sprite baseSprite;
-    Animation currentAnimation;
+    Animation* currentAnimation;
 
     float currentTime = 0.0f;
     int currentFrame = 0;

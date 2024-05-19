@@ -1,14 +1,27 @@
-#include "../../Headers/Utilities/Event.h"
 #include "../../Headers/Scenes/SceneManager.h"
 
 
-SceneManager::SceneEnum SceneManager::currentScene;
-Event<SceneManager::SceneEnum> SceneManager::OnSceneChanged;
-
 void SceneManager::ChangeScene(SceneEnum newScene)
 {
-	currentScene = newScene;
+	currentSceneType = newScene;
 	OnSceneChanged.InvokeEvent(newScene);
+}
+
+SceneManager* SceneManager::GetInstance()
+{
+    static SceneManager* instance;
+    if (instance == nullptr)
+    {
+        instance = new SceneManager();
+    }
+    return instance;
+}
+
+void SceneManager::ResetInstance()
+{
+    auto instance = GetInstance();
+    delete instance;
+    instance = nullptr;
 }
 
 void SceneManager::SetLevel(int newLevel)
@@ -26,6 +39,16 @@ void SceneManager::SetLevel(int newLevel)
         ChangeScene(SceneEnum::Menu);
     }
 
-	//currentScene = newScene;
+	//currentSceneType = newScene;
 	//OnSceneChanged.InvokeEvent(newScene);
+}
+
+Scene* SceneManager::GetCurrentScene() const
+{
+    return currentScene;
+}
+
+void SceneManager::SetCurrentScene(Scene* newScene)
+{
+    currentScene = newScene;
 }

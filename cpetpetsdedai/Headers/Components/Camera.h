@@ -10,19 +10,22 @@
 class Camera : public Component
 {
 public:
-	AddType(Camera, Component)
+	ADD_TYPE(Camera, Component, REG_TYPE)
 	Camera();
+	~Camera();
+	
 	void AddToPermanentDrawablesObjects(sf::Shape* drawableToAdd, GameObject* attachedObject);
 	void RemoveFromPermanentDrawablesObjects(sf::Shape* drawableToRemove);
 
 	void AddToTexts(sf::Text* textToAdd);
 	void RemoveFromTexts(sf::Text* textToRemove);
 
-	sf::RenderWindow* GetCurrentWindow();
 	void UpdateCameraRect();
 
-	void Init(sf::Vector2f _cameraView, sf::RenderWindow* _window);
+	void Init(sf::Vector2f _cameraView);
 	sf::FloatRect GetCameraRect();
+	void Start() override;
+	void Update(float deltaTime) override;
 
 private:
 	std::vector<sf::Text*> Texts;
@@ -32,8 +35,6 @@ private:
 
 	sf::FloatRect CameraRect;
 	
-	void Start() override;
-	void Update(float deltaTime) override;
 
 };
 

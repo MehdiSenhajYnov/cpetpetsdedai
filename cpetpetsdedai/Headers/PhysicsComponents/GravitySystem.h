@@ -9,7 +9,7 @@ class GameObject;
 class GravitySystem : public Component
 {
 public:
-	AddType(GravitySystem, Component)
+	ADD_TYPE(GravitySystem, Component, REG_TYPE)
 	GravitySystem();
 	void Init(BoxCollider* _boxCollider, PhysicsEngine* _physicsEngine);
 	// Hérité via Component
@@ -18,13 +18,13 @@ public:
 
 	void SetGravity(float _newGravityForce);
 private:
-	PhysicsEngine* physicsEngine;
-	BoxCollider* boxCollider;
-	float multiplier;
-	float gravityForce;
-	bool isGravityEnable;
-	float minY;
+	PhysicsEngine* physicsEngine = nullptr;
+	BoxCollider* boxCollider = nullptr;
+	float multiplier = 0;
+	float gravityForce = 0;
+	bool isGravityEnable = false;
+	float minY = 0;
 	float maxY = 900;
-	bool canBounce;
+	bool canBounce = false;
 };
 

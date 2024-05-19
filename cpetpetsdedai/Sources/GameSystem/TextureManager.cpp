@@ -39,6 +39,12 @@ void TextureManager::Init()
     AddTexture("Square", "./Assets/Square.png");
     AddTexture("RoundedRectangle", "./Assets/RoundedRectangle.png");
     AddTexture("EditorMove", "./Assets/Editor/MoveArrow.png");
+
+    AddTexture("OpenContextDown", "./Assets/Editor/OpenContext/OpenContextDown.png");
+    AddTexture("OpenContextUp", "./Assets/Editor/OpenContext/OpenContextUp.png");
+    AddTexture("OpenContextLeft", "./Assets/Editor/OpenContext/OpenContextLeft.png");
+    AddTexture("OpenContextRight", "./Assets/Editor/OpenContext/OpenContextRight.png");
+    
     IncludeIdleAnimationTextures();
 }
 
@@ -60,8 +66,6 @@ void TextureManager::DeleteTexture(std::string _texturePath)
         delete textureToDelete;
         textureToDelete = nullptr;
         textures.erase(_texturePath);
-
-        
     }
 }
 

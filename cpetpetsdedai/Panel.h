@@ -26,11 +26,9 @@ class Panel : public EngineUIElement
 public:
     Panel();
     Panel(const std::string& _typeName, Type* parentType);
-    Panel(const uint64_t& _id, const std::string& _name, Type* parentType);
-    Panel(uint64_t _id);
     virtual ~Panel() override;
 
-    AddType(Panel, EngineUIElement)
+    ADD_TYPE(Panel, EngineUIElement, REG_TYPE)
 
     virtual void Init(sf::RenderWindow* _window) override;
     void DragLine();
@@ -38,7 +36,7 @@ public:
     void Update(float _deltaTime) override;
     void Draw(sf::RenderWindow* _window) override;
 
-    TextUIElement* text;
+    TextUIElement* text = nullptr;
     std::string GetName() const { return name; }
     virtual void SetName(const std::string& _name);
 
@@ -56,8 +54,14 @@ public:
     void SetAnchorSide(AnchorSide _anchorSide) { anchorSide = _anchorSide; }
 
     
-    float GetSize() const { return size; }
-    void SetSize(float _size);
+    float GetPanelWidth() const { return size; }
+    
+    sf::Vector2f GetSize() const override
+    {
+        return { size, size };
+    }
+    
+    void SetPanelWidth(float _size);
 
 protected:
     float size = 300.0f;

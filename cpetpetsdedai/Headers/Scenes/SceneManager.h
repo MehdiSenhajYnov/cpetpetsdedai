@@ -1,18 +1,26 @@
 #pragma once
+#include "../Utilities/Event.h"
 
-template <typename... Args>
-class Event;
+
+class Scene;
 
 class SceneManager
 {
 public:
+	static SceneManager* GetInstance();
+	static void ResetInstance();
+	
 	enum SceneEnum { Menu, Level1};
-	static SceneEnum currentScene;
+	SceneEnum currentSceneType;
 
-	static void SetLevel(int newLevel);
-	static Event<SceneManager::SceneEnum> OnSceneChanged;
+	void SetLevel(int newLevel);
+	Event<SceneEnum> OnSceneChanged;
+
+	Scene* GetCurrentScene() const;
+	void SetCurrentScene(Scene* newScene);
 private:
-	static void ChangeScene(SceneEnum newScene);
+	Scene* currentScene = nullptr;
+	void ChangeScene(SceneEnum newScene);
 
 };
 
